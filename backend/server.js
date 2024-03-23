@@ -213,7 +213,20 @@ app.get("/profile", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+app.delete("/users/delete/:userId", verifyToken, (req, res) => {
+  if (req.userRole !== "admin") {
+    res.status(403).json({ message: "Only admins can delete users." });
+  }
 
+  const userId = req.params.userId;
+
+  // Delete user using mongoose
+  User.findByIdAndDelete(userId)
+    .then(() => res.status(200).json({ message: "User deleted successfully." }))
+    .catch((err) =>
+      res.status(500).json({ message: "Error deleting user.", error: err })
+    );
+});
 app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
   try {
     const userId = req.params.userId;
