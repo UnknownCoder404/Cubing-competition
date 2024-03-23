@@ -22,32 +22,15 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error(err));
 
+const solveSchema = new mongoose.Schema({ solves: [Number] });
 // Define a schema for the user model
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, required: true, enum: ["admin", "user"] },
+  rounds: [solveSchema],
 });
 
-const addSolves = async (userId, solves) => {
-  // Validation logic here (same as the original method)
-  if (!Array.isArray(solves) || solves.length !== 5) {
-    throw new Error("Invalid solves data. Must be an array of 5 times.");
-  }
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  // Check if 'rounds' array is undefined before using push
-  if (!user.rounds) {
-    user.rounds = []; // Initialize rounds array if it doesn't exist
-  }
-
-  user.rounds.push(...solves.map((time) => ({ time })));
-  await user.save();
-};
 // Add a pre-save hook to hash the password before saving
 userSchema.pre("save", async function (next) {
   try {
@@ -77,6 +60,7 @@ const verifyToken = async (req, res, next) => {
     // Set the user id to the request object
     req.userId = decoded.id;
     const USER = await User.findById(decoded.id);
+    req.user = USER;
     req.userRole = USER.role;
     // Call the next middleware
     next();
@@ -99,17 +83,6 @@ userSchema.methods.comparePassword = async function (password) {
 
 // Create a user model from the schema
 const User = mongoose.model("User", userSchema);
-const registerAdmin = async () => {
-  // Create a new user instance
-  const user = new User({
-    username: "admin",
-    password: "admin",
-    role: "admin",
-  });
-  // Save the user to the database
-  await user.save();
-};
-//registerAdmin();
 // Define a route for user registration
 app.post("/register", verifyToken, async (req, res) => {
   try {
@@ -161,7 +134,16 @@ app.post("/register", verifyToken, async (req, res) => {
     }
   }
 });
-
+async function createAdmin() {
+  // Create a new user instance
+  const user = new User({
+    username: "admin",
+    password: "admin",
+    role: "admin",
+  });
+  // Save the user to the database
+  await user.save();
+}
 // Define a route for user login
 app.post("/login", async (req, res) => {
   try {
@@ -187,7 +169,7 @@ app.post("/login", async (req, res) => {
     }
     // Generate a JSON web token with the user id as the payload
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "5h",
+      expiresIn: "24h",
     });
     res.status(200).json({
       message: "User logged in successfully",
@@ -257,6 +239,70 @@ app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
   }
 });
 
+app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
+  const solverId = req.params.solverId;
+  const solver = await User.findById(solverId);
+  const judgeId = req.userId;
+  const judgeRole = req.userRole;
+  const solves = req.body.solves;
+  const round = req.body.round - 1; // indexing starts at 0
+  if (judgeRole !== "admin") {
+    return res.status(403).json({ message: "Only Admins can add solves." });
+  }
+  if (!solver) {
+    return res.status(400).json({
+      message: `Solver doesn't exist. Contact administrators for help. (You provided: "${solverId}")`,
+    });
+  }
+  console.log(`Solves: ${solves}`);
+  if (!solves) {
+    return res.status(400).json({ message: "No solves provided." });
+  }
+  const response = await addSolves(solver, solves, round);
+  if (response > 0) {
+    return res
+      .status(200)
+      .json({ message: `Solves added to ${solver.username}.` });
+  } else {
+    return res.status(400).json({
+      message: `Failed to add solves to ${solver.username}. Contact administrators for help.`,
+    });
+  }
+});
+
+async function addSolves(solver, solves, round) {
+  // Input validation
+  if (!solver || !solves || typeof round !== "number") {
+    return -1;
+  }
+
+  // Ensure rounds array exists
+  if (!solver.rounds) {
+    solver.rounds = [];
+  }
+
+  // Check if the round needs to be created
+  if (round >= solver.rounds.length) {
+    // Create new rounds to fill the gap
+    solver.rounds.length = round + 1;
+    // Initialize the new round with an empty solves array
+    solver.rounds[round] = { solves: [] };
+  }
+
+  try {
+    // Update the solves array for the specified round
+    solver.rounds[round].solves.push(...solves);
+
+    // Save the updated user data
+    await solver.save();
+
+    // Success response
+    return 1;
+  } catch (err) {
+    console.error("Error adding solves:", err);
+    return -1;
+  }
+}
 
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
