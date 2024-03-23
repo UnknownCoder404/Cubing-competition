@@ -1,0 +1,72 @@
+/* Style the header */
+.header {
+  padding: 10px 16px;
+  background: #555;
+  color: #f1f1f1;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+.interaction-container {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 10px;
+}
+/* Page content */
+.content {
+  padding: 16px;
+}
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+/* Add some top padding to the page content to prevent sudden quick movement */
+.sticky + .content {
+  padding-top: 102px;
+}
+.logo {
+  width: 20px;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.naslov-container {
+  display: flex;
+}
+.naslov {
+  display: inline-block;
+}
+.search {
+  height: 40px;
+  width: 100%;
+  border-radius: 3px;
+  border: none;
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+.account-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}
+.account-circle {
+  fill: rgb(255, 255, 255);
+}
+
+.log-in {
+  display: inline-block;
+}
+
+@media screen and (max-width: 370px) {
+  .log-in {
+    display: none;
+  }
+}
