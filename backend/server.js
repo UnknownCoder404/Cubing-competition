@@ -20,7 +20,7 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error(err));
+  .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
 const solveSchema = new mongoose.Schema({ solves: [Number] });
 // Define a schema for the user model
@@ -134,15 +134,38 @@ app.post("/register", verifyToken, async (req, res) => {
     }
   }
 });
-async function createAdmin() {
+async function createAdmin(username, password) {
+  // -1 : Username missing
+  // -2 : Password missing
+  // -3 : Username taken
+  // -4 : Error while saving admin to database
+  //  1 : Success
+  if (!username) {
+    return -1;
+  }
+  if (!password) {
+    return -2;
+  }
+  const available = !(await User.findOne({ username }));
+
+  if (!available) {
+    console.error("Tried to create admin with username that already exists.");
+    return -3;
+  }
   // Create a new user instance
   const user = new User({
-    username: "admin",
-    password: "admin",
+    username,
+    password,
     role: "admin",
   });
   // Save the user to the database
-  await user.save();
+  try {
+    await user.save();
+    return 1;
+  } catch (err) {
+    console.error(`Error while saving new Admin:\n` + err);
+    return -4;
+  }
 }
 // Define a route for user login
 app.post("/login", async (req, res) => {
@@ -264,7 +287,7 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
   }
   if (!solver) {
     return res.status(400).json({
-      message: `Solver doesn't exist. Contact administrators for help. (You provided: "${solverId}")`,
+      message: `Solver doesn't exist. Contact administrators for help. (You provided: ${solverId})`,
     });
   }
   console.log(`Solves: ${solves}`);
@@ -317,6 +340,90 @@ async function addSolves(solver, solves, round) {
   }
 }
 
+app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
+  const userId = req.params.userId; // userid to delete solves
+  const roundToDelete = req.body.round;
+  const solveToDelete = req.body.solve;
+
+  if (!roundToDelete) {
+    res.status(400).json({ message: "Round to delete is missing." });
+  }
+  if (typeof roundToDelete !== "number") {
+    res.status(400).json({ message: "Round to delete should be a number." });
+  }
+
+  if (typeof solveToDelete !== "number") {
+    res.status(400).json({ message: "Solve to delete should be a number." });
+  }
+
+  const user = await User.findById(userId);
+
+  // Delete the specified solve
+  if (user.rounds && user.rounds[roundToDelete - 1]) {
+    user.rounds[roundToDelete - 1].solves.splice(solveToDelete - 1, 1); // Remove the element at index
+  } else {
+    // Handle case where round doesn't exist
+    return res.status(400).json({ message: "Round not found for user." });
+  }
+
+  await user.save();
+  return res
+    .status(200)
+    .json({
+      message: `Successfully deleted solve ${solveToDelete} in round ${roundToDelete}.`,
+    });
+});
+
+app.post("/admin/register", verifyToken, async (req, res) => {
+  const adminUsername = req.body.username;
+  const adminPassword = req.body.password;
+
+  if (req.userRole !== "admin") {
+    return res
+      .status(401)
+      .json({ message: "Only admins can register admins." });
+  }
+
+  // -1 : Username missing
+  // -2 : Password missing
+  // -3 : Username taken
+  // -4 : Error while saving admin to database
+  //  1 : Success
+  const result = await createAdmin(adminUsername, adminPassword);
+  if (result === 1) {
+    return res.status(200).json({ message: "Successfully registered admin." });
+  }
+  if (result === -1) {
+    return res.status(400).json({ message: "Username missing." });
+  }
+  if (result === -2) {
+    return res.status(400).json({ message: "Password missing." });
+  }
+  if (result === -3) {
+    return res.status(400).json({
+      message: `Cannot register admin with username ${adminUsername}. Username already taken.`,
+    });
+  }
+  if (result === -4) {
+    return res
+      .status(500)
+      .json({ message: "Error while saving admin to database." });
+  }
+
+  console.error(`Error registering new admin. Deep logs:
+Old Admin userRole: "${req.userRole}", 
+Old Admin id: "${req.userId}",
+Old Admin username: "${req.user.username}"
+New Admin username: "${adminUsername}",
+New Admin password: "${adminPassword}",
+Result: "${result}"
+  `);
+  return res.status(500).json({
+    message: "Unknown result. Contact admins and tell them to check logs.",
+  });
+});
+
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
+createAdmin("admin", "admin");
