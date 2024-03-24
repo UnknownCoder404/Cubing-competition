@@ -171,7 +171,8 @@ async function createAdmin(username, password) {
 app.post("/login", async (req, res) => {
   try {
     // Get the username and password from the request body
-    const { username, password } = req.body;
+    const username = req.body.username;
+    const password = req.body.password;
     // Validate the input
     if (!username || !password) {
       return res
@@ -367,11 +368,9 @@ app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
   }
 
   await user.save();
-  return res
-    .status(200)
-    .json({
-      message: `Successfully deleted solve ${solveToDelete} in round ${roundToDelete}.`,
-    });
+  return res.status(200).json({
+    message: `Successfully deleted solve ${solveToDelete} in round ${roundToDelete}.`,
+  });
 });
 
 app.post("/admin/register", verifyToken, async (req, res) => {
@@ -426,4 +425,4 @@ Result: "${result}"
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
-createAdmin("admin", "admin");
+createAdmin("admin1234", "admin12345");
