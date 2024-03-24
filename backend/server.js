@@ -216,30 +216,6 @@ app.get("/profile", verifyToken, async (req, res) => {
   }
 });
 
-// PROFILE INFO
-// Define a route for getting the user profile (by id)
-app.get("/admin/profile", verifyToken, async (req, res) => {
-  try {
-    // Find the user by id using the user model
-    const user = await User.findById(req.userId);
-    if (req.userRole !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Only admins can get profile info." });
-    }
-    // Check if the user exists
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    // Send a success response with the user profile
-    res
-      .status(200)
-      .json({ message: "User profile retrieved successfully", user });
-  } catch (err) {
-    // Handle the error
-    res.status(500).json({ message: err.message });
-  }
-});
 app.delete("/users/delete/:userId", verifyToken, (req, res) => {
   if (req.userRole !== "admin") {
     res.status(403).json({ message: "Only admins can delete users." });
@@ -479,4 +455,4 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
-createAdmin("admin1234", "admin12345");
+createAdmin("admin", "admin");
