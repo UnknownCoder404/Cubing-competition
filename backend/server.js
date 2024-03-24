@@ -205,17 +205,20 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Define a route for testing the authentication
-app.get("/test", verifyToken, (req, res) => {
-  // Send a success response with the user id
-  res
-    .status(200)
-    .json({ message: "You are authenticated", userId: req.userId });
+app.get("/profile", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findbyId(req.userId);
+    return res
+      .status(200)
+      .json({ userId: req.userId, username: user.username, role: user.role });
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
 });
 
 // PROFILE INFO
 // Define a route for getting the user profile (by id)
-app.get("/profile", verifyToken, async (req, res) => {
+app.get("/admin/profile", verifyToken, async (req, res) => {
   try {
     // Find the user by id using the user model
     const user = await User.findById(req.userId);
