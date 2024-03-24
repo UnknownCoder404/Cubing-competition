@@ -20,6 +20,7 @@ document
       if (response.ok) {
         // Save token to local storage or session storage
         localStorage.setItem("token", data.info.token);
+        localStorage.setItem("id", data.info.id);
         // Redirect to a dashboard or another page
         window.location.href = "/dashboard";
       }

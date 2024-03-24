@@ -122,7 +122,13 @@ app.post("/register", verifyToken, async (req, res) => {
     await user.save();
     // Send a success response
     console.log(`User registered with username: "${req.body.username}"`);
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "User registered successfully",
+      registeredUser: {
+        username: req.body.username,
+        password: req.body.password,
+      },
+    });
   } catch (err) {
     // Handle the error
     if (err.code === 11000) {
