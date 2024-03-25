@@ -22,8 +22,11 @@ document
         localStorage.setItem("token", data.info.token);
         localStorage.setItem("id", data.info.id);
         localStorage.setItem("username", data.info.username);
+        localStorage.setItem("role", data.info.role);
         // Redirect to a dashboard or another page
-        window.location.href = "/dashboard";
+        if (data.info.role === "admin") {
+          window.location.href = "/dashboard";
+        }
       }
     } catch (error) {
       console.error("Error:", error);
