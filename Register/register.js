@@ -43,11 +43,9 @@ document
 
       const data = await response.json();
       alert(data.message);
-      document.getElementById("message").innerText = `${
-        data.message
-      }\nUsername: ${data.registeredUser.username}\nPassword: ${maskMiddle(
-        data.registeredUser.password
-      )}`;
+      document.getElementById("message").innerText = `${data.message}
+Username: ${data.registeredUser.username}
+Password: ${maskMiddle(data.registeredUser.password)}`;
       clearInput(document.getElementById("username"));
       clearInput(document.getElementById("password"));
     } catch (error) {
