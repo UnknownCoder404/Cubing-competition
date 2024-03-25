@@ -1,4 +1,9 @@
 const url = "http://localhost:3000";
+
+function clearInput(input) {
+  input.value = "";
+}
+
 function maskMiddle(str) {
   if (str.length <= 2) {
     return str;
@@ -43,6 +48,8 @@ document
       }\nUsername: ${data.registeredUser.username}\nPassword: ${maskMiddle(
         data.registeredUser.password
       )}`;
+      clearInput(document.getElementById("username"));
+      clearInput(document.getElementById("password"));
     } catch (error) {
       console.error("Error:", error);
     }
