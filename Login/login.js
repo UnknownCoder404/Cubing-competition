@@ -21,6 +21,7 @@ document
         // Save token to local storage or session storage
         localStorage.setItem("token", data.info.token);
         localStorage.setItem("id", data.info.id);
+        localStorage.setItem("username", data.info.username);
         // Redirect to a dashboard or another page
         window.location.href = "/dashboard";
       }

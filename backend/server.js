@@ -203,7 +203,7 @@ app.post("/login", async (req, res) => {
     });
     res.status(200).json({
       message: "User logged in successfully",
-      info: { id: user._id, token },
+      info: { id: user._id, token, username: username },
     });
   } catch (err) {
     // Handle the error
