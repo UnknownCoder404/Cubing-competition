@@ -199,7 +199,7 @@ app.post("/login", async (req, res) => {
     }
     // Generate a JSON web token with the user id as the payload
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "24h",
     });
     res.status(200).json({
       message: "User logged in successfully",
