@@ -44,3 +44,12 @@ button:hover {
 .currentTime {
   margin-left: 20px;
 }
+.round {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: beige;
+  border: 2px solid black;
+}
+.round:hover {
+  background-color: rgb(239, 239, 179);
+}

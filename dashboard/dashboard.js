@@ -19,6 +19,7 @@ async function showCompetition(userId, index) {
   // Loop through rounds
   for (let i = 0; i < 3; i++) {
     const round = user.rounds[i] || [];
+    html += `<div class="round">`;
     html += `<h3>Round ${i + 1}</h3>`;
 
     // Check if solves exist for the round
@@ -42,6 +43,7 @@ async function showCompetition(userId, index) {
         <button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
       </form>
     `;
+    html += `</div>`;
   }
 
   userDiv.insertAdjacentHTML("beforeend", html);
