@@ -26,9 +26,10 @@ async function showCompetition(userId, index) {
     if (round.solves && round.solves.length > 0) {
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
-        html += `<li>Solve ${j + 1}: ${
-          round.solves[j]
-        }</li><button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
+        const time = round.solves[j] === 0 ? "DNF/DNS" : round.solves[j]; // if 0, display DNF/DNS
+        html += `<li>Solve `;
+        html += `${j + 1}: ${time}`;
+        html += `</li><button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
       }
       html += `</ul>`;
     } else {
@@ -49,7 +50,6 @@ async function showCompetition(userId, index) {
   userDiv.insertAdjacentHTML("beforeend", html);
 }
 
-// Function to handle adding a solve
 async function addSolve(userId, roundIndex) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   const solveValue = solveInput.value;
@@ -203,7 +203,7 @@ function getTime() {
   // You will need to replace this with your specific method to update the HTML element
   document.getElementById("currentTime").innerText = formattedTime;
 }
-// Add this new function to handle the delete button click
+
 async function deleteSolve(userId, roundIndex, solveIndex) {
   // Call the backend to delete the solve
   const response = await fetch(
