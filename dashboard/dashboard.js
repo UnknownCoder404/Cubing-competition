@@ -12,7 +12,7 @@ async function showCompetition(userId, index) {
 
   // Check if user data exists
   if (!user) {
-    html += `<p>User not found.</p>`;
+    html = `<p>User not found.</p>`;
     userDiv.insertAdjacentHTML("beforeend", html);
     return;
   }
@@ -25,7 +25,9 @@ async function showCompetition(userId, index) {
     if (round.solves && round.solves.length > 0) {
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
-        html += `<li>Solve ${j + 1}: ${round.solves[j]}</li>`;
+        html += `<li>Solve ${j + 1}: ${
+          round.solves[j]
+        }</li><button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
       }
       html += `</ul>`;
     } else {
@@ -72,7 +74,7 @@ async function addSolve(userId, roundIndex) {
     const data = await response.json();
     alert(data.message);
     // Update the competition display after successful addition
-    location.reload();
+    main();
   } else {
     const data = await response.json();
     if (data.message) {
@@ -199,7 +201,30 @@ function getTime() {
   // You will need to replace this with your specific method to update the HTML element
   document.getElementById("currentTime").innerText = formattedTime;
 }
+// Add this new function to handle the delete button click
+async function deleteSolve(userId, roundIndex, solveIndex) {
+  // Call the backend to delete the solve
+  const response = await fetch(
+    `http://localhost:3000/solves/delete/${userId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
+    }
+  );
 
+  if (response.ok) {
+    // Remove the solve from the DOM or refresh the list of solves
+    main();
+  } else {
+    // Handle errors
+    const error = await response.json();
+    alert(error.message);
+  }
+}
 getTime();
 main();
 
