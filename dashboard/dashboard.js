@@ -58,7 +58,7 @@ async function addSolve(userId, roundIndex) {
   }
   const solveData = {
     round: roundIndex + 1,
-    solves: [parseInt(solveValue)],
+    solves: [parseFloat(solveValue)],
   };
   const response = await fetch(`http://localhost:3000/solves/add/${userId}`, {
     method: "POST",
