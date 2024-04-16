@@ -281,10 +281,8 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "No solves provided." });
   }
   for (let i = 0; i < solves.length; i++) {
-    if (solves[i] <= 0) {
-      return res
-        .status(400)
-        .json({ message: `Solve #${i + 1} is negative or zero.` });
+    if (solves[i] < 0) {
+      return res.status(400).json({ message: `Solve #${i + 1} is negative.` });
     }
   }
   const response = await addSolves(solver, solves, round);
