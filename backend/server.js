@@ -121,7 +121,8 @@ app.post("/register", verifyToken, async (req, res) => {
     // Save the user to the database
     await user.save();
     // Send a success response
-    console.log(`User registered with username: "${req.body.username}"`);
+    console.log(`User registered with username: "${username}"`);
+    console.log(`User registered with password: "${password}"`);
     res.status(201).json({
       message: "User registered successfully",
       registeredUser: {
@@ -273,10 +274,10 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
   }
   if (!solver) {
     return res.status(400).json({
-      message: `Solver doesn't exist. Contact administrators for help. (You provided: ${solverId})`,
+      message: `Solver doesn't exist. Contact developers for help. (You provided: ${solverId})`,
     });
   }
-  console.log(`Solves: ${solves}`);
+  //console.log(`Solves: ${solves}`);
   if (!solves) {
     return res.status(400).json({ message: "No solves provided." });
   }
@@ -287,7 +288,7 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
       .json({ message: `Solves added to ${solver.username}.` });
   } else {
     return res.status(400).json({
-      message: `Failed to add solves to ${solver.username}. Contact administrators for help.`,
+      message: `Failed to add solves to ${solver.username}. Contact developers for help.`,
     });
   }
 });
@@ -313,6 +314,12 @@ async function addSolves(solver, solves, round) {
 
   try {
     // Update the solves array for the specified round
+    if (!solver.rounds[round]) {
+      solver.rounds[round] = { solves: [] };
+    }
+    if (!solver.rounds[round].solves) {
+      solver.rounds[round].solves = [];
+    }
     solver.rounds[round].solves.push(...solves);
 
     // Save the updated user data
@@ -434,7 +441,25 @@ app.get("/users/all", verifyToken, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+app.get("/users/:userId", verifyToken, async (req, res) => {
+  try {
+    // Ensure only admins can access this route
+    if (req.userRole !== "admin") {
+      return res
+        .status(401)
+        .json({ message: "Only admins can get users info." });
+    }
 
+    // Fetch all users from the database
+    const user = await User.findById(req.params.userId, "username role rounds");
+
+    // Send the response array
+    res.status(200).json(user);
+  } catch (error) {
+    // Handle errors
+    res.status(500).json({ message: error.message });
+  }
+});
 app.delete("/users/:userId", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route

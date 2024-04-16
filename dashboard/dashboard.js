@@ -1,4 +1,83 @@
 const usersDiv = document.querySelector(".users");
+async function showCompetition(userId, index) {
+  const allUserDiv = document.querySelectorAll(".user");
+  const userDiv = allUserDiv[index];
+  let html = "";
+
+  const user = await fetch(`http://localhost:3000/users/${userId}`, {
+    headers: {
+      Authorization: localStorage.getItem("token"),
+    },
+  }).then((response) => response.json());
+
+  // Check if user data exists
+  if (!user) {
+    html += `<p>User not found.</p>`;
+    userDiv.insertAdjacentHTML("beforeend", html);
+    return;
+  }
+  // Loop through rounds
+  for (let i = 0; i < 3; i++) {
+    const round = user.rounds[i] || [];
+    html += `<h3>Round ${i + 1}</h3>`;
+
+    // Check if solves exist for the round
+    if (round.solves && round.solves.length > 0) {
+      html += `<ul>`;
+      for (let j = 0; j < round.solves.length; j++) {
+        html += `<li>Solve ${j + 1}: ${round.solves[j]}</li>`;
+      }
+      html += `</ul>`;
+    } else {
+      html += `<p>No solves for this round.</p>`;
+    }
+
+    // Add form to add solves (assuming you have elements with these IDs)
+    html += `
+      <form id="add-solve-${i}">
+        <label for="solve-${i}">Solve:</label>
+        <input type="number" id="solve-${i}" name="solve">
+        <button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
+      </form>
+    `;
+  }
+
+  userDiv.insertAdjacentHTML("beforeend", html);
+}
+
+// Function to handle adding a solve
+async function addSolve(userId, roundIndex) {
+  const solveInput = document.getElementById(`solve-${roundIndex}`);
+  console.log(solveInput);
+  const solveValue = solveInput.value;
+
+  // Check if solve value is a number
+  if (isNaN(solveValue) || solveValue.trim() === "") {
+    alert("Please enter a valid solve value (number).");
+    return;
+  }
+  const solveData = {
+    round: roundIndex + 1,
+    solves: [parseInt(solveValue)],
+  };
+  const response = await fetch(`http://localhost:3000/solves/add/${userId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token"),
+    },
+    body: JSON.stringify(solveData),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    alert(data.message);
+    // Update the competition display after successful addition
+    location.reload();
+  } else {
+    alert("Failed to add solve. Please try again.");
+  }
+}
 
 async function getUsers() {
   const body = {
@@ -89,9 +168,11 @@ async function main() {
     // Add a delete button for each user
     html += `<button onclick="deleteUser('${id}')">Delete</button>`;
     html += `<button onclick="assignAdmin('${id}', '${username}')">Assign admin</button>`;
+    html += `<button onclick="showCompetition('${id}', ${index})">Competition</button>`;
     html += `</div>`; // end user div
   });
   usersDiv.innerHTML = html;
 }
 
 main();
+setInterval(() => main(), 5 * 1000 * 60 * 5); // 5 min
