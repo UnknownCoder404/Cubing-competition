@@ -174,5 +174,26 @@ async function main() {
   usersDiv.innerHTML = html;
 }
 
+function getTime() {
+  // Get the current date and time in GMT+1
+  const now = new Date();
+  const cetTime = new Date(now.getTime());
+
+  // Extract hours and minutes
+  const hours = cetTime.getHours().toString().padStart(2, "0"); // Pad hours with leading zero
+  const minutes = cetTime.getMinutes().toString().padStart(2, "0"); // Pad minutes with leading zero
+  //const seconds = cetTime.getSeconds().toString().padStart(2, "0"); // Pad minutes with leading zero
+
+  // Format the time string (24-hour format)
+  const formattedTime = `${hours}:${minutes}`;
+
+  // Update the content of the HTML element with the formatted time string
+  // You will need to replace this with your specific method to update the HTML element
+  document.getElementById("currentTime").innerText = formattedTime;
+}
+
+getTime();
 main();
-setInterval(() => main(), 5 * 1000 * 60 * 5); // 5 min
+
+// Call the function every 10 seconds to update the time automatically
+setInterval(getTime, 1000 * 10);
