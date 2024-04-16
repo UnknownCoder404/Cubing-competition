@@ -10,6 +10,12 @@ h1 {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
+  background-color: white;
+  transition: background-color 1s;
+  transition-delay: 0.2s;
+}
+.user:hover {
+  background-color: rgb(188, 188, 188);
 }
 
 .username {
@@ -29,8 +35,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #c82333;
+.user button:hover {
+  background-color: #921c27;
 }
 .register-btn {
   margin-left: 30px;
