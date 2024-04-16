@@ -277,7 +277,6 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
       message: `Solver doesn't exist. Contact developers for help. (You provided: ${solverId})`,
     });
   }
-  //console.log(`Solves: ${solves}`);
   if (!solves) {
     return res.status(400).json({ message: "No solves provided." });
   }
