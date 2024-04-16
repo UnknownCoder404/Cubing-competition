@@ -48,7 +48,6 @@ async function showCompetition(userId, index) {
 // Function to handle adding a solve
 async function addSolve(userId, roundIndex) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
-  console.log(solveInput);
   const solveValue = solveInput.value;
 
   // Check if solve value is a number
@@ -75,7 +74,12 @@ async function addSolve(userId, roundIndex) {
     // Update the competition display after successful addition
     location.reload();
   } else {
-    alert("Failed to add solve. Please try again.");
+    const data = await response.json();
+    if (data.message) {
+      alert(data.message);
+    } else {
+      alert("Failed to add solve. Please try again. Reason: Unknown");
+    }
   }
 }
 
@@ -103,6 +107,10 @@ async function getUsers() {
 }
 
 async function deleteUser(id) {
+  if (id === localStorage.getItem("id")) {
+    alert("Cannot delete own account.");
+    return;
+  }
   try {
     const body = {
       method: "DELETE",
