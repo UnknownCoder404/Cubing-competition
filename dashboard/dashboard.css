@@ -41,3 +41,6 @@ button:hover {
 .register-btn:hover {
   background-color: rgb(48, 181, 48);
 }
+.currentTime {
+  margin-left: 20px;
+}
