@@ -45,7 +45,7 @@ button {
   transition: background-color 1s;
 }
 .register-btn:hover {
-  background-color: rgb(48, 181, 48);
+  background-color: rgb(29, 107, 29);
 }
 .currentTime {
   margin-left: 20px;
@@ -58,4 +58,17 @@ button {
 }
 .round:hover {
   background-color: rgb(239, 239, 179);
+}
+.currentTime {
+  font-size: 20px;
+}
+@media screen and (max-width: 300px) {
+  .currentTime {
+    font-size: 18px;
+  }
+}
+@media screen and (max-width: 280px) {
+  .currentTime {
+    font-size: 15px;
+  }
 }
