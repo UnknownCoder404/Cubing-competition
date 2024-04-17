@@ -1,11 +1,11 @@
 const usersDiv = document.querySelector(".users");
-
+const url = "http://localhost:3000";
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
   let html = "";
 
-  const user = await fetch(`http://localhost:3000/users/${userId}`, {
+  const user = await fetch(`${url}/users/${userId}`, {
     headers: {
       Authorization: localStorage.getItem("token"),
     },
@@ -67,7 +67,7 @@ async function addSolve(userId, roundIndex) {
     round: roundIndex + 1,
     solves: [parseFloat(solveValue)],
   };
-  const response = await fetch(`http://localhost:3000/solves/add/${userId}`, {
+  const response = await fetch(`${url}/solves/add/${userId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -99,7 +99,7 @@ async function getUsers() {
     },
   };
   try {
-    const data = await fetch("http://localhost:3000/users/all", body);
+    const data = await fetch(`${url}/users/all`, body);
     if (data.status === 401) {
       localStorage.removeItem("token");
       localStorage.removeItem("username");
@@ -126,7 +126,7 @@ async function deleteUser(id) {
         Authorization: localStorage.getItem("token"),
       },
     };
-    const data = await fetch(`http://localhost:3000/users/${id}`, body);
+    const data = await fetch(`${url}/users/${id}`, body);
     const result = await data.json();
     if (data.ok) {
       main();
@@ -147,7 +147,7 @@ async function assignAdmin(id, username) {
     },
   };
   try {
-    const data = await fetch(`http://localhost:3000/assign-admin/${id}`, body);
+    const data = await fetch(`${url}/assign-admin/${id}`, body);
     const result = await data.json();
 
     if (data.ok) {
@@ -215,17 +215,14 @@ function getTime() {
 
 async function deleteSolve(userId, roundIndex, solveIndex) {
   // Call the backend to delete the solve
-  const response = await fetch(
-    `http://localhost:3000/solves/delete/${userId}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
-    }
-  );
+  const response = await fetch(`${url}/solves/delete/${userId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token"),
+    },
+    body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
+  });
 
   if (response.ok) {
     // Remove the solve from the DOM or refresh the list of solves
