@@ -1,5 +1,10 @@
 const url = "https://cubing-competition.onrender.com";
 const group1Checkbox = document.querySelector(".group-1");
+function validateString(input) {
+    // Regular expression to match alphabet letters, numbers, and exclamation marks
+    const regex = /^[a-zA-Z0-9!]+$/;
+    return regex.test(input);
+}
 function clearInput(input) {
   input.value = "";
 }
@@ -32,6 +37,11 @@ document
       alert("Only admins can register users.");
       window.location.href = "../Login/login.html";
     }
+    if(!validateString(username) || !validateString(password))
+    {
+     alert("Samo slova,brojevi i uskličnik dozvoljeni");
+     return;
+}
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
