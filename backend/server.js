@@ -435,7 +435,7 @@ app.get("/users/all", verifyToken, async (req, res) => {
     }
 
     // Fetch all users from the database
-    const users = await User.find({}, "username role rounds");
+    const users = await User.find({}, "username role rounds group");
 
     // Prepare the response array
     const usersInfo = users.map((user) => ({
@@ -443,6 +443,7 @@ app.get("/users/all", verifyToken, async (req, res) => {
       username: user.username,
       role: user.role,
       rounds: user.rounds,
+      group: user.group,
     }));
 
     // Send the response array

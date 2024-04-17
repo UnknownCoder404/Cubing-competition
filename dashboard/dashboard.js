@@ -1,4 +1,5 @@
 const usersDiv = document.querySelector(".users");
+
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
@@ -137,6 +138,7 @@ async function deleteUser(id) {
     alert(error);
   }
 }
+
 async function assignAdmin(id, username) {
   const body = {
     method: "POST",
@@ -170,25 +172,29 @@ async function main() {
     location.href = "../Login/login.html";
   }
 
-  let html = "";
   let users = await getUsers();
+  displayUsers(users);
+}
+function displayUsers(users) {
+  let html = "";
   usersDiv.innerHTML = "";
   users.forEach((user, index) => {
     const username = user.username;
     const id = user.id;
     const role = user.role;
+    const group = user.group;
     html += `<div class="user">`;
     html += `<p class="username">${username} (${id})</p>`;
-    html += `<p class="role">${role}</p>`;
+    html += `<p class="role">Uloga: ${role}</p>`;
+    html += `<p class="group">Grupa ${group}</p>`;
     // Add a delete button for each user
-    html += `<button onclick="deleteUser('${id}')">Delete</button>`;
-    html += `<button onclick="assignAdmin('${id}', '${username}')">Assign admin</button>`;
-    html += `<button onclick="showCompetition('${id}', ${index})">Competition</button>`;
+    html += `<button onclick="deleteUser('${id}')">Izbriši</button>`;
+    html += `<button onclick="assignAdmin('${id}', '${username}')">Postavi za admina</button>`;
+    html += `<button onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
     html += `</div>`; // end user div
   });
   usersDiv.innerHTML = html;
 }
-
 function getTime() {
   // Get the current date and time in GMT+1
   const now = new Date();
@@ -230,7 +236,7 @@ async function deleteSolve(userId, roundIndex, solveIndex) {
     alert(error.message);
   }
 }
-// Status: working
+
 function getAverage(solves) {
   if (solves.length !== 5) {
     return "Need 5 solves";
