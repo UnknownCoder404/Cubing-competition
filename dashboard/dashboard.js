@@ -1,4 +1,5 @@
 const usersDiv = document.querySelector(".users");
+// TODO: Disable input if there is 5 or more solves
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
@@ -21,9 +22,9 @@ async function showCompetition(userId, index) {
     const round = user.rounds[i] || [];
     html += `<div class="round">`;
     html += `<h3>Round ${i + 1}</h3>`;
-
     // Check if solves exist for the round
     if (round.solves && round.solves.length > 0) {
+      html += `Ao5: ${getAverage(round.solves)}`;
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
         const time = round.solves[j] === 0 ? "DNF/DNS" : round.solves[j]; // if 0, display DNF/DNS
@@ -227,6 +228,36 @@ async function deleteSolve(userId, roundIndex, solveIndex) {
     alert(error.message);
   }
 }
+// Status: working
+function getAverage(solves) {
+  if (solves.length !== 5) {
+    return "Need 5 solves";
+  }
+
+  // Create a copy of the solves array
+  let sortedSolves = solves.slice();
+
+  sortedSolves.sort((a, b) => {
+    if (a === 0) return -1; // Place 0 at the top index
+    if (b === 0) return 1; // Place 0 at the top index
+    return a - b; // Regular sorting for other numbers
+  });
+  // Remove the smallest and largest elements
+  let trimmedSolves = sortedSolves.slice(1, sortedSolves.length - 1);
+
+  // Calculate average
+  let average =
+    trimmedSolves.reduce((acc, val) => acc + val, 0) / trimmedSolves.length;
+
+  // Check if trimmedSolves contains 0
+  if (trimmedSolves.includes(0)) {
+    return "DNF";
+  }
+
+  // Return average rounded to 2 decimal places
+  return average.toFixed(2);
+}
+
 getTime();
 main();
 
