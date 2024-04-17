@@ -21,10 +21,8 @@ h1 {
 }
 
 form {
-  display: flex;
+  display: grid;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 
 label {
@@ -63,4 +61,9 @@ button:hover {
 .error {
   color: red;
   text-align: center;
+}
+.group-container {
+  display: flex;
+  align-items: start;
+  justify-content: start;
 }

@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, required: true, enum: ["admin", "user"] },
   rounds: [solveSchema],
+  group: { type: String, required: true },
 });
 
 // Add a pre-save hook to hash the password before saving
@@ -87,7 +88,7 @@ const User = mongoose.model("User", userSchema);
 app.post("/register", verifyToken, async (req, res) => {
   try {
     // Get the username and password from the request body
-    const { username, password } = req.body;
+    const { username, password, group } = req.body;
     const USER = await User.findById(req.userId);
     const userRole = USER.role;
     // Validate the input
@@ -116,18 +117,23 @@ app.post("/register", verifyToken, async (req, res) => {
         .status(400)
         .json({ message: "Username and password cannot be same." });
     }
+    if (group !== 1 && group !== 2) {
+      return res.status(400).json({ message: "Group has to be 1 or 2" });
+    }
     // Create a new user instance
-    const user = new User({ username, password, role: "user" }); // Set default role to 'user'
+    const user = new User({ username, password, role: "user", group }); // Set default role to 'user'
     // Save the user to the database
     await user.save();
     // Send a success response
     console.log(`User registered with username: "${username}"`);
     console.log(`User registered with password: "${password}"`);
+    console.log(`User registered with group: ${group}`);
     res.status(201).json({
       message: "User registered successfully",
       registeredUser: {
-        username: req.body.username,
-        password: req.body.password,
+        username,
+        password,
+        group,
       },
     });
   } catch (err) {
@@ -164,6 +170,7 @@ async function createAdmin(username, password) {
     username,
     password,
     role: "admin",
+    group: 1,
   });
   // Save the user to the database
   try {

@@ -1,5 +1,5 @@
 const url = "http://localhost:3000";
-
+const group1Checkbox = document.querySelector(".group-1");
 function clearInput(input) {
   input.value = "";
 }
@@ -26,6 +26,7 @@ document
     event.preventDefault();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const group = isChecked(group1Checkbox) ? 1 : 2;
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) {
       alert("Only admins can register users.");
@@ -38,7 +39,7 @@ document
           "Content-Type": "application/json",
           Authorization: TOKEN,
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, group }),
       });
 
       const data = await response.json();
@@ -52,3 +53,7 @@ Password: ${maskMiddle(data.registeredUser.password)}`;
       console.error("Error:", error);
     }
   });
+
+function isChecked(checkbox) {
+  return checkbox.checked;
+}
