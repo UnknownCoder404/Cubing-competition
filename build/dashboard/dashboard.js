@@ -246,8 +246,8 @@ function getAverage(solves) {
   let sortedSolves = solves.slice();
 
   sortedSolves.sort((a, b) => {
-    if (a === 0) return -1; // Place 0 at the top index
-    if (b === 0) return 1; // Place 0 at the top index
+    if (a === 0) return 1; // Place 0 at the last element
+    if (b === 0) return -1; // Place 0 at the last element
     return a - b; // Regular sorting for other numbers
   });
   // Remove the smallest and largest elements
