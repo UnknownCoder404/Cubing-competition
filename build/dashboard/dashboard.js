@@ -27,7 +27,7 @@ async function showCompetition(userId, index) {
       html += `Ao5: ${getAverage(round.solves)}`;
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
-        const time = round.solves[j] === 0 ? "DNF/DNS" : round.solves[j]; // if 0, display DNF/DNS
+        const time = round.solves[j] === 0 ? "DNF/DNS" : round.solves[j].toFixed(2); // if 0, display DNF/DNS
         html += `<li>Solve `;
         html += `${j + 1}: ${time}`;
         html += `</li><button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
