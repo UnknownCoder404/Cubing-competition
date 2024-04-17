@@ -1,5 +1,4 @@
 const usersDiv = document.querySelector(".users");
-// TODO: Disable input if there is 5 or more solves
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
@@ -38,13 +37,16 @@ async function showCompetition(userId, index) {
     }
 
     // Add form to add solves (assuming you have elements with these IDs)
-    html += `
+    if ((round.solves && round.solves.length < 5) || !round.solves) {
+      html += `
       <form id="add-solve-${i}">
-        <label for="solve-${i}">Solve:</label>
-        <input type="number" id="solve-${i}" name="solve">
-        <button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
+        <label for="solve-${i}">Solve:</label>`;
+      html += `<input type="number" id="solve-${i}" name="solve">`;
+      html += `<button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
       </form>
     `;
+    }
+    // Close .round div
     html += `</div>`;
   }
 
