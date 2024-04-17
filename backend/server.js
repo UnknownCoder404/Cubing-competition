@@ -54,7 +54,9 @@ const verifyToken = async (req, res, next) => {
     const token = req.headers["authorization"];
     // Check if the token exists
     if (!token) {
-      return res.status(403).json({ message: "No token provided" });
+      return res
+        .status(403)
+        .json({ message: "Nema tokena. Prijavi se ponovno." });
     }
     // Verify the token with the secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -67,7 +69,9 @@ const verifyToken = async (req, res, next) => {
     next();
   } catch (err) {
     // Handle the error
-    res.status(401).json({ message: "Invalid token. Try logging in again." });
+    res
+      .status(401)
+      .json({ message: "Pogrešan token. Pokušajte se ponovno prijaviti." });
   }
 };
 
@@ -93,43 +97,43 @@ app.post("/register", verifyToken, async (req, res) => {
     const userRole = USER.role;
     // Validate the input
     if (userRole !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized: Only admins can register users" });
+      return res.status(403).json({
+        message: "Neovlašteno: samo administratori mogu registrirati korisnike",
+      });
     }
     if (!username || !password) {
       return res
         .status(400)
-        .json({ message: "Username and password are required." });
+        .json({ message: "Korisničko ime i lozinka su obavezni." });
     }
-    if (username.length < 4) {
+    if (username.length < 5) {
       return res
         .status(400)
-        .json({ message: "Username must be longer than 3 characters." });
+        .json({ message: "Korisničko ime mora biti duže od 4 znaka." });
     }
     if (password.length < 8) {
       return res
         .status(400)
-        .json({ message: "Password must be longer than 7 characters." });
+        .json({ message: "Lozinka mora biti duža od 7 znakova." });
     }
     if (username === password) {
       return res
         .status(400)
-        .json({ message: "Username and password cannot be same." });
+        .json({ message: "Korisničko ime i lozinka ne mogu biti isti." });
     }
     if (group !== 1 && group !== 2) {
-      return res.status(400).json({ message: "Group has to be 1 or 2" });
+      return res.status(400).json({ message: "Grupa mora biti 1 ili 2." });
     }
     // Create a new user instance
     const user = new User({ username, password, role: "user", group }); // Set default role to 'user'
     // Save the user to the database
     await user.save();
     // Send a success response
-    console.log(`User registered with username: "${username}"`);
-    console.log(`User registered with password: "${password}"`);
-    console.log(`User registered with group: ${group}`);
+    console.log(`Korisnik registriran s korisničkim imenom: "${username}"`);
+    console.log(`Korisnik registriran sa lozinkom: "${password}"`);
+    console.log(`Korisnik registriran u grupi: ${group}`);
     res.status(201).json({
-      message: "User registered successfully",
+      message: "Korisnik  uspješno registriran.",
       registeredUser: {
         username,
         password,
@@ -140,7 +144,7 @@ app.post("/register", verifyToken, async (req, res) => {
     // Handle the error
     if (err.code === 11000) {
       // Duplicate username
-      res.status(409).json({ message: "Username already exists." });
+      res.status(409).json({ message: "Korisničko ime već postoji." });
     } else {
       // Other errors
       res.status(500).json({ message: err.message });
@@ -162,7 +166,9 @@ async function createAdmin(username, password) {
   const available = !(await User.findOne({ username }));
 
   if (!available) {
-    console.error("Tried to create admin with username that already exists.");
+    console.error(
+      "Pokušao stvoriti administratora s korisničkim imenom koje već postoji."
+    );
     return -3;
   }
   // Create a new user instance
@@ -177,7 +183,7 @@ async function createAdmin(username, password) {
     await user.save();
     return 1;
   } catch (err) {
-    console.error(`Error while saving new Admin:\n` + err);
+    console.error(`Greška prilikom spremanja novog administratora:\n` + err);
     return -4;
   }
 }
@@ -191,26 +197,26 @@ app.post("/login", async (req, res) => {
     if (!username || !password) {
       return res
         .status(400)
-        .json({ message: "Username and password are required" });
+        .json({ message: "Korisničko ime i lozinka su obavezni." });
     }
     // Find the user by username
     const user = await User.findOne({ username });
     // Check if the user exists
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Korisnik nije pronađen." });
     }
     // Compare the password with the hashed one
     const match = await user.comparePassword(password);
     // Check if the password matches
     if (!match) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Netočna lozinka." });
     }
     // Generate a JSON web token with the user id as the payload
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",
     });
     res.status(200).json({
-      message: "User logged in successfully",
+      message: "Korisnik se uspješno prijavio.",
       info: { id: user._id, token, username: username, role: user.role },
     });
   } catch (err) {
@@ -232,16 +238,22 @@ app.get("/profile", verifyToken, async (req, res) => {
 
 app.delete("/users/delete/:userId", verifyToken, (req, res) => {
   if (req.userRole !== "admin") {
-    res.status(403).json({ message: "Only admins can delete users." });
+    res
+      .status(403)
+      .json({ message: "Samo administratori mogu brisati korisnike." });
   }
 
   const userId = req.params.userId;
 
   // Delete user using mongoose
   User.findByIdAndDelete(userId)
-    .then(() => res.status(200).json({ message: "User deleted successfully." }))
+    .then(() =>
+      res.status(200).json({ message: "Korisnik je uspješno izbrisan." })
+    )
     .catch((err) =>
-      res.status(500).json({ message: "Error deleting user.", error: err })
+      res
+        .status(500)
+        .json({ message: "Greška prilikom brisanja korisnika.", error: err })
     );
 });
 app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
@@ -249,21 +261,25 @@ app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
     const userId = req.params.userId;
     const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Korisnik nije pronađen." });
       return;
     }
     if (user.role === "admin") {
-      res.status(409).json({ message: "User is already an admin." });
+      res.status(409).json({ message: "Korisnik je već administrator." });
       return;
     }
     if (req.userRole !== "admin") {
-      res.status(403).json({ message: "Only admins can assign admins" });
+      res.status(403).json({
+        message: "Samo administratori mogu dodijeliti administratore.",
+      });
       return;
     }
 
     user.role = "admin";
     await user.save();
-    res.status(200).json({ message: "Admin role assigned successfully" });
+    res
+      .status(200)
+      .json({ message: "Uloga administratora uspješno je dodijeljena." });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -277,19 +293,23 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
   const solves = req.body.solves;
   const round = req.body.round - 1; // indexing starts at 0
   if (judgeRole !== "admin") {
-    return res.status(403).json({ message: "Only Admins can add solves." });
+    return res
+      .status(403)
+      .json({ message: "Samo administratori mogu dodavati slaganja." });
   }
   if (!solver) {
     return res.status(400).json({
-      message: `Solver doesn't exist. Contact developers for help. (You provided: ${solverId})`,
+      message: `Natjecatelj ne postoji. Kontaktirajte programere za pomoć. (Naveli ste: ${solverId})`,
     });
   }
   if (!solves) {
-    return res.status(400).json({ message: "No solves provided." });
+    return res.status(400).json({ message: "Nema ponuđenih slaganja." });
   }
   for (let i = 0; i < solves.length; i++) {
     if (solves[i] < 0) {
-      return res.status(400).json({ message: `Solve #${i + 1} is negative.` });
+      return res
+        .status(400)
+        .json({ message: `Slaganje #${i + 1} je negativno.` });
     }
   }
   const response = await addSolves(solver, solves, round);
