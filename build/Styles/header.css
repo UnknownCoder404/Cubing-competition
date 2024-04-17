@@ -39,18 +39,6 @@
 .naslov {
   display: inline-block;
 }
-.search {
-  height: 40px;
-  width: 100%;
-  border-radius: 3px;
-  border: none;
-}
-.search-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-}
 .account-container {
   display: flex;
   justify-content: center;
@@ -70,8 +58,8 @@
   color: white;
 }
 
-@media screen and (max-width: 370px) {
-  .log-in {
-    display: none;
+@media screen and (max-width: 300px) {
+  .account-circle {
+    display:none;
   }
 }
