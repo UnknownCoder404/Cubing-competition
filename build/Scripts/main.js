@@ -11,7 +11,7 @@ if (role === "admin") {
   html += `
   <div class="card">
       <h2>Radna ploča</h2>
-      <p>Ti si admin. Oni imaju pristup <a href="./dashboard/dashboard.html">radnoj ploči!</a></p>
+      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p>
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
