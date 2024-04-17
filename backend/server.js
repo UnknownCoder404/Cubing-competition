@@ -316,10 +316,10 @@ app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
   if (response > 0) {
     return res
       .status(200)
-      .json({ message: `Solves added to ${solver.username}.` });
+      .json({ message: `Slaganje dodano korisniku ${solver.username}.` });
   } else {
     return res.status(400).json({
-      message: `Failed to add solves to ${solver.username}. Contact developers for help.`,
+      message: `Nije uspjelo dodavanje slaganja korisniku ${solver.username}. Kontaktirajte programere za pomoć.`,
     });
   }
 });
@@ -359,7 +359,7 @@ async function addSolves(solver, solves, round) {
     // Success response
     return 1;
   } catch (err) {
-    console.error("Error adding solves:", err);
+    console.error("Pogreška dodavanja slaganja:\n", err);
     return -1;
   }
 }
@@ -370,14 +370,14 @@ app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
   const solveToDelete = req.body.solve;
 
   if (!roundToDelete) {
-    res.status(400).json({ message: "Round to delete is missing." });
+    res.status(400).json({ message: "Nedostaje runda za brisanje." });
   }
   if (typeof roundToDelete !== "number") {
-    res.status(400).json({ message: "Round to delete should be a number." });
+    res.status(400).json({ message: "Runda za brisanje treba biti broj." });
   }
 
   if (typeof solveToDelete !== "number") {
-    res.status(400).json({ message: "Solve to delete should be a number." });
+    res.status(400).json({ message: "Slaganje za brisanje treba biti broj." });
   }
 
   const user = await User.findById(userId);
@@ -387,7 +387,9 @@ app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
     user.rounds[roundToDelete - 1].solves.splice(solveToDelete - 1, 1); // Remove the element at index
   } else {
     // Handle case where round doesn't exist
-    return res.status(400).json({ message: "Round not found for user." });
+    return res
+      .status(400)
+      .json({ message: "Runda za korisnika nije pronađena." });
   }
 
   await user.save();
@@ -401,9 +403,9 @@ app.post("/admin/register", verifyToken, async (req, res) => {
   const adminPassword = req.body.password;
 
   if (req.userRole !== "admin") {
-    return res
-      .status(401)
-      .json({ message: "Only admins can register admins." });
+    return res.status(401).json({
+      message: "Samo administratori mogu registrirati administratore.",
+    });
   }
 
   // -1 : Username missing
@@ -413,35 +415,29 @@ app.post("/admin/register", verifyToken, async (req, res) => {
   //  1 : Success
   const result = await createAdmin(adminUsername, adminPassword);
   if (result === 1) {
-    return res.status(200).json({ message: "Successfully registered admin." });
+    return res
+      .status(200)
+      .json({ message: "Uspješno registriran administrator." });
   }
   if (result === -1) {
-    return res.status(400).json({ message: "Username missing." });
+    return res.status(400).json({ message: "Korisničko ime nedostaje." });
   }
   if (result === -2) {
-    return res.status(400).json({ message: "Password missing." });
+    return res.status(400).json({ message: "Lozinka nedostaje." });
   }
   if (result === -3) {
     return res.status(400).json({
-      message: `Cannot register admin with username ${adminUsername}. Username already taken.`,
+      message: `Nije moguće registrirati administratora s korisničkim imenom ${adminUsername}. Korisničko ime je već zauzeto.`,
     });
   }
   if (result === -4) {
-    return res
-      .status(500)
-      .json({ message: "Error while saving admin to database." });
+    return res.status(500).json({
+      message: "Pogreška prilikom spremanja administratora u bazu podataka.",
+    });
   }
 
-  console.error(`Error registering new admin. Deep logs:
-Old Admin userRole: "${req.userRole}", 
-Old Admin id: "${req.userId}",
-Old Admin username: "${req.user.username}"
-New Admin username: "${adminUsername}",
-New Admin password: "${adminPassword}",
-Result: "${result}"
-  `);
   return res.status(500).json({
-    message: "Unknown result. Contact admins and tell them to check logs.",
+    message: "Nepoznat rezultat. Kontaktirajte programere.",
   });
 });
 
@@ -449,9 +445,9 @@ app.get("/users/all", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
     if (req.userRole !== "admin") {
-      return res
-        .status(401)
-        .json({ message: "Only admins can get users info." });
+      return res.status(401).json({
+        message: "Samo administratori mogu dobiti informacije o korisnicima.",
+      });
     }
 
     // Fetch all users from the database
@@ -477,9 +473,9 @@ app.get("/users/:userId", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
     if (req.userRole !== "admin") {
-      return res
-        .status(401)
-        .json({ message: "Only admins can get users info." });
+      return res.status(401).json({
+        message: "Samo administratori mogu dobiti informacije o korisnicima.",
+      });
     }
 
     // Fetch all users from the database
@@ -496,7 +492,9 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
     if (req.userRole !== "admin") {
-      return res.status(401).json({ message: "Only admins can delete users." });
+      return res
+        .status(401)
+        .json({ message: "Samo administratori mogu brisati korisnike." });
     }
 
     const userId = req.params.userId; // Id of user to delete
@@ -505,10 +503,10 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
     const deletedUser = await User.findByIdAndDelete(userId);
 
     if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Korisnik nije pronađen." });
     }
 
-    return res.status(200).json({ message: "User deleted successfully." });
+    return res.status(200).json({ message: "Korisnik je uspješno izbrisan." });
   } catch (error) {
     // Handle errors
     return res.status(500).json({ message: error.message });
