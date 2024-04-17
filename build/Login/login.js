@@ -25,7 +25,9 @@ document
         localStorage.setItem("role", data.info.role);
         // Redirect to a dashboard or another page
         if (data.info.role === "admin") {
-          window.location.href = "/dashboard";
+          window.location.href = "../dashboard/dashboard.html";
+        } else {
+          window.location.href = "../index.html";
         }
       }
     } catch (error) {
