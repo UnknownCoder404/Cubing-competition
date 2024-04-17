@@ -1,5 +1,5 @@
 const usersDiv = document.querySelector(".users");
-const url = "http://localhost:3000";
+const url = "https://cubing-competition.onrender.com";
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];

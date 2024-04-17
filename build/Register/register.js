@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "https://cubing-competition.onrender.com";
 const group1Checkbox = document.querySelector(".group-1");
 function clearInput(input) {
   input.value = "";
