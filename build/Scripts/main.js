@@ -35,3 +35,15 @@ if (username) {
     await logOut();
   });
 }
+document.querySelector(".share").addEventListener("click", async () => {
+  if (navigator.share) {
+    await navigator.share({
+      title: "Dođi na natjecanje!",
+      text: "Dođi na natjecanje 3.5.2024. u OŠ Pavleka Miškine.",
+      url: "https://bit.ly/CroComp",
+    });
+    console.log("Successfully shared");
+  } else {
+    throw new Error("Web Share API not supported");
+  }
+});

@@ -25,7 +25,8 @@
     grid-template-columns: 1fr;
   }
 }
-.logout-span {
+.logout-span,
+.share {
   cursor: pointer;
   color: blue;
   text-decoration: underline;
