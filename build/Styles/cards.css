@@ -25,4 +25,8 @@
     grid-template-columns: 1fr;
   }
 }
-gi
+.logout-span {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
