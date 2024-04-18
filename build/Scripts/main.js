@@ -39,7 +39,16 @@ document.querySelector(".share").addEventListener("click", async () => {
   if (navigator.share) {
     await navigator.share({
       title: "Dođi na natjecanje!",
-      text: "Dođi na natjecanje 3.5.2024. u OŠ Pavleka Miškine.",
+      text: `Zagreb međuškolsko 2024 (neslužbeno) u slaganje Rubikove kocke
+
+      Bit će 3.5. u dvorani Oš. Pavleka Miškine
+      14-16:30
+      
+      Smiju se natjecati samo OSNOVNOŠKOLCI.
+      
+      Natjecateljsko ograničenje je 50, ako ga se pređe bit će te stavljeni na listu čekanja.
+      
+      Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com`,
       url: "https://bit.ly/CroComp",
       files: "../Images/qrcode_to_website.png",
     });
