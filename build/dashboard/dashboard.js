@@ -29,9 +29,8 @@ async function showCompetition(userId, index) {
       for (let j = 0; j < round.solves.length; j++) {
         const time =
           round.solves[j] === 0 ? "DNF/DNS" : round.solves[j].toFixed(2); // if 0, display DNF/DNS
-        html += `<li>Solve `;
-        html += `${j + 1}: ${time}`;
-        html += `</li><button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
+        html += `<li>Solve ${j + 1}: ${time}</li>`;
+        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
       }
       html += `</ul>`;
     } else {
