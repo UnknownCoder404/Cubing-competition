@@ -15,3 +15,23 @@ if (role === "admin") {
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
+async function logOut() {
+  localStorage.removeItem("id");
+  localStorage.removeItem("role");
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  location.reload();
+}
+if (username) {
+  let html = "";
+  html += `
+  <div class="card">
+      <h2>Odjavi se</h2>
+      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p>
+  `;
+  cardsDiv.insertAdjacentHTML("beforeEnd", html);
+  let logOutSpan = document.querySelector(".logout-span");
+  logOutSpan.addEventListener("click", async () => {
+    await logOut();
+  });
+}
