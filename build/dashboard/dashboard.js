@@ -251,11 +251,11 @@ function getAverage(solves) {
 async function main() {
   if (localStorage.getItem("role") === "user") {
     alert("Admins only!");
-    location.href = "../home.html";
+    location.href = "../";
   }
   if (!localStorage.getItem("token")) {
     alert("Login again.");
-    location.href = "../Login/login.html";
+    location.href = "../Login";
   }
 
   let users = await getUsers();
