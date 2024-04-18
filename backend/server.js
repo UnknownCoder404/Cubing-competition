@@ -512,7 +512,9 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
-
+app.get("/health-check", (req, res) => {
+  return res.status(200).send();
+});
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
