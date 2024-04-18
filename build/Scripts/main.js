@@ -48,7 +48,8 @@ document.querySelector(".share").addEventListener("click", async () => {
       
       Natjecateljsko ograničenje je 50, ako ga se pređe bit ćete stavljeni na listu čekanja.
       
-      Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com`,
+      Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com
+      `,
       url: "https://bit.ly/CroComp",
     });
     console.log("Successfully shared");
