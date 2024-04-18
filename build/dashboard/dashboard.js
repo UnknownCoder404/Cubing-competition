@@ -40,9 +40,8 @@ async function showCompetition(userId, index) {
 
     // Add form to add solves (assuming you have elements with these IDs)
     if ((round.solves && round.solves.length < 5) || !round.solves) {
-      html += `
-      <form id="add-solve-${i}">
-        <label for="solve-${i}">Solve:</label>`;
+      html += `<form id="add-solve-${i}">
+              <label for="solve-${i}">Solve:</label>`;
       html += `<input type="number" id="solve-${i}" name="solve">`;
       html += `<button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
       </form>
@@ -163,19 +162,6 @@ async function assignAdmin(id, username) {
   }
 }
 
-async function main() {
-  if (localStorage.getItem("role") === "user") {
-    alert("Admins only!");
-    location.href = "../home.html";
-  }
-  if (!localStorage.getItem("token")) {
-    alert("Login again.");
-    location.href = "../Login/login.html";
-  }
-
-  let users = await getUsers();
-  displayUsers(users);
-}
 function displayUsers(users) {
   let html = "";
   usersDiv.innerHTML = "";
@@ -263,7 +249,19 @@ function getAverage(solves) {
   // Return average rounded to 2 decimal places
   return average.toFixed(2);
 }
+async function main() {
+  if (localStorage.getItem("role") === "user") {
+    alert("Admins only!");
+    location.href = "../home.html";
+  }
+  if (!localStorage.getItem("token")) {
+    alert("Login again.");
+    location.href = "../Login/login.html";
+  }
 
+  let users = await getUsers();
+  displayUsers(users);
+}
 getTime();
 main();
 
