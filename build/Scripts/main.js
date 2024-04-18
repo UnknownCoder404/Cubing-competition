@@ -50,7 +50,7 @@ document.querySelector(".share").addEventListener("click", async () => {
       
       Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com`,
       url: "https://bit.ly/CroComp",
-      files: "../Images/qrcode_to_website.png",
+      files: ["../Images/qrcode_to_website.png"],
     });
     console.log("Successfully shared");
   } else {
