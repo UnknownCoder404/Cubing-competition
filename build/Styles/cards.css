@@ -30,3 +30,6 @@
   color: blue;
   text-decoration: underline;
 }
+.qrcode {
+  width: 100px;
+}

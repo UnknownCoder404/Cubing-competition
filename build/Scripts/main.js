@@ -11,7 +11,7 @@ if (role === "admin") {
   html += `
   <div class="card">
       <h2>Radna ploča</h2>
-      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p>
+      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p></div>
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
@@ -26,9 +26,9 @@ if (username) {
   let html = "";
   html += `
   <div class="card">
+  <div class="container">
       <h2>Odjavi se</h2>
-      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p>
-  `;
+      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p></div></div>`;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
   let logOutSpan = document.querySelector(".logout-span");
   logOutSpan.addEventListener("click", async () => {
