@@ -269,12 +269,9 @@ function formatTime(seconds) {
   }
 
   // Add seconds to the time parts
-  timeParts.push(`${remainingSeconds}`);
+  timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
 
-  // If there are milliseconds, add them to the time parts
-  if (milliseconds > 0) {
-    timeParts.push(`.${milliseconds}`);
-  }
+  timeParts.push(`.${milliseconds.toString().padStart(2, "0")}`);
   console.log(`${seconds}s formatted to ${timeParts.join("")}`);
   // Return the formatted time string
   return timeParts.join("");
