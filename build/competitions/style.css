@@ -1,0 +1,44 @@
+body {
+  background-color: gray;
+  color: white;
+}
+.comp-location-p,
+.comp-date-p {
+  font-style: italic;
+}
+.grupe {
+  background-color: rgb(58, 58, 58);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  color: white;
+}
+.title {
+  display: flex;
+  align-items: center;
+}
+.runda {
+  background-color: gray;
+}
+#runda1,
+#runda3 {
+  background-color: rgb(90, 90, 90);
+}
+.runda:hover {
+  background-color: lightblue !important;
+}
+.runda h3 {
+  display: inline-block;
+  margin: 10px 0px
+}
+.runda p {
+  margin-bottom: 0;
+}
+.showhide {
+  margin-left: 10px
+}
+.bold {
+  font-weight: 700;
+}
+.hidden {
+  display: none;
+}
