@@ -1,4 +1,5 @@
 const url = "https://cubing-competition.onrender.com";
+const submitBtn = document.querySelector(".submit-btn");
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -15,7 +16,8 @@ document
     event.preventDefault();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    document.querySelector(".submit-btn").innerHTML = loadingHTML;
+    submitBtn.innerHTML = loadingHTML;
+    submitBtn.disabled = true;
     try {
       const response = await fetch(`${url}/login`, {
         method: "POST",
@@ -27,7 +29,8 @@ document
 
       const data = await response.json();
       document.getElementById("message").innerText = data.message;
-      document.querySelector(".submit-btn").innerHTML = "Prijava";
+      submitBtn.innerHTML = "Prijava";
+      submitBtn.disabled = false;
       if (response.ok) {
         // Save token to local storage or session storage
         localStorage.setItem("token", data.info.token);
@@ -43,5 +46,7 @@ document
       }
     } catch (error) {
       console.error("Error:", error);
+      submitBtn.innerHTML = "Prijava";
+      submitBtn.disabled = false;
     }
   });
