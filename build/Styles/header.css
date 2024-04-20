@@ -45,9 +45,6 @@
   align-items: center;
   column-gap: 10px;
 }
-.account-circle {
-  fill: rgb(255, 255, 255);
-}
 
 .log-in {
   display: inline-block;
