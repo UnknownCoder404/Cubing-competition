@@ -55,10 +55,11 @@ async function showCompetition(userId, index) {
 
 async function addSolve(userId, roundIndex) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
-  const solveValue = solveInput.value;
-
+  let solveValue = solveInput.value;
+  solveValue = formatTimeString(solveValue);
+  console.log(solveValue);
   // Check if solve value is a number
-  if (isNaN(solveValue) || solveValue.trim() === "") {
+  if (isNaN(solveValue) || solveValue.toString().trim() === "") {
     alert("Please enter a valid solve value (number).");
     return;
   }
@@ -258,7 +259,7 @@ function formatTime(seconds) {
   // Calculate minutes, remaining seconds, and milliseconds
   const minutes = Math.floor(ms / 60000);
   const remainingSeconds = Math.floor((ms % 60000) / 1000);
-  const milliseconds = Math.floor(ms % 1000); // Updated line
+  const milliseconds = ms % 1000; // Corrected line
 
   // Initialize an array to hold the time parts
   let timeParts = [];
@@ -268,13 +269,43 @@ function formatTime(seconds) {
     timeParts.push(`${minutes}:`);
   }
 
-  // Add seconds to the time parts
+  // Add seconds and milliseconds to the time parts
   timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
+  timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`); // Updated line
 
-  timeParts.push(`.${milliseconds.toString().padStart(2, "0")}`);
-  console.log(`${seconds}s formatted to ${timeParts.join("")}`);
   // Return the formatted time string
   return timeParts.join("");
+}
+
+function formatTimeString(str) {
+  // Check if the string is already in the format of a decimal number
+  if (str.includes(".")) {
+    return parseFloat(str);
+  }
+
+  // Handle formatting based on the length of the string
+  switch (str.length) {
+    case 1:
+      return parseFloat(`0.0${str}`);
+    case 2:
+      return parseFloat(`0.${str}`);
+    case 3:
+      return parseFloat(`${str.charAt(0)}.${str.substring(1)}`);
+    case 4:
+      return parseFloat(`${str.substring(0, 2)}.${str.substring(2)}`);
+    case 5:
+      return (
+        60 * parseInt(str.charAt(0)) +
+        parseFloat(`${str.substring(1, 3)}.${str.substring(3)}`)
+      );
+    case 6:
+      return (
+        60 * parseInt(str.substring(0, 2)) +
+        parseFloat(`${str.substring(2, 4)}.${str.substring(4)}`)
+      );
+    default:
+      return null; // or any other default value for invalid input
+  }
 }
 
 async function main() {
