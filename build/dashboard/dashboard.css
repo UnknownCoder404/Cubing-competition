@@ -76,11 +76,11 @@ button {
   margin-top: 10px;
   margin-bottom: 10px;
   color: black;
-  background-color: rgb(255, 255, 167);
+  background-color: rgb(181, 181, 149);
   padding: 10px;
 }
 .round:hover {
-  background-color: rgb(181, 181, 148);
+  background-color: rgba(181, 181, 149,0.8);
 }
 .round h3 {
   margin: 0;
