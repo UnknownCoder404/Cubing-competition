@@ -273,7 +273,7 @@ function formatTime(seconds) {
 
   // If there are milliseconds, add them to the time parts
   if (milliseconds > 0) {
-    timeParts.push(`.${milliseconds}ms`);
+    timeParts.push(`.${milliseconds}`);
   }
   console.log(`${seconds}s formatted to ${timeParts.join("")}`);
   // Return the formatted time string
