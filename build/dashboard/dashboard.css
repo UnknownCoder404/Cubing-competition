@@ -2,8 +2,21 @@ body {
   background-color: gray;
   color: white;
 }
-h1 {
+.title-div {
+  display: flex;
+  align-items: center;
+}
+.title-div h1 {
   display: inline-block;
+}
+.register-btn {
+  margin: 0 !important;
+}
+.register-btn-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
 }
 .users {
   display: flex;
@@ -79,11 +92,14 @@ button {
 }
 @media screen and (max-width: 300px) {
   .currentTime {
-    font-size: 18px;
+    display: none;
+  }
+  .manage-accounts {
+    display: none;
   }
 }
-@media screen and (max-width: 280px) {
-  .currentTime {
-    font-size: 15px;
+@media screen and (max-width: 350px) {
+  .admin-panel {
+    display: none;
   }
 }
