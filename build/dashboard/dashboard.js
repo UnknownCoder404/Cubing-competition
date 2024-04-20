@@ -30,7 +30,7 @@ async function showCompetition(userId, index) {
         const time =
           round.solves[j] === 0 ? "DNF/DNS" : formatTime(round.solves[j]); // if 0, display DNF/DNS
         html += `<li>Slaganje ${j + 1}: ${time}</li>`;
-        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Izbriši</button></li>`;
+        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j}, ${index})">Izbriši</button></li>`;
       }
       html += `</ul>`;
     } else {
@@ -42,7 +42,7 @@ async function showCompetition(userId, index) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Solve:</label>`;
       html += `<input placeholder="Broj sekundi..." type="number" id="solve-${i}" name="solve">`;
-      html += `<button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
+      html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Add Solve</button>
       </form>
     `;
     }
@@ -54,7 +54,7 @@ async function showCompetition(userId, index) {
   userDiv.querySelector(".comp").innerHTML = html;
 }
 
-async function addSolve(userId, roundIndex) {
+async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
   solveValue = formatTimeString(solveValue);
@@ -81,7 +81,7 @@ async function addSolve(userId, roundIndex) {
     const data = await response.json();
     alert(data.message);
     // Update the competition display after successful addition
-    main();
+    showCompetition(userId, index);
   } else {
     const data = await response.json();
     if (data.message) {
@@ -206,7 +206,7 @@ function getTime() {
   document.getElementById("currentTime").innerText = formattedTime;
 }
 
-async function deleteSolve(userId, roundIndex, solveIndex) {
+async function deleteSolve(userId, roundIndex, solveIndex, index) {
   // Call the backend to delete the solve
   const response = await fetch(`${url}/solves/delete/${userId}`, {
     method: "DELETE",
@@ -219,7 +219,7 @@ async function deleteSolve(userId, roundIndex, solveIndex) {
 
   if (response.ok) {
     // Remove the solve from the DOM or refresh the list of solves
-    main();
+    showCompetition(userId, index);
   } else {
     // Handle errors
     const error = await response.json();
