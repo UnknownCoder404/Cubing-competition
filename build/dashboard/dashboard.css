@@ -20,11 +20,17 @@ h1 {
 .user:hover {
   background-color: rgb(40, 40, 40);
 }
-
+.username-div {
+  display: flex;
+  align-items: center;
+}
 .username {
   font-weight: bold;
+  display: inline-block;
 }
-
+.manage-accounts {
+  margin-left: 5px;
+}
 .role {
   margin-top: 5px;
 }

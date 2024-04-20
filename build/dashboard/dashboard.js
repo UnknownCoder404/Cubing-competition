@@ -170,7 +170,10 @@ function displayUsers(users) {
     const role = user.role;
     const group = user.group;
     html += `<div class="user">`;
+    html += `<div class="username-div">`;
     html += `<p class="username">${username} (${id})</p>`;
+    html += `<img class="manage-accounts" src="../Images/manage_accounts.svg"/>`;
+    html += `</div>`; // close .username-div
     html += `<p class="role">Uloga: ${role}</p>`;
     html += `<p class="group">Grupa ${group}</p>`;
     // Add a delete button for each user
