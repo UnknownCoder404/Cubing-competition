@@ -8,7 +8,7 @@ body {
 }
 
 .card {
-  background-color: gray;
+  background-color: rgb(74, 74, 74);
   padding-top: 5px;
   padding-bottom: 10px;
   box-shadow: 4px 0 8px 0 rgba(0, 0, 0, 0.2);
