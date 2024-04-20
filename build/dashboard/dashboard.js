@@ -252,32 +252,31 @@ function getAverage(solves) {
   return average.toFixed(2);
 }
 function formatTime(seconds) {
-  // Convert seconds to milliseconds and round off
-  const ms = Math.round(seconds * 1000);
+  // Convert seconds to milliseconds without rounding
+  const ms = seconds * 1000;
 
   // Calculate minutes, remaining seconds, and milliseconds
   const minutes = Math.floor(ms / 60000);
   const remainingSeconds = Math.floor((ms % 60000) / 1000);
-  const milliseconds = ms % 100;
+  const milliseconds = Math.floor(ms % 1000); // Updated line
 
-  // Initialize an array to hold the time parts with units
+  // Initialize an array to hold the time parts
   let timeParts = [];
 
-  // If there are minutes, add them to the time parts with 'm' unit
+  // If there are minutes, add them to the time parts
   if (minutes > 0) {
     timeParts.push(`${minutes}:`);
   }
 
-  // Add seconds to the time parts with 's' unit
+  // Add seconds to the time parts
   timeParts.push(`${remainingSeconds}`);
 
-  // If there are milliseconds, add them to the time parts with 'ms' unit
+  // If there are milliseconds, add them to the time parts
   if (milliseconds > 0) {
-    timeParts.push(`.${milliseconds}`);
+    timeParts.push(`.${milliseconds}ms`);
   }
-
-  // Return the formatted time string with units
   console.log(`${seconds}s formatted to ${timeParts.join("")}`);
+  // Return the formatted time string
   return timeParts.join("");
 }
 
