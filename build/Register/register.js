@@ -1,5 +1,6 @@
 const url = "https://cubing-competition.onrender.com";
 const group1Checkbox = document.querySelector(".group-1");
+const submitBtn = document.querySelector(".submit-btn");
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -39,6 +40,11 @@ document
   .getElementById("registerForm")
   .addEventListener("submit", async function (event) {
     event.preventDefault();
+
+    // Disable the button to prevent multiple clicks
+    submitBtn.disabled = true;
+
+    submitBtn.innerHTML = loadingHTML;
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const group = isChecked(group1Checkbox) ? 1 : 2;
@@ -46,12 +52,15 @@ document
     if (!TOKEN) {
       alert("Only admins can register users.");
       window.location.href = "../Login/login.html";
+      return;
     }
     if (!validateString(username) || !validateString(password)) {
+      submitBtn.disabled = false; // Re-enable the button
+      submitBtn.innerHTML = "Registriraj";
       alert("Samo slova,brojevi i uskličnik dozvoljeni");
       return;
     }
-    document.querySelector(".submit-btn").innerHTML = loadingHTML;
+
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
@@ -61,6 +70,7 @@ document
         },
         body: JSON.stringify({ username, password, group }),
       });
+      submitBtn.disabled = false; // Re-enable the button
       document.querySelector(".submit-btn").innerHTML = "Registriraj";
       const data = await response.json();
       alert(data.message);
@@ -70,8 +80,9 @@ Password: ${maskMiddle(data.registeredUser.password)}`;
       clearInput(document.getElementById("username"));
       clearInput(document.getElementById("password"));
     } catch (error) {
-      console.error("Error:", error);
-      document.querySelector(".submit-btn").innerHTML = "Registriraj";
+      console.log("Error:", error);
+      submitBtn.disabled = false; // Re-enable the button
+      submitBtn.innerHTML = "Registriraj";
     }
   });
 
