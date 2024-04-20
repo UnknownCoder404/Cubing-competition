@@ -249,7 +249,7 @@ function getAverage(solves) {
   }
 
   // Return average rounded to 2 decimal places
-  return average.toFixed(2);
+  return formatTime(average);
 }
 function formatTime(seconds) {
   // Convert seconds to milliseconds without rounding
