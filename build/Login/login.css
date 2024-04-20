@@ -4,11 +4,11 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: rgb(96, 96, 96);
+  color: white;
 }
 
 .container {
-  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -56,10 +56,12 @@ button:hover {
 #message {
   margin-top: 10px;
   text-align: center;
-  color: #007bff;
+  color: rgb(255, 255, 255);
+  font-weight: 700;
 }
 
 .error {
   color: red;
   text-align: center;
+  font-weight: 700;
 }
