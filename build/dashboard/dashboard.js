@@ -41,7 +41,7 @@ async function showCompetition(userId, index) {
     if ((round.solves && round.solves.length < 5) || !round.solves) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Solve:</label>`;
-      html += `<input type="number" id="solve-${i}" name="solve">`;
+      html += `<input placeholder="Broj sekundi..." type="number" id="solve-${i}" name="solve">`;
       html += `<button type="button" onclick="addSolve('${userId}', ${i})">Add Solve</button>
       </form>
     `;
