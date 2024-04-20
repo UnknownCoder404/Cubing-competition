@@ -40,14 +40,17 @@ document
   .getElementById("registerForm")
   .addEventListener("submit", async function (event) {
     event.preventDefault();
-
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const group = isChecked(group1Checkbox) ? 1 : 2;
+    if (credentialsCheck(username, password, group)) {
+      return;
+    }
     // Disable the button to prevent multiple clicks
     submitBtn.disabled = true;
 
     submitBtn.innerHTML = loadingHTML;
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const group = isChecked(group1Checkbox) ? 1 : 2;
+
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) {
       alert("Only admins can register users.");
@@ -88,4 +91,27 @@ Password: ${maskMiddle(data.registeredUser.password)}`;
 
 function isChecked(checkbox) {
   return checkbox.checked;
+}
+function credentialsCheck(username, password, group) {
+  if (!username || !password) {
+    alert("Korisničko ime i lozinka su obavezni.");
+    return true;
+  }
+  if (username.length <= 4) {
+    alert("Korisničko ime mora biti duže od 4 znaka.");
+    return true;
+  }
+  if (password.length <= 7) {
+    alert("Lozinka mora biti duža od 7 znakova.");
+    return true;
+  }
+  if (username === password) {
+    alert("Korisničko ime i lozinka ne mogu biti isti.");
+    return true;
+  }
+  if (group !== 1 && group !== 2) {
+    alert("Grupa mora biti 1 ili 2.");
+    return true;
+  }
+  return false;
 }

@@ -16,8 +16,12 @@ document
     event.preventDefault();
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    if (credentialsCheck(username, password)) {
+      return;
+    }
     submitBtn.innerHTML = loadingHTML;
     submitBtn.disabled = true;
+
     try {
       const response = await fetch(`${url}/login`, {
         method: "POST",
@@ -50,3 +54,10 @@ document
       submitBtn.disabled = false;
     }
   });
+function credentialsCheck(username, password) {
+  if (!username || !password) {
+    alert("Korisničko ime i lozinka su obavezni.");
+    return true;
+  }
+  return false;
+}
