@@ -28,7 +28,7 @@ async function showCompetition(userId, index) {
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
         const time =
-          round.solves[j] === 0 ? "DNF/DNS" : round.solves[j].toFixed(2); // if 0, display DNF/DNS
+          round.solves[j] === 0 ? "DNF/DNS" : formatTime(round.solves[j]); // if 0, display DNF/DNS
         html += `<li>Solve ${j + 1}: ${time}</li>`;
         html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
       }
@@ -251,6 +251,35 @@ function getAverage(solves) {
   // Return average rounded to 2 decimal places
   return average.toFixed(2);
 }
+function formatTime(seconds) {
+  // Convert seconds to milliseconds and round off
+  const ms = Math.round(seconds * 1000);
+
+  // Calculate minutes, remaining seconds, and milliseconds
+  const minutes = Math.floor(ms / 60000);
+  const remainingSeconds = Math.floor((ms % 60000) / 1000);
+  const milliseconds = ms % 100;
+
+  // Initialize an array to hold the time parts with units
+  let timeParts = [];
+
+  // If there are minutes, add them to the time parts with 'm' unit
+  if (minutes > 0) {
+    timeParts.push(`${minutes}:`);
+  }
+
+  // Add seconds to the time parts with 's' unit
+  timeParts.push(`${remainingSeconds}`);
+
+  // If there are milliseconds, add them to the time parts with 'ms' unit
+  if (milliseconds > 0) {
+    timeParts.push(`.${milliseconds}s`);
+  }
+
+  // Return the formatted time string with units
+  return timeParts.join("");
+}
+
 async function main() {
   if (localStorage.getItem("role") === "user") {
     alert("Admins only!");
