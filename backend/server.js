@@ -203,7 +203,7 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ username });
     // Check if the user exists
     if (!user) {
-      return res.status(404).json({ message: "Korisnik nije pronađen." });
+      return res.status(404).json({ message: "Korisnik ne postoji." });
     }
     // Compare the password with the hashed one
     const match = await user.comparePassword(password);
