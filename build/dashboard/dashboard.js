@@ -21,7 +21,7 @@ async function showCompetition(userId, index) {
   for (let i = 0; i < 3; i++) {
     const round = user.rounds[i] || [];
     html += `<div class="round">`;
-    html += `<h3>Round ${i + 1}</h3>`;
+    html += `<h3>Runda ${i + 1}</h3>`;
     // Check if solves exist for the round
     if (round.solves && round.solves.length > 0) {
       html += `Ao5: ${getAverage(round.solves)}`;
@@ -29,8 +29,8 @@ async function showCompetition(userId, index) {
       for (let j = 0; j < round.solves.length; j++) {
         const time =
           round.solves[j] === 0 ? "DNF/DNS" : formatTime(round.solves[j]); // if 0, display DNF/DNS
-        html += `<li>Solve ${j + 1}: ${time}</li>`;
-        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Delete</button></li>`;
+        html += `<li>Slaganje ${j + 1}: ${time}</li>`;
+        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j})">Izbriši</button></li>`;
       }
       html += `</ul>`;
     } else {
