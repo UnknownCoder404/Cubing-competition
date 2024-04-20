@@ -50,7 +50,8 @@ async function showCompetition(userId, index) {
     html += `</div>`;
   }
 
-  userDiv.insertAdjacentHTML("beforeend", html);
+  //userDiv.insertAdjacentHTML("beforeend", html);
+  userDiv.querySelector(".comp").innerHTML = html;
 }
 
 async function addSolve(userId, roundIndex) {
@@ -181,6 +182,8 @@ function displayUsers(users) {
     html += `<button onclick="deleteUser('${id}')">Izbriši</button>`;
     html += `<button onclick="assignAdmin('${id}', '${username}')">Postavi za admina</button>`;
     html += `<button onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
+    html += `<div class="comp">`;
+    html += `</div>`;
     html += `</div>`; // end user div
   });
   usersDiv.innerHTML = html;
