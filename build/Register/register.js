@@ -1,9 +1,19 @@
 const url = "https://cubing-competition.onrender.com";
 const group1Checkbox = document.querySelector(".group-1");
+const loadingHTML = `<div id="circularG">
+<div id="circularG_1" class="circularG"></div>
+<div id="circularG_2" class="circularG"></div>
+<div id="circularG_3" class="circularG"></div>
+<div id="circularG_4" class="circularG"></div>
+<div id="circularG_5" class="circularG"></div>
+<div id="circularG_6" class="circularG"></div>
+<div id="circularG_7" class="circularG"></div>
+<div id="circularG_8" class="circularG"></div>
+</div>`;
 function validateString(input) {
-    // Regular expression to match alphabet letters, numbers, and exclamation marks
-    const regex = /^[a-zA-Z0-9!]+$/;
-    return regex.test(input);
+  // Regular expression to match alphabet letters, numbers, and exclamation marks
+  const regex = /^[a-zA-Z0-9!]+$/;
+  return regex.test(input);
 }
 function clearInput(input) {
   input.value = "";
@@ -37,11 +47,11 @@ document
       alert("Only admins can register users.");
       window.location.href = "../Login/login.html";
     }
-    if(!validateString(username) || !validateString(password))
-    {
-     alert("Samo slova,brojevi i uskličnik dozvoljeni");
-     return;
-}
+    if (!validateString(username) || !validateString(password)) {
+      alert("Samo slova,brojevi i uskličnik dozvoljeni");
+      return;
+    }
+    document.querySelector(".submit-btn").innerHTML = loadingHTML;
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
@@ -51,7 +61,7 @@ document
         },
         body: JSON.stringify({ username, password, group }),
       });
-
+      document.querySelector(".submit-btn").innerHTML = "Registriraj";
       const data = await response.json();
       alert(data.message);
       document.getElementById("message").innerText = `${data.message}
@@ -61,6 +71,7 @@ Password: ${maskMiddle(data.registeredUser.password)}`;
       clearInput(document.getElementById("password"));
     } catch (error) {
       console.error("Error:", error);
+      document.querySelector(".submit-btn").innerHTML = "Registriraj";
     }
   });
 
