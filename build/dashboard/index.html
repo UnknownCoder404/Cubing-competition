@@ -13,15 +13,20 @@
 />
 <noscript><link rel="stylesheet" href="Styles/font.css" /></noscript>
 <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="header.css">
 </head>
 <body>
-  <div class="title-div">
-  <h1>Svi korisnici</h1>  
-  <img class="admin-panel" src="../Images/admin_panel.svg"/>
-  <div class="register-btn-div">
-    <a href="../Register/"><button class="register-btn">+</button></a>   
+  <div class="header">
+    <div class="interaction-container">
+        <div class="logo-container"><a href="../"><img class="logo" src="../favicon.ico" /></a></div><h1>Svi korisnici</h1>  
+        <img class="admin-panel" src="../Images/admin_panel.svg"/>
+        <div class="register-btn-div">
+          <a href="../Register/"><button class="register-btn">+</button></a>   
+        </div>
+        </div>
+        <div class="time-container"><span class="currentTime" id="currentTime"></span></div>
   </div>
-  <span class="currentTime" id="currentTime"></span></div>
+ 
   <div class="users"></div>
   <script src="dashboard.js"></script>
 </body>
