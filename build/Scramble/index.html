@@ -107,6 +107,7 @@
             // Only allow a line break every 5 moves
             result += scramble.slice(i, i + 5).join("&nbsp;") + " ";
           }
+          document.querySelector(".scramble-display").scramble = result.replace(/&nbsp;/g, ' ')
           document.getElementById("scramble").innerHTML = result;
         }
         displayScramble();
@@ -150,11 +151,13 @@
         width: 50vw;
       }
     </style>
+    <script src="https://cdn.cubing.net/js/scramble-display" type="module"></script>
   </head>
   <body>
     <div id="main">
       <div id="scramble"></div>
       <button id="btn-refresh">PROMIJEŠAJ</button>
     </div>
+    <scramble-display class="scramble-display" scramble=""></scramble-display>
   </body>
 </html>
