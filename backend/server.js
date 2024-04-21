@@ -13,8 +13,26 @@ const app = express();
 
 // Use JSON middleware to parse the request body
 app.use(express.json());
-// Use cors middleware
-app.use(cors());
+// Define the list of allowed origins
+const allowedOrigins = [
+  "http://localhost:2500",
+  "127.0.0.1:2500",
+  "https://UknownCoder404.github.io/Cubing-competition",
+];
+
+// CORS middleware function to check the origin against the allowed list
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+
+app.use(cors(corsOptions));
 // Connect to the MongoDB database using mongoose
 
 mongoose
