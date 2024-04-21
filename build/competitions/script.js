@@ -32,7 +32,7 @@ async function getSolves() {
       testData[groupIndex][roundIndex] = testData[groupIndex][roundIndex] || [];
       // Create a string of all solves for the current round
       const solvesString = round.solves
-        .map((solve) => formatTime(solve).toString())
+        .map((solve) => (solve ? formatTime(solve).toString() : "DNF/DNS"))
         .join("  ");
       // Push the combined solves into the corresponding group and round
       testData[groupIndex][roundIndex].push({
