@@ -45,6 +45,12 @@ body {
 .solve-times {
   letter-spacing: 0.5px; /* Adjust the value as needed */
 }
+.average {
+  color: lightgreen;
+}
+.red {
+  color: rgb(255, 163, 163);
+}
 @media screen and (max-width: 500px) {
   .grupe { 
   grid-template-columns: 1fr;

@@ -68,7 +68,9 @@ async function displayCompetition(data) {
         const name = SOLVE.name;
         const solveNumber = index + 1;
         html += `<div class="solve">
-        <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span> <span class="average">(Prosjek: ${average})</span>
+        <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span> <span class="${
+          average === "DNF" ? "red" : "average"
+        }">(Prosjek: ${average})</span>
         </p>
       </div>`;
       });
