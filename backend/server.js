@@ -16,7 +16,7 @@ app.use(express.json());
 // Define the list of allowed origins
 const allowedOrigins = [
   "http://localhost:2500",
-  "127.0.0.1:2500",
+  "http://127.0.0.1:2500",
   "https://UknownCoder404.github.io/Cubing-competition",
 ];
 
