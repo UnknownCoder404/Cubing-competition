@@ -1,20 +1,38 @@
 const usersDiv = document.querySelector(".users");
 const url = "https://cubing-competition.onrender.com";
+const loadingHTML = `<div id="circularG">
+<div id="circularG_1" class="circularG"></div>
+<div id="circularG_2" class="circularG"></div>
+<div id="circularG_3" class="circularG"></div>
+<div id="circularG_4" class="circularG"></div>
+<div id="circularG_5" class="circularG"></div>
+<div id="circularG_6" class="circularG"></div>
+<div id="circularG_7" class="circularG"></div>
+<div id="circularG_8" class="circularG"></div>
+</div>`;
+
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
-  let html = "";
+  const showCompBtn = userDiv.querySelector(".showComp-btn");
+  // Make showCompBtn innerHtml's to variable 'loadingHTML' and revert changes back
+  const prevHTML = showCompBtn.innerHTML;
+  showCompBtn.disabled = true;
+  showCompBtn.innerHTML = loadingHTML;
 
+  let html = "";
   const user = await fetch(`${url}/users/${userId}`, {
     headers: {
       Authorization: localStorage.getItem("token"),
     },
   }).then((response) => response.json());
-
+  showCompBtn.disabled = false;
   // Check if user data exists
   if (!user) {
     html = `<p>User not found.</p>`;
-    userDiv.insertAdjacentHTML("beforeend", html);
+    userDiv.querySelector(".comp").innerHTML = html;
+    showCompBtn.innerHTML = prevHTML;
+    showCompBtn.disabled = false;
     return;
   }
   // Loop through rounds
@@ -50,8 +68,8 @@ async function showCompetition(userId, index) {
     html += `</div>`;
   }
 
-  //userDiv.insertAdjacentHTML("beforeend", html);
   userDiv.querySelector(".comp").innerHTML = html;
+  showCompBtn.innerHTML = prevHTML;
 }
 
 async function addSolve(userId, roundIndex, index) {
@@ -181,7 +199,7 @@ function displayUsers(users) {
     // Add a delete button for each user
     html += `<button onclick="deleteUser('${id}')">Izbriši</button>`;
     html += `<button onclick="assignAdmin('${id}', '${username}')">Postavi za admina</button>`;
-    html += `<button onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
+    html += `<button class="showComp-btn" onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
     html += `<div class="comp">`;
     html += `</div>`;
     html += `</div>`; // end user div
