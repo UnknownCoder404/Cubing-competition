@@ -64,10 +64,11 @@ async function displayCompetition(data) {
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
         const solves = SOLVE.solves;
+        const average = getAverage(solves);
         const name = SOLVE.name;
         const solveNumber = index + 1;
         html += `<div class="solve">
-        <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span>
+        <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span> <span class="average">(Prosjek: ${average})</span>
         </p>
       </div>`;
       });
@@ -80,7 +81,7 @@ async function displayCompetition(data) {
 }
 function getAverage(solves) {
   if (solves.length !== 5) {
-    return "Need 5 solves";
+    return "X";
   }
 
   // Create a copy of the solves array
