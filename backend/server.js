@@ -17,7 +17,7 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:2500",
   "http://127.0.0.1:2500",
-  "https://UknownCoder404.github.io/Cubing-competition",
+  "https://unknowncoder404.github.io",
 ];
 
 // CORS middleware function to check the origin against the allowed list
