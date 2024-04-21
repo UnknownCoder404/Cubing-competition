@@ -54,6 +54,8 @@ document.querySelector(".share").addEventListener("click", async () => {
     });
     console.log("Successfully shared");
   } else {
-    alert("Ovaj uređaj ne može dijeliti.");
+    alert(
+      "Ovaj uređaj ne može dijeliti.Preporučuje se najnovija verzija Google Chrome-a."
+    );
   }
 });
