@@ -66,7 +66,8 @@ async function displayCompetition(data) {
         const solveNumber = index + 1;
 
         html += `<div class="solve">
-        <p><span class="bold">${solveNumber}. ${name}</span> ${solve}</p>
+        <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span>
+        </p>
       </div>`;
       });
       html += `</div>`; // Zatvori content

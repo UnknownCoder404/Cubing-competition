@@ -42,3 +42,11 @@ body {
 .hidden {
   display: none;
 }
+.solve-times {
+  letter-spacing: 0.5px; /* Adjust the value as needed */
+}
+@media screen and (max-width: 500px) {
+  .grupe { 
+  grid-template-columns: 1fr;
+  }
+}
