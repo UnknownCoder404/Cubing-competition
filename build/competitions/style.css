@@ -49,7 +49,7 @@ body {
   color: lightgreen;
 }
 .red {
-  color: rgb(255, 163, 163);
+  color: rgb(255, 10, 47);
 }
 @media screen and (max-width: 500px) {
   .grupe { 
