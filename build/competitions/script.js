@@ -32,11 +32,12 @@ async function getSolves() {
       testData[groupIndex][roundIndex] = testData[groupIndex][roundIndex] || [];
       // Create a string of all solves for the current round
       const solvesString = round.solves
-        .map((solve) => solve.toString())
-        .join(" ");
+        .map((solve) => formatTime(solve).toString())
+        .join("  ");
       // Push the combined solves into the corresponding group and round
       testData[groupIndex][roundIndex].push({
         solve: solvesString,
+        solves: round.solves,
         name: username,
       });
     });
@@ -62,9 +63,9 @@ async function displayCompetition(data) {
       html += `<div class="content">`;
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
+        const solves = SOLVE.solves;
         const name = SOLVE.name;
         const solveNumber = index + 1;
-
         html += `<div class="solve">
         <p><span class="bold">${solveNumber}. ${name}</span> <span class="solve-times">${solve}</span>
         </p>
@@ -76,6 +77,58 @@ async function displayCompetition(data) {
     html += `</div>`; // Close group-# div
   });
   return html;
+}
+function getAverage(solves) {
+  if (solves.length !== 5) {
+    return "Need 5 solves";
+  }
+
+  // Create a copy of the solves array
+  let sortedSolves = solves.slice();
+
+  sortedSolves.sort((a, b) => {
+    if (a === 0) return 1; // Place 0 at the last element
+    if (b === 0) return -1; // Place 0 at the last element
+    return a - b; // Regular sorting for other numbers
+  });
+  // Remove the smallest and largest elements
+  let trimmedSolves = sortedSolves.slice(1, sortedSolves.length - 1);
+
+  // Calculate average
+  let average =
+    trimmedSolves.reduce((acc, val) => acc + val, 0) / trimmedSolves.length;
+
+  // Check if trimmedSolves contains 0
+  if (trimmedSolves.includes(0)) {
+    return "DNF";
+  }
+
+  // Return average rounded to 2 decimal places
+  return formatTime(average);
+}
+function formatTime(seconds) {
+  // Convert seconds to milliseconds without rounding
+  const ms = seconds * 1000;
+
+  // Calculate minutes, remaining seconds, and milliseconds
+  const minutes = Math.floor(ms / 60000);
+  const remainingSeconds = Math.floor((ms % 60000) / 1000);
+  const milliseconds = ms % 1000; // Corrected line
+
+  // Initialize an array to hold the time parts
+  let timeParts = [];
+
+  // If there are minutes, add them to the time parts
+  if (minutes > 0) {
+    timeParts.push(`${minutes}:`);
+  }
+
+  // Add seconds and milliseconds to the time parts
+  timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
+  timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`); // Updated line
+  console.log(`Formatted ${seconds}s to ${timeParts.join("")}`);
+  // Return the formatted time string
+  return timeParts.join("");
 }
 async function main() {
   document.querySelector(".grupe").innerHTML = await displayCompetition(
