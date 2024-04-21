@@ -1,5 +1,6 @@
+const url = "http://localhost:3000";
 function addInteractive() {
-  const rundeElements = document.querySelectorAll(".runda");
+  const rundeElements = document.querySelectorAll(".runda") || [];
 
   rundeElements.forEach((runde) => {
     const showHideButton = runde.querySelector(".showhide");
@@ -17,49 +18,33 @@ function addInteractive() {
   });
 }
 
-const testData = [
-  [
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      },
-    ],
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      }, // Runda 2
-    ],
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      }, // Runda 3
-    ],
-  ], // Grupa 1
-  [
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      }, // Runda 1
-    ],
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      }, // Runda 2
-    ],
-    [
-      {
-        solve: "(69.69) (23) 43 34 30",
-        name: "Jakov Čiček",
-      }, // Runda 3
-    ],
-  ], // Grupa 2
-];
-async function getSolves() {}
+async function getSolves() {
+  const data = await fetch(`${url}/live/solves`, { method: "GET" });
+  const competitions = await data.json();
+  let testData = [[], []]; // Assuming there are only two groups
+
+  competitions.forEach((user) => {
+    const username = user.username; // String
+    const groupIndex = parseInt(user.group) - 1; // Convert "1" or "2" to 0 or 1
+    user.rounds.forEach((round, index) => {
+      const roundIndex = index; // 0, 1, or 2
+      // Ensure the sub-array for the group and round exists
+      testData[groupIndex][roundIndex] = testData[groupIndex][roundIndex] || [];
+      // Create a string of all solves for the current round
+      const solvesString = round.solves
+        .map((solve) => solve.toString())
+        .join(" ");
+      // Push the combined solves into the corresponding group and round
+      testData[groupIndex][roundIndex].push({
+        solve: solvesString,
+        name: username,
+      });
+    });
+  });
+
+  return testData;
+}
+
 async function displayCompetition(data) {
   let html = "";
   data.forEach((group, index) => {
@@ -67,23 +52,24 @@ async function displayCompetition(data) {
     html += `<div class="grupa-${groupNumber}">`;
     html += groupNumber === 1 ? `<h3>Razredi 1-4</h3>` : `<h3>Razredi 5-8</h3>`;
     for (let i = 0; i < 3; i++) {
-      const round = group[i];
+      const round = group[i] || [];
       const roundNumber = i + 1;
       html += `<div class="runda" id="runda${roundNumber}">`;
       html += `<div class="title">            
       <h3>Runda ${roundNumber}</h3>
       <img src="../Images/hide.svg" class="showhide">
     </div>`;
+      html += `<div class="content">`;
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
         const name = SOLVE.name;
         const solveNumber = index + 1;
-        html += `<div class="content">`;
+
         html += `<div class="solve">
         <p><span class="bold">${solveNumber}. ${name}</span> ${solve}</p>
       </div>`;
-        html += `</div>`; // Zatvori content
       });
+      html += `</div>`; // Zatvori content
       html += `</div>`; // Zatvori rundu
     }
     html += `</div>`; // Close group-# div
@@ -92,7 +78,7 @@ async function displayCompetition(data) {
 }
 async function main() {
   document.querySelector(".grupe").innerHTML = await displayCompetition(
-    testData
+    await getSolves()
   );
   addInteractive();
 }

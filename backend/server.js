@@ -530,6 +530,18 @@ app.delete("/users/:userId", verifyToken, async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
+// Route handler for getting live solves
+app.get("/live/solves", async (req, res) => {
+  try {
+    const usersWithSolves = await User.find({
+      "rounds.solves": { $exists: true, $not: { $size: 0 } },
+    }).select("username rounds group -_id");
+    res.json(usersWithSolves);
+  } catch (err) {
+    res.status(500).json({ message: "Error retrieving solves" });
+  }
+});
+
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
