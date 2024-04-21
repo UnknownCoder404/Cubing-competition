@@ -76,9 +76,12 @@ async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
   solveValue = formatTimeString(solveValue);
-  console.log(solveValue);
   // Check if solve value is a number
-  if (isNaN(solveValue) || solveValue.toString().trim() === "") {
+  if (
+    isNaN(solveValue) ||
+    (!solveValue && solveValue !== 0) || // If falsy, but not 0
+    solveValue.toString().trim() === ""
+  ) {
     alert("Please enter a valid solve value (number).");
     return;
   }
@@ -293,7 +296,7 @@ function formatTime(seconds) {
   // Add seconds and milliseconds to the time parts
   timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
   timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`); // Updated line
-
+  console.log(`Formatted ${seconds}s to ${timeParts.join("")}`);
   // Return the formatted time string
   return timeParts.join("");
 }
