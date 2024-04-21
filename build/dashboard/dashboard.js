@@ -127,7 +127,7 @@ async function getUsers() {
       localStorage.removeItem("username");
       localStorage.removeItem("role");
       alert("Login again.");
-      location.href = "../Login/login.html";
+      location.href = "../Login/";
     }
     const result = await data.json();
     return result;
