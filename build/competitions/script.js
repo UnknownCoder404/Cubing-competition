@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "https://cubing-competition.onrender.com";
 function addInteractive() {
   const rundeElements = document.querySelectorAll(".runda") || [];
 
