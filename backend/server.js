@@ -120,6 +120,10 @@ const verifyToken = async (req, res, next) => {
 userSchema.methods.comparePassword = async function (password) {
   try {
     // Return a boolean value indicating the match
+    console.log(`Username: ${this.username}`);
+    console.log(`Plain password: ${password}`);
+    console.log(`Hashed password: ${this.password}`);
+    console.log(`Success? ${await bcrypt.compare(password, this.password)}`);
     return await bcrypt.compare(password, this.password);
   } catch (err) {
     // Handle the error
