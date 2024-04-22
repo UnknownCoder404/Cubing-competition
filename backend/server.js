@@ -576,9 +576,14 @@ app.get("/live/solves", async (req, res) => {
   }
 });
 
-app.post("/change-password", async (req, res) => {
+app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
   const newPassword = req.body.newPassword;
+  if (req.userRole !== "admin") {
+    return res.status(401).json({
+      message: "Samo administratori smiju mijenjati lozinke.",
+    });
+  }
   if (!userId || !newPassword || newPassword.trim() === "") {
     return res.status(400).json({ message: "Nepotpun unos podataka." });
   }
