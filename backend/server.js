@@ -78,10 +78,8 @@ const Post = mongoose.model("Post", postSchema);
 // Add a pre-save hook to hash the password before saving
 userSchema.pre("save", async function (next) {
   try {
-    // Generate a salt
-    const salt = await bcrypt.genSalt(10);
     // Hash the password with the salt
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password, 10);
     // Call the next middleware
     next();
   } catch (err) {
@@ -122,15 +120,6 @@ const verifyToken = async (req, res, next) => {
 userSchema.methods.comparePassword = async function (password) {
   try {
     // Return a boolean value indicating the match
-    console.log(`Username: ${this.username}`);
-    console.log("Plain password:", password);
-    console.log("Hashed password:", this.password);
-    console.log(
-      await bcrypt.compare(password, this.password, function (err, isMatch) {
-        if (err) throw err;
-        // isMatch is true if the passwords match, or false if they don't
-      })
-    );
     return await bcrypt.compare(password, this.password);
   } catch (err) {
     // Handle the error
