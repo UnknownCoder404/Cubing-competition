@@ -122,6 +122,15 @@ const verifyToken = async (req, res, next) => {
 userSchema.methods.comparePassword = async function (password) {
   try {
     // Return a boolean value indicating the match
+    console.log(`Username: ${this.username}`);
+    console.log("Plain password:", password);
+    console.log("Hashed password:", this.password);
+    console.log(
+      await bcrypt.compare(password, this.password, function (err, isMatch) {
+        if (err) throw err;
+        // isMatch is true if the passwords match, or false if they don't
+      })
+    );
     return await bcrypt.compare(password, this.password);
   } catch (err) {
     // Handle the error
@@ -573,9 +582,10 @@ app.post("/change-password", async (req, res) => {
   if (!userId || !newPassword) {
     return res.status(400).send();
   }
-  const user = mongoose.findById(userId);
+  const user = await User.findById(userId);
   user.password = newPassword;
-  user.save();
+  await user.save();
+  return res.status(200).send();
 });
 
 app.post("/new-post", verifyToken, async (req, res) => {
