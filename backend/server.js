@@ -579,13 +579,18 @@ app.get("/live/solves", async (req, res) => {
 app.post("/change-password", async (req, res) => {
   const userId = req.body.userId;
   const newPassword = req.body.newPassword;
-  if (!userId || !newPassword) {
-    return res.status(400).send();
+  if (!userId || !newPassword || newPassword.trim() === "") {
+    return res.status(400).json({ message: "Nepotpun unos podataka." });
   }
   const user = await User.findById(userId);
+  if (!user) {
+    return res
+      .status(400)
+      .json({ message: "Ne postoji korisnik s tim ID-om." });
+  }
   user.password = newPassword;
   await user.save();
-  return res.status(200).send();
+  return res.status(200).json({ message: "Lozinka promijenjena." });
 });
 
 app.post("/new-post", verifyToken, async (req, res) => {
