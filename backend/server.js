@@ -49,6 +49,31 @@ const userSchema = new mongoose.Schema({
   rounds: [solveSchema],
   group: { type: String, required: true },
 });
+// Define the schema for the Post model
+const postSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  author: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    username: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+// Create the Post model using the schema
+const Post = mongoose.model("Post", postSchema);
 
 // Add a pre-save hook to hash the password before saving
 userSchema.pre("save", async function (next) {
@@ -539,6 +564,52 @@ app.get("/live/solves", async (req, res) => {
     res.json(usersWithSolves);
   } catch (err) {
     res.status(500).json({ message: "Error retrieving solves" });
+  }
+});
+
+app.post("/change-password", async (req, res) => {
+  const userId = req.body.userId;
+  const newPassword = req.body.newPassword;
+  if (!userId || !newPassword) {
+    return res.status(400).send();
+  }
+  const user = mongoose.findById(userId);
+  user.password = newPassword;
+  user.save();
+});
+
+app.post("/new-post", verifyToken, async (req, res) => {
+  if (req.userRole !== "admin") {
+    return res
+      .status(400)
+      .json({ message: "Samo administratori smiju objavljivati." });
+  }
+  const username = req.user.username;
+  const userId = req.userId;
+  const title = req.body.title;
+  const description = req.body.description;
+
+  try {
+    const newPost = await Post.create({
+      title: title,
+      description: description,
+      author: {
+        id: userId,
+        username: username,
+      },
+    });
+    res.status(201).json(newPost);
+  } catch (err) {
+    res.status(500).json({ message: "Neuspješno objavljivanje posta." });
+  }
+});
+
+app.get("/post", async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
 
