@@ -41,3 +41,11 @@ body {
 .qrcode {
   width: 100px;
 }
+.post-author {
+  font-weight: 700;
+}
+.post {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
