@@ -66,8 +66,11 @@ if (role === "admin") {
   let html = "";
   html += `
   <div class="card">
+   <div class="container">
       <h2>Radna ploča</h2>
-      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p></div>
+      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p>
+</div>
+</div>
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
@@ -127,7 +130,7 @@ document.querySelector(".share").addEventListener("click", async () => {
     console.log("Successfully shared");
   } else {
     alert(
-      "Ovaj uređaj ne može dijeliti.Preporučuje se najnovija verzija Google Chrome-a."
+      "Ovaj uređaj ne može dijeliti. Preporučuje se najnovija verzija Google Chrome-a."
     );
   }
 });
