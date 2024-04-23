@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const exceljs = require("exceljs");
 // Load the environment variables from the .env file
 dotenv.config();
 
@@ -608,7 +609,46 @@ app.get("/post", async (req, res) => {
     res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
+app.get("/passwords", async (req, res) => {
+  try {
+    // Fetch users from the database
+    const users = await User.find({}, "username password");
 
+    // Create a new workbook and add a sheet
+    const workbook = new exceljs.Workbook();
+    const sheet = workbook.addWorksheet("Passwords");
+
+    // Add column headers
+    sheet.columns = [
+      { header: "Username", key: "username", width: 30 },
+      { header: "Password", key: "password", width: 30 },
+    ];
+
+    // Add rows to the sheet
+    users.forEach((user) => {
+      sheet.addRow({ username: user.username, password: user.password });
+    });
+
+    // Write to a file
+    const fileName = "UserPasswords.xlsx";
+    await workbook.xlsx.writeFile(fileName);
+
+    // Set the headers to prompt download on the client side
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+
+    // Pipe the workbook to the response
+    workbook.xlsx.write(res).then(() => {
+      res.end();
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while generating the Excel file");
+  }
+});
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
