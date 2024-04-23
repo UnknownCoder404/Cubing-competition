@@ -80,7 +80,7 @@ const Post = mongoose.model("Post", postSchema);
 const verifyToken = async (req, res, next) => {
   try {
     // Get the token from the request header
-    const token = req.headers["authorization"];
+    const token = req.headers["authorization"] || req.params.token;
     // Check if the token exists
     if (!token) {
       return res
@@ -609,7 +609,7 @@ app.get("/post", async (req, res) => {
     res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
-app.get("/passwords", async (req, res) => {
+app.get("/passwords", verifyToken, async (req, res) => {
   try {
     // Fetch users from the database
     const users = await User.find({}, "username password");
@@ -620,8 +620,8 @@ app.get("/passwords", async (req, res) => {
 
     // Add column headers
     sheet.columns = [
-      { header: "Username", key: "username", width: 30 },
-      { header: "Password", key: "password", width: 30 },
+      { header: "Username", key: "username", width: 50 },
+      { header: "Password", key: "password", width: 50 },
     ];
 
     // Add rows to the sheet
