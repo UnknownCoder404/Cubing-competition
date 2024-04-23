@@ -1,6 +1,6 @@
 body {
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: #333; 
+  color: #f4f4f4;
   line-height: 1.6;
 }
 .indent {
@@ -10,7 +10,7 @@ body {
   color: orange;
 }
 h1, h2 {
-  color: #444;
+  color: #ffffff;
 }
 
 a {
