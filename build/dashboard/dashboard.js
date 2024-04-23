@@ -71,6 +71,7 @@ async function showCompetition(userId, index) {
   userDiv.querySelector(".comp").innerHTML = html;
   showCompBtn.innerHTML = prevHTML;
 }
+document.querySelector(".passwords").addEventListener("click", getPasswords);
 function getPasswords() {
   const token = localStorage.getItem("token");
   if (!token) {

@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css">
-  <link
-  rel="preload"
-  href="../Styles/font.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
-<noscript><link rel="stylesheet" href="Styles/font.css" /></noscript>
-<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="header.css">
-<link rel="stylesheet" href="loading.css">
-</head>
-<body>
-  <div class="header">
-    <div class="interaction-container">
-        <div class="logo-container"><a href="../"><img class="logo" src="../favicon.ico" /></a></div><h1>Svi korisnici</h1>  
-        <img class="admin-panel" src="../Images/admin_panel.svg"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+    <link
+      rel="preload"
+      href="../Styles/font.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="Styles/font.css" /></noscript>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="loading.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="interaction-container">
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+        </div>
+        <h1>Svi korisnici</h1>
+        <img class="admin-panel" src="../Images/admin_panel.svg" />
         <div class="register-btn-div">
-          <a href="../Register/"><button class="register-btn">+</button></a>   
+          <a href="../Register/"><button class="register-btn">+</button></a>
         </div>
-        </div>
-        <div class="time-container"><span class="currentTime" id="currentTime"></span></div>
-  </div>
- 
-  <div class="users"></div>
-  <script src="dashboard.js"></script>
-</body>
+      </div>
+      <div class="time-container">
+        <span class="currentTime" id="currentTime"></span>
+      </div>
+    </div>
+    <button class="passwords">Sve lozinke</button>
+    <div class="users"></div>
+    <script src="dashboard.js"></script>
+  </body>
 </html>
