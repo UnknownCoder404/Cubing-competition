@@ -182,42 +182,6 @@ app.post("/register", verifyToken, async (req, res) => {
     }
   }
 });
-async function createAdmin(username, password) {
-  // -1 : Username missing
-  // -2 : Password missing
-  // -3 : Username taken
-  // -4 : Error while saving admin to database
-  //  1 : Success
-  if (!username) {
-    return -1;
-  }
-  if (!password) {
-    return -2;
-  }
-  const available = !(await User.findOne({ username }));
-
-  if (!available) {
-    console.error(
-      "Pokušao stvoriti administratora s korisničkim imenom koje već postoji."
-    );
-    return -3;
-  }
-  // Create a new user instance
-  const user = new User({
-    username,
-    password,
-    role: "admin",
-    group: 1,
-  });
-  // Save the user to the database
-  try {
-    await user.save();
-    return 1;
-  } catch (err) {
-    console.error(`Greška prilikom spremanja novog administratora:\n` + err);
-    return -4;
-  }
-}
 // Define a route for user login
 app.post("/login", async (req, res) => {
   try {
@@ -429,49 +393,6 @@ app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
   });
 });
 
-app.post("/admin/register", verifyToken, async (req, res) => {
-  const adminUsername = req.body.username;
-  const adminPassword = req.body.password;
-
-  if (req.userRole !== "admin") {
-    return res.status(401).json({
-      message: "Samo administratori mogu registrirati administratore.",
-    });
-  }
-
-  // -1 : Username missing
-  // -2 : Password missing
-  // -3 : Username taken
-  // -4 : Error while saving admin to database
-  //  1 : Success
-  const result = await createAdmin(adminUsername, adminPassword);
-  if (result === 1) {
-    return res
-      .status(200)
-      .json({ message: "Uspješno registriran administrator." });
-  }
-  if (result === -1) {
-    return res.status(400).json({ message: "Korisničko ime nedostaje." });
-  }
-  if (result === -2) {
-    return res.status(400).json({ message: "Lozinka nedostaje." });
-  }
-  if (result === -3) {
-    return res.status(400).json({
-      message: `Nije moguće registrirati administratora s korisničkim imenom ${adminUsername}. Korisničko ime je već zauzeto.`,
-    });
-  }
-  if (result === -4) {
-    return res.status(500).json({
-      message: "Pogreška prilikom spremanja administratora u bazu podataka.",
-    });
-  }
-
-  return res.status(500).json({
-    message: "Nepoznat rezultat. Kontaktirajte programere.",
-  });
-});
-
 app.get("/users/all", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
@@ -662,4 +583,3 @@ app.get("/health-check", (req, res) => {
 // Start the server on the specified port
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
-createAdmin("admin", "admin");
