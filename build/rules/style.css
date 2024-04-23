@@ -1,0 +1,23 @@
+body {
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
+.indent {
+  margin-left: 20px;
+}
+h1, h2 {
+  color: #444;
+}
+
+a {
+  color: #06c;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+p {
+  margin-bottom: 10px;
+}
