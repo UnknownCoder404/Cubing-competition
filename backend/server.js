@@ -610,6 +610,11 @@ app.get("/post", async (req, res) => {
   }
 });
 app.get("/passwords", verifyToken, async (req, res) => {
+  if (req.userRole !== "admin") {
+    return res
+      .status(400)
+      .send("Samo administratori smiju dobiti lozinke korisnika.");
+  }
   try {
     // Fetch users from the database
     const users = await User.find({}, "username password");
