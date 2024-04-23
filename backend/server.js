@@ -75,19 +75,6 @@ const postSchema = new mongoose.Schema({
 // Create the Post model using the schema
 const Post = mongoose.model("Post", postSchema);
 
-// Add a pre-save hook to hash the password before saving
-userSchema.pre("save", async function (next) {
-  try {
-    // Hash the password with the salt
-    this.password = await bcrypt.hash(this.password, 10);
-    // Call the next middleware
-    next();
-  } catch (err) {
-    // Handle the error
-    next(err);
-  }
-});
-
 // Define a middleware to verify the token
 const verifyToken = async (req, res, next) => {
   try {
@@ -120,11 +107,7 @@ const verifyToken = async (req, res, next) => {
 userSchema.methods.comparePassword = async function (password) {
   try {
     // Return a boolean value indicating the match
-    console.log(`Username: ${this.username}`);
-    console.log(`Plain password: ${password}`);
-    console.log(`Hashed password: ${this.password}`);
-    console.log(`Success? ${await bcrypt.compare(password, this.password)}`);
-    return await bcrypt.compare(password, this.password);
+    return password === this.password;
   } catch (err) {
     // Handle the error
     throw err;
