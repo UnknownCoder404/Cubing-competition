@@ -16,6 +16,12 @@ h1, h2 {
 a {
   color: #06c;
 }
+.yellow {
+  color: yellow;
+}
+.red {
+  color: red;
+}
 
 .bold {
   font-weight: bold;
