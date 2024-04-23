@@ -1,5 +1,5 @@
 const usersDiv = document.querySelector(".users");
-const url = "https://cubing-competition.onrender.com";
+const url = "http://localhost:3000";
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -71,7 +71,17 @@ async function showCompetition(userId, index) {
   userDiv.querySelector(".comp").innerHTML = html;
   showCompBtn.innerHTML = prevHTML;
 }
-
+function getPasswords() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Prijavi se ponovno.");
+    window.location.href = "../Login";
+    return;
+  }
+  const redirect = `${url}/passwords?token=${token}`;
+  // Redirect with target="_blank"
+  window.open(redirect, "_blank");
+}
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;

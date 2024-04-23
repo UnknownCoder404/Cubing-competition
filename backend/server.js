@@ -79,8 +79,10 @@ const Post = mongoose.model("Post", postSchema);
 // Define a middleware to verify the token
 const verifyToken = async (req, res, next) => {
   try {
-    // Get the token from the request header
-    const token = req.headers["authorization"] || req.params.token;
+    // Get the token from the request header or from parameters in the URL
+    const token = req.headers["authorization"]
+      ? req.headers["authorization"].replace(/^Bearer\s/, "")
+      : new URLSearchParams(req.url.split("?")[1]).get("token");
     // Check if the token exists
     if (!token) {
       return res
