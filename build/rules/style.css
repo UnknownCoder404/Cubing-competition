@@ -6,6 +6,9 @@ body {
 .indent {
   margin-left: 20px;
 }
+.numbering {
+  color: orange;
+}
 h1, h2 {
   color: #444;
 }
