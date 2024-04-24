@@ -1,5 +1,5 @@
 const usersDiv = document.querySelector(".users");
-const url = "https://cubing-competition.onrender.com";
+const url = "http://localhost:3000";
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -80,6 +80,17 @@ function getPasswords() {
     return;
   }
   const redirect = `${url}/passwords?token=${token}`;
+  // Redirect with target="_blank"
+  window.open(redirect, "_blank");
+}
+function getResults() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Prijavi se ponovno.");
+    window.location.href = "../Login";
+    return;
+  }
+  const redirect = `${url}/results?token=${token}`;
   // Redirect with target="_blank"
   window.open(redirect, "_blank");
 }
