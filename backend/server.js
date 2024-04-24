@@ -540,10 +540,10 @@ app.get("/results", async (req, res) => {
 
     // Add column headers
     sheet.columns = [
-      { header: "Natjecatelj", key: "username", width: 30 },
-      { header: "Runda 1", key: "round1", width: 10 },
-      { header: "Runda 2", key: "round2", width: 10 },
-      { header: "Runda 3", key: "round3", width: 10 },
+      { header: "Natjecatelj", key: "username", width: 20 },
+      { header: "Runda 1", key: "round1", width: 25 },
+      { header: "Runda 2", key: "round2", width: 25 },
+      { header: "Runda 3", key: "round3", width: 25 },
     ];
 
     // Add rows for each user
