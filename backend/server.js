@@ -532,6 +532,57 @@ app.get("/post", async (req, res) => {
     res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
+app.get("/results", async (req, res) => {
+  try {
+    const results = await User.find({}, "username rounds");
+    const workbook = new exceljs.Workbook();
+    const sheet = workbook.addWorksheet("Rezultati");
+
+    // Add column headers
+    sheet.columns = [
+      { header: "Natjecatelj", key: "username", width: 30 },
+      { header: "Runda 1", key: "round1", width: 10 },
+      { header: "Runda 2", key: "round2", width: 10 },
+      { header: "Runda 3", key: "round3", width: 10 },
+    ];
+
+    // Add rows for each user
+    results.forEach((user) => {
+      // Create a row object with the username
+      const row = { username: user.username };
+
+      // Assuming 'rounds' is an array of objects with a 'solves' property
+      user.rounds.forEach((round, index) => {
+        if (round.solves && round.solves.length > 0) {
+          // Add the solves to the corresponding round in the row object
+          row[`round${index + 1}`] = round.solves.join(", ");
+        }
+      });
+
+      // Add the row to the sheet
+      sheet.addRow(row);
+    });
+    // Write to a file
+    const fileName = "rezultati.xlsx";
+    await workbook.xlsx.writeFile(fileName);
+
+    // Set the headers to prompt download on the client side
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+
+    // Pipe the workbook to the response
+    workbook.xlsx.write(res).then(() => {
+      res.end();
+    });
+  } catch (error) {
+    console.error("Failed to generate results:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
 app.get("/passwords", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
     return res
@@ -548,8 +599,8 @@ app.get("/passwords", verifyToken, async (req, res) => {
 
     // Add column headers
     sheet.columns = [
-      { header: "Username", key: "username", width: 50 },
-      { header: "Password", key: "password", width: 50 },
+      { header: "Korisnik", key: "username", width: 30 },
+      { header: "Lozinka", key: "password", width: 30 },
     ];
 
     // Add rows to the sheet
