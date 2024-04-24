@@ -562,6 +562,16 @@ app.get("/results", async (req, res) => {
       // Add the row to the sheet
       sheet.addRow(row);
     });
+    sheet.columns.forEach(function (column, i) {
+      let maxLength = 0;
+      column["eachCell"]({ includeEmpty: true }, function (cell) {
+        const columnLength = cell.value ? cell.value.toString().length : 10;
+        if (columnLength > maxLength) {
+          maxLength = columnLength;
+        }
+      });
+      column.width = maxLength < 10 ? 10 : maxLength;
+    });
     // Write to a file
     const fileName = "rezultati.xlsx";
     await workbook.xlsx.writeFile(fileName);
