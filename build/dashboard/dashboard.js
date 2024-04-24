@@ -94,6 +94,7 @@ function getResults() {
   // Redirect with target="_blank"
   window.open(redirect, "_blank");
 }
+document.querySelector(".results").addEventListener("click", getResults);
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
