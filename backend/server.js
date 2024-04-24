@@ -532,7 +532,14 @@ app.get("/post", async (req, res) => {
     res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
-app.get("/results", async (req, res) => {
+app.get("/results", verifyToken, async (req, res) => {
+  if (req.userRole !== "admin") {
+    return res
+      .status(400)
+      .json({
+        message: "Samo administratori smiju dobiti rezultate u excel formatu.",
+      });
+  }
   try {
     const results = await User.find({}, "username rounds");
     const workbook = new exceljs.Workbook();
@@ -562,6 +569,7 @@ app.get("/results", async (req, res) => {
       // Add the row to the sheet
       sheet.addRow(row);
     });
+    // Auto size width of the column
     sheet.columns.forEach(function (column, i) {
       let maxLength = 0;
       column["eachCell"]({ includeEmpty: true }, function (cell) {
