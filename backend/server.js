@@ -474,7 +474,10 @@ app.get("/live/solves", async (req, res) => {
     }).select("username rounds group -_id");
     res.json({
       solves: usersWithSolves,
-      lastUpdated: new Date().toISOString().substr(17, 5),
+      lastUpdated: new Intl.DateTimeFormat("en-US", {
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(new Date()),
     });
   } catch (err) {
     res.status(500).json({ message: "Error retrieving solves" });
