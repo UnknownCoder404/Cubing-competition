@@ -21,21 +21,22 @@ function addInteractive() {
 async function getSolves() {
   const data = await fetch(`${url}/live/solves`, { method: "GET" });
   const competitions = await data.json();
-  let testData = [[], []]; // Assuming there are only two groups
+  let solvesData = [[], []]; // Assuming there are only two groups
 
-  competitions.forEach((user) => {
+  competitions.solves.forEach((user) => {
     const username = user.username; // String
     const groupIndex = parseInt(user.group) - 1; // Convert "1" or "2" to 0 or 1
     user.rounds.forEach((round, index) => {
       const roundIndex = index; // 0, 1, or 2
       // Ensure the sub-array for the group and round exists
-      testData[groupIndex][roundIndex] = testData[groupIndex][roundIndex] || [];
+      solvesData[groupIndex][roundIndex] =
+        solvesData[groupIndex][roundIndex] || [];
       // Create a string of all solves for the current round
       const solvesString = round.solves
         .map((solve) => (solve ? formatTime(solve).toString() : "DNF/DNS"))
         .join("  ");
       // Push the combined solves into the corresponding group and round
-      testData[groupIndex][roundIndex].push({
+      solvesData[groupIndex][roundIndex].push({
         solve: solvesString,
         solves: round.solves,
         name: username,
@@ -43,7 +44,7 @@ async function getSolves() {
     });
   });
 
-  return testData;
+  return solvesData;
 }
 async function getWinner() {
   const data = await fetch(`${url}/get-winners`);
