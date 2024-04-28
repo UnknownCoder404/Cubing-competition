@@ -649,7 +649,7 @@ app.get("/passwords", verifyToken, async (req, res) => {
 // Route to announce the winner
 app.post("/announce-winner", verifyToken, async (req, res) => {
   try {
-    const { id } = req.body;
+    const id = req.body.id;
     if (!id) {
       return res.status(400).json({ message: "Id korisnika je potreban." });
     }

@@ -1,5 +1,5 @@
 const usersDiv = document.querySelector(".users");
-const url = "https://cubing-competition.onrender.com";
+const url = "http://localhost:3000";
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -10,7 +10,22 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
-
+async function setWinner(id) {
+  console.log(id);
+  console.log(typeof id);
+  const data = await fetch(`${url}/announce-winner`, {
+    method: "POST",
+    body: JSON.stringify({
+      id: id,
+    }),
+    headers: {
+      Authorization: localStorage.getItem("token"),
+      "Content-Type": "application/json",
+    },
+  });
+  const response = await data.json();
+  alert(response.message);
+}
 async function showCompetition(userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
@@ -226,6 +241,7 @@ function displayUsers(users) {
     html += `<button onclick="deleteUser('${id}')">Izbriši</button>`;
     html += `<button onclick="assignAdmin('${id}', '${username}')">Postavi za admina</button>`;
     html += `<button class="showComp-btn" onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
+    html += `<button onclick="setWinner('${id}')">Pobjednik</button>`;
     html += `<div class="comp">`;
     html += `</div>`;
     html += `</div>`; // end user div
