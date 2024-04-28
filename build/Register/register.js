@@ -11,11 +11,6 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
-function validateString(input) {
-  // Regular expression to match alphabet letters, numbers, and exclamation marks
-  const regex = /^[a-zA-Z0-9!]+$/;
-  return regex.test(input);
-}
 function clearInput(input) {
   input.value = "";
 }
@@ -55,12 +50,6 @@ document
     if (!TOKEN) {
       alert("Only admins can register users.");
       window.location.href = "../Login/login.html";
-      return;
-    }
-    if (!validateString(username) || !validateString(password)) {
-      submitBtn.disabled = false; // Re-enable the button
-      submitBtn.innerHTML = "Registriraj";
-      alert("Samo slova,brojevi i uskličnik dozvoljeni");
       return;
     }
 
