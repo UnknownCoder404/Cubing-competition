@@ -50,9 +50,35 @@ async function getWinner() {
   const response = await data.json();
   return response;
 }
+function sortGroups(groups) {
+  // winners is an array of 0,1 or 2 objects, where object.group is 1 or 2.
+  // sort it so that group 1 is at index 0 and group 2 at index 1, if there is not an winner with group 1 or 2, make it an empty object
+  const winners = groups;
+  // Custom comparator function
+  const compareGroups = (a, b) => {
+    if (a.group === undefined) return 1; // undefined group goes to the end
+    if (b.group === undefined) return -1; // undefined group goes to the end
+    return a.group - b.group; // sort by group number
+  };
+
+  // Sort the winners array
+  winners.sort(compareGroups);
+
+  // Ensure there are empty objects for groups with no winners
+  if (winners.length === 0 || winners[0].group !== 1) {
+    winners.unshift({ group: 1 }); // Add empty object for group 1 at index 0
+  }
+  if (winners.length === 1 || winners[1].group !== 2) {
+    winners.splice(1, 0, { group: 2 }); // Add empty object for group 2 at index 1
+  }
+
+  return winners;
+}
 async function displayCompetition(data) {
   let html = "";
+  const winners = sortGroups(await getWinner());
   data.forEach((group, index) => {
+    const winnerUsername = winners[index].username;
     const groupNumber = index + 1;
     html += `<div class="grupa-${groupNumber}">`;
     html += groupNumber === 1 ? `<h3>Razredi 1-4</h3>` : `<h3>Razredi 5-8</h3>`;
@@ -84,6 +110,9 @@ async function displayCompetition(data) {
       html += `</div>`; // Zatvori content
       html += `</div>`; // Zatvori rundu
     }
+    html += winnerUsername
+      ? `<p>Pobjednik je ${winnerUsername}`
+      : `<p>Nema upisanog pobjednika.`;
     html += `</div>`; // Close group-# div
   });
   return html;
