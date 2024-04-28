@@ -647,7 +647,7 @@ app.get("/passwords", verifyToken, async (req, res) => {
   }
 });
 // Route to announce the winner
-app.post("/announce-winner", async (req, res) => {
+app.post("/announce-winner", verifyToken, async (req, res) => {
   try {
     const { id } = req.body;
     if (!id) {
@@ -686,6 +686,10 @@ app.post("/announce-winner", async (req, res) => {
     console.error(err);
     res.status(500).json({ message: "Greška kod servera." });
   }
+});
+app.get("/get-winners", async (req, res) => {
+  const winners = await winner.find({}, "username id group");
+  return winners;
 });
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
