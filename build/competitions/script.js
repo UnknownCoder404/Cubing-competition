@@ -79,6 +79,9 @@ async function displayCompetition(data) {
   const lastUpdated = data.lastUpdated;
   data = data.solves;
   let html = "";
+  document.querySelector(
+    ".last-updated"
+  ).innerHTML = `Rezultati: ${lastUpdated}`;
   const winners = sortGroups(await getWinner());
   data.forEach((group, index) => {
     const winnerUsername = winners[index].username;
