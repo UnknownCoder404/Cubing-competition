@@ -45,7 +45,11 @@ async function getSolves() {
 
   return testData;
 }
-
+async function getWinner() {
+  const data = await fetch(`${url}/get-winners`);
+  const response = await data.json();
+  return response;
+}
 async function displayCompetition(data) {
   let html = "";
   data.forEach((group, index) => {
