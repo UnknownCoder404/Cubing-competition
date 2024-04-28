@@ -142,7 +142,6 @@ async function addSolve(userId, roundIndex, index) {
 
   if (response.ok) {
     const data = await response.json();
-    alert(data.message);
     // Update the competition display after successful addition
     showCompetition(userId, index);
   } else {
