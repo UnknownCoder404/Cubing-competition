@@ -668,7 +668,7 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
       await existingWinner.save();
       return res
         .status(200)
-        .json({ message: "Pobjednik promijenjen uspješno." });
+        .json({ message: "Pobjednik uspješno promijenjen." });
     }
 
     // Create a new winner
