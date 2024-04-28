@@ -164,10 +164,6 @@ app.post("/register", verifyToken, async (req, res) => {
     const user = new User({ username, password, role: "user", group }); // Set default role to 'user'
     // Save the user to the database
     await user.save();
-    // Send a success response
-    console.log(`Korisnik registriran s korisničkim imenom: "${username}"`);
-    console.log(`Korisnik registriran sa lozinkom: "${password}"`);
-    console.log(`Korisnik registriran u grupi: ${group}`);
     res.status(201).json({
       message: "Korisnik  uspješno registriran.",
       registeredUser: {
