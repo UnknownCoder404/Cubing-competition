@@ -44,7 +44,7 @@ async function getSolves() {
     });
   });
 
-  return solvesData;
+  return { solves: solvesData, lastUpdated: competitions.lastUpdated };
 }
 async function getWinner() {
   const data = await fetch(`${url}/get-winners`);
@@ -76,6 +76,8 @@ function sortGroups(groups) {
   return winners;
 }
 async function displayCompetition(data) {
+  const lastUpdated = data.lastUpdated;
+  data = data.solves;
   let html = "";
   const winners = sortGroups(await getWinner());
   data.forEach((group, index) => {
@@ -112,8 +114,8 @@ async function displayCompetition(data) {
       html += `</div>`; // Zatvori rundu
     }
     html += winnerUsername
-      ? `<p>Pobjednik je ${winnerUsername}`
-      : `<p>Nema upisanog pobjednika.`;
+      ? `<p>Pobjednik je ${winnerUsername}.</p>`
+      : `<p>Nema upisanog pobjednika.</p>`;
     html += `</div>`; // Close group-# div
   });
   return html;
