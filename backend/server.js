@@ -679,10 +679,10 @@ app.post("/announce-winner", async (req, res) => {
     // Save the winner to the database
     await newWinner.save();
 
-    res.status(201).json({ message: "Winner announced successfully." });
+    res.status(201).json({ message: "Pobjednik uspješno objavljen." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: "Greška kod servera." });
   }
 });
 app.get("/health-check", (req, res) => {
