@@ -547,7 +547,7 @@ app.get("/results", verifyToken, async (req, res) => {
 
     // Add column headers
     sheet.columns = [
-      { header: "Natjecatelj", key: "username", width: 20 },
+      { header: "Natjecatelj", key: "username", width: 30 },
       { header: "Runda 1", key: "round1", width: 25 },
       { header: "Runda 2", key: "round2", width: 25 },
       { header: "Runda 3", key: "round3", width: 25 },
@@ -556,7 +556,7 @@ app.get("/results", verifyToken, async (req, res) => {
     // Add rows for each user
     results.forEach((user) => {
       // Create a row object with the username
-      const row = { username: user.username };
+      const row = { username: `${user.username} (Grupa ${user.group})` };
 
       // Assuming 'rounds' is an array of objects with a 'solves' property
       user.rounds.forEach((round, index) => {
