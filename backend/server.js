@@ -653,9 +653,12 @@ app.get("/passwords", verifyToken, async (req, res) => {
 app.post("/announce-winner", async (req, res) => {
   try {
     const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ message: "Id korisnika je potreban." });
+    }
     const user = await User.findById(id);
     if (!user) {
-      return res.status(400).send();
+      return res.status(400).json({ message: "Korisnik ne postoji." });
     }
     const group = user.group;
     // Check if the winner already exists for the group
