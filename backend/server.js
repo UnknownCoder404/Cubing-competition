@@ -541,7 +541,7 @@ app.get("/results", verifyToken, async (req, res) => {
     });
   }
   try {
-    const results = await User.find({}, "username rounds");
+    const results = await User.find({}, "username rounds group");
     const workbook = new exceljs.Workbook();
     const sheet = workbook.addWorksheet("Rezultati");
 
