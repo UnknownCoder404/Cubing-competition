@@ -689,7 +689,7 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
 });
 app.get("/get-winners", async (req, res) => {
   const winners = await winner.find({}, "username id group");
-  return winners;
+  return res.status(200).json(winners);
 });
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
