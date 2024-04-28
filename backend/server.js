@@ -472,7 +472,10 @@ app.get("/live/solves", async (req, res) => {
     const usersWithSolves = await User.find({
       "rounds.solves": { $exists: true, $not: { $size: 0 } },
     }).select("username rounds group -_id");
-    res.json(usersWithSolves);
+    res.json({
+      solves: usersWithSolves,
+      lastUpdated: new Date().toISOString().substr(17, 5),
+    });
   } catch (err) {
     res.status(500).json({ message: "Error retrieving solves" });
   }
