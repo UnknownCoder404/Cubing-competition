@@ -11,8 +11,10 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_8" class="circularG"></div>
 </div>`;
 async function setWinner(id) {
-  console.log(id);
-  console.log(typeof id);
+  const setWinnerBtn = document.querySelector(`.set-winner-${id}`);
+  const previousHtml = setWinnerBtn.innerHTML;
+  setWinnerBtn.disabled = true;
+  setWinnerBtn.innerHTML = loadingHTML;
   const data = await fetch(`${url}/announce-winner`, {
     method: "POST",
     body: JSON.stringify({
@@ -24,6 +26,8 @@ async function setWinner(id) {
     },
   });
   const response = await data.json();
+  setWinnerBtn.disabled = false;
+  setWinnerBtn.innerHTML = previousHtml;
   alert(response.message);
 }
 async function showCompetition(userId, index) {
@@ -241,7 +245,7 @@ function displayUsers(users) {
     html += `<button onclick="deleteUser('${id}')">Izbriši</button>`;
     html += `<button onclick="assignAdmin('${id}', '${username}')">Postavi za admina</button>`;
     html += `<button class="showComp-btn" onclick="showCompetition('${id}', ${index})">Natjecanje</button>`;
-    html += `<button onclick="setWinner('${id}')">Pobjednik</button>`;
+    html += `<button class="set-winner-${id}" onclick="setWinner('${id}')">Pobjednik</button>`;
     html += `<div class="comp">`;
     html += `</div>`;
     html += `</div>`; // end user div
