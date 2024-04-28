@@ -396,7 +396,7 @@ app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
 
   await user.save();
   return res.status(200).json({
-    message: `Successfully deleted solve ${solveToDelete} in round ${roundToDelete}.`,
+    message: `Slaganje ${solveToDelete} u rundi ${roundToDelete} je uspješno izbrisano.`,
   });
 });
 
