@@ -161,6 +161,11 @@ app.post("/register", verifyToken, async (req, res) => {
     if (group !== 1 && group !== 2) {
       return res.status(400).json({ message: "Grupa mora biti 1 ili 2." });
     }
+    if (password.split("").includes(" ")) {
+      return res
+        .status(400)
+        .json({ message: "Lozinka ne smije koristiti razmak." });
+    }
     // Create a new user instance
     const user = new User({ username, password, role: "user", group }); // Set default role to 'user'
     // Save the user to the database
