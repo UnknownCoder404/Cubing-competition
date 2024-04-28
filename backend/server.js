@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
 const winnerSchema = new mongoose.Schema({
   group: { type: Number, enum: [1, 2], required: true }, // Only 1 winner per group
   id: { type: String, required: true },
+  username: { type: String, required: true },
 });
 const winner = mongoose.model("winners", winnerSchema);
 // Define the schema for the Post model
@@ -656,6 +657,7 @@ app.post("/announce-winner", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Korisnik ne postoji." });
     }
+    const username = user.username;
     const group = user.group;
     // Check if the winner already exists for the group
     let existingWinner = await winner.findOne({ group });
@@ -673,6 +675,7 @@ app.post("/announce-winner", async (req, res) => {
     const newWinner = new winner({
       group,
       id,
+      username,
     });
 
     // Save the winner to the database
