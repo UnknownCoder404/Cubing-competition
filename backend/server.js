@@ -48,8 +48,13 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, required: true, enum: ["admin", "user"] },
   rounds: [solveSchema],
-  group: { type: String, required: true },
+  group: { type: Number, enum: [1, 2], required: true },
 });
+const winnerSchema = new mongoose.Schema({
+  group: { type: Number, enum: [1, 2], required: true }, // Only 1 winner per group
+  id: { type: String, required: true },
+});
+const winner = mongoose.model("winners", winnerSchema);
 // Define the schema for the Post model
 const postSchema = new mongoose.Schema({
   title: {
@@ -534,11 +539,9 @@ app.get("/post", async (req, res) => {
 });
 app.get("/results", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
-    return res
-      .status(400)
-      .json({
-        message: "Samo administratori smiju dobiti rezultate u excel formatu.",
-      });
+    return res.status(400).json({
+      message: "Samo administratori smiju dobiti rezultate u excel formatu.",
+    });
   }
   try {
     const results = await User.find({}, "username rounds");
@@ -644,6 +647,42 @@ app.get("/passwords", verifyToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while generating the Excel file");
+  }
+});
+// Route to announce the winner
+app.post("/announce-winner", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).send();
+    }
+    const group = user.group;
+    // Check if the winner already exists for the group
+    let existingWinner = await winner.findOne({ group });
+
+    if (existingWinner) {
+      // If winner already exists, update the winner's ID
+      existingWinner.id = id;
+      await existingWinner.save();
+      return res
+        .status(200)
+        .json({ message: "Pobjednik promijenjen uspješno." });
+    }
+
+    // Create a new winner
+    const newWinner = new winner({
+      group,
+      id,
+    });
+
+    // Save the winner to the database
+    await newWinner.save();
+
+    res.status(201).json({ message: "Winner announced successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 app.get("/health-check", (req, res) => {
