@@ -53,7 +53,6 @@ const userSchema = new mongoose.Schema({
 const winnerSchema = new mongoose.Schema({
   group: { type: Number, enum: [1, 2], required: true }, // Only 1 winner per group
   id: { type: String, required: true },
-  username: { type: String, required: true },
 });
 const winner = mongoose.model("winners", winnerSchema);
 // Define the schema for the Post model
@@ -671,7 +670,10 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
     const group = user.group;
     // Check if the winner already exists for the group
     let existingWinner = await winner.findOne({ group });
-
+    if (existingWinner && existingWinner.id && existingWinner.id === id) {
+      await winner.findByIdAndDelete(id);
+      return res.status(200).json({ message: "Pobjednik uspješno izbrisan." });
+    }
     if (existingWinner) {
       // If winner already exists, update the winner's ID
       existingWinner.id = id;
@@ -701,9 +703,15 @@ app.get("/get-winners", async (req, res) => {
     const winners = await winner.find({}, "id group");
     for (let index = 0; index < winners.length; index++) {
       const user = await User.findById(winners[index].id);
-      winners[index].username = user.username;
+      winners[index].username = user ? user.username : "Nepoznato";
     }
-    return res.status(200).json(winners);
+    // Construct response object with usernames
+    const response = winners.map((winner) => ({
+      id: winner.id,
+      group: winner.group,
+      username: winner.username,
+    }));
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
