@@ -699,9 +699,18 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
   }
 });
 app.get("/get-winners", async (req, res) => {
-  const winners = await winner.find({}, "username id group");
-  return res.status(200).json(winners);
+  try {
+    const winners = await winner.find({}, "id group");
+    for (let index = 0; index < winners.length; index++) {
+      const user = await User.findById(winners[index].id);
+      winners[index].username = user.username;
+    }
+    return res.status(200).json(winners);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
