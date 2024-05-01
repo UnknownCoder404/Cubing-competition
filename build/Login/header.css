@@ -12,6 +12,7 @@
 .interaction-container {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .time-container {
   display: flex;
