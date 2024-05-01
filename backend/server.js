@@ -668,7 +668,6 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "Korisnik ne postoji." });
     }
-    const username = user.username;
     const group = user.group;
     // Check if the winner already exists for the group
     let existingWinner = await winner.findOne({ group });
@@ -686,7 +685,6 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
     const newWinner = new winner({
       group,
       id,
-      username,
     });
 
     // Save the winner to the database
