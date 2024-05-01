@@ -539,11 +539,24 @@ app.post("/new-post", verifyToken, async (req, res) => {
 app.get("/post", async (req, res) => {
   try {
     const posts = await Post.find();
-    res.status(200).json(posts);
+    // Construct response object with usernames
+    const response = await Promise.all(
+      posts.map(async (post) => ({
+        title: post.title,
+        description: post.description,
+        author: {
+          id: post.author.id, // Assuming this is the correct field for the author's id
+          username: (await User.findById(post.author.id)).username,
+        },
+        createdAt: post.createdAt,
+      }))
+    );
+    res.status(200).json(response); // Sending the constructed response
   } catch (err) {
     res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
   }
 });
+
 app.get("/results", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
     return res.status(400).json({
