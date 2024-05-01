@@ -6,10 +6,21 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
 }
+@media screen and (max-width: 500px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+}
 .interaction-container {
   display: flex;
   flex-wrap: wrap;
   column-gap: 10px;
+}
+@media screen and (max-width: 500px) {
+  .interaction-container {
+    justify-content: center;
+    align-items: center;
+  }
 }
 /* Page content */
 .content {
