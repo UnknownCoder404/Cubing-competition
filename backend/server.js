@@ -761,9 +761,21 @@ app.get("/scrambles/passwords", verifyToken, (req, res) => {
   ) {
     const htmlResponse = `
       <html>
-        <head><title>Passwords</title></head>
+        <head><title>Passwords</title>
+        <style>/* Osnovni stil za desktop */
+        p {
+          font-size: 16px;
+        }
+        
+        /* Stil za uređaje s maksimalnom širinom od 600px */
+        @media (max-width: 600px) {
+          p {
+            font-size: 18px; /* Povećana veličina teksta za bolju čitljivost na telefonima */
+          }
+        }</style>
+        </head>
         <body>
-          <p>Lozinka 1. grupe: ${process.env.G1PASSWORD}</p>
+          <p style="font-size: 15px">Lozinka 1. grupe: ${process.env.G1PASSWORD}</p>
           <p>Lozinka 2. grupe: ${process.env.G2PASSWORD}</p>
         </body>
       </html>`;
