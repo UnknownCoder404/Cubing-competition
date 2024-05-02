@@ -1,7 +1,6 @@
 // Require the necessary modules
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -80,6 +79,29 @@ const postSchema = new mongoose.Schema({
 
 // Create the Post model using the schema
 const Post = mongoose.model("Post", postSchema);
+function getCurrentDateTimeInZagreb() {
+  const now = new Date();
+  const options = { timeZone: "Europe/Zagreb", hour12: false };
+  const zagrebDateTimeString = now.toLocaleString("en-US", options);
+
+  // Parse the string to get date and time components
+  const [datePart, timePart] = zagrebDateTimeString.split(", ");
+  const [month, day, year] = datePart.split("/");
+  const [hour, minute, second] = timePart.split(":");
+
+  // Construct the date object
+  const zagrebDateTimeObj = {
+    year: parseInt(year),
+    month: parseInt(month),
+    day: parseInt(day),
+    hour: parseInt(hour),
+    minute: parseInt(minute),
+    second: parseInt(second),
+  };
+
+  return zagrebDateTimeObj;
+}
+console.log(getCurrentDateTimeInZagreb());
 
 // Define a middleware to verify the token
 const verifyToken = async (req, res, next) => {
@@ -691,7 +713,9 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
       // Ako već postoji pobjednik, ažurirajte ID pobjednika
       existingWinner.id = id;
       await existingWinner.save();
-      return res.status(200).json({ message: "Pobjednik uspješno promijenjen." });
+      return res
+        .status(200)
+        .json({ message: "Pobjednik uspješno promijenjen." });
     }
 
     // Stvorite novog pobjednika
@@ -723,7 +747,21 @@ app.get("/get-winners", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
+app.get("/scrambles/passwords", verifyToken, (req, res) => {
+  const currentDateTime = getCurrentDateTimeInZagreb();
+  if (
+    currentDateTime.year >= 2024 &&
+    currentDateTime.month >= 5 &&
+    currentDateTime.day >= 3 &&
+    currentDateTime.hour >= 14
+  ) {
+    return res.status(200).json({
+      group1password: process.env.G1PASSWORD,
+      group2password: process.env.G2PASSWORD,
+    });
+  }
+  return res.status(401).json({ message: "Pristupno tek 03.05.2024 u 14:00" });
+});
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
