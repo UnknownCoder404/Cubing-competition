@@ -98,10 +98,10 @@ async function displayCompetition(data) {
     </div>`;
       html += `<div class="content">`;
       round.sort((a, b) => {
-        if (getAverageNoFormat(a.solves) === 0) return -1; // Place 0 at the top
-        if (getAverageNoFormat(b.solves) === 0) return 1; // Place 0 at the top
-        if (getAverageNoFormat(a.solves) === -1) return 1; // Place -1 below 0
-        if (getAverageNoFormat(b.solves) === -1) return -1; // Place -1 below 0
+        if (getAverageNoFormat(a.solves) === 0) return 1; // Place 0 at the top
+        if (getAverageNoFormat(b.solves) === 0) return -1; // Place 0 at the top
+        if (getAverageNoFormat(a.solves) === -1) return -1; // Place -1 below 0
+        if (getAverageNoFormat(b.solves) === -1) return 1; // Place -1 below 0
         return getAverageNoFormat(a.solves) - getAverageNoFormat(b.solves); // Regular sorting for other numbers
       });
       round.forEach((SOLVE, index) => {
