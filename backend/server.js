@@ -749,9 +749,8 @@ app.get("/get-winners", async (req, res) => {
 });
 app.get("/scrambles/passwords", verifyToken, (req, res) => {
   if (req.userRole !== "admin") {
-    res
-      .status(401)
-      .json({ message: "Samo administratori imaju pristup lozinkama." });
+    res.status(401).send("<p>Samo administratori imaju pristup lozinkama.</p>");
+    return;
   }
   const currentDateTime = getCurrentDateTimeInZagreb();
   if (
@@ -760,13 +759,20 @@ app.get("/scrambles/passwords", verifyToken, (req, res) => {
     currentDateTime.day >= 3 &&
     currentDateTime.hour >= 14
   ) {
-    return res.status(200).json({
-      group1password: process.env.G1PASSWORD,
-      group2password: process.env.G2PASSWORD,
-    });
+    const htmlResponse = `
+      <html>
+        <head><title>Passwords</title></head>
+        <body>
+          <p>Lozinka 1. grupe: ${process.env.G1PASSWORD}</p>
+          <p>Lozinka 2. grupe: ${process.env.G2PASSWORD}</p>
+        </body>
+      </html>`;
+    res.status(200).send(htmlResponse);
+    return;
   }
-  return res.status(401).json({ message: "Pristupno tek 03.05.2024 u 14:00" });
+  res.status(401).send("<p>Pristupno tek 03.05.2024 u 14:00</p>");
 });
+
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
