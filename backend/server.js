@@ -748,6 +748,11 @@ app.get("/get-winners", async (req, res) => {
   }
 });
 app.get("/scrambles/passwords", verifyToken, (req, res) => {
+  if (req.userRole !== "admin") {
+    res
+      .status(401)
+      .json({ message: "Samo administratori imaju pristup lozinkama." });
+  }
   const currentDateTime = getCurrentDateTimeInZagreb();
   if (
     currentDateTime.year >= 2024 &&
