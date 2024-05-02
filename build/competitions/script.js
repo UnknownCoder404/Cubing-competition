@@ -97,6 +97,13 @@ async function displayCompetition(data) {
       <img src="../Images/hide.svg" class="showhide">
     </div>`;
       html += `<div class="content">`;
+      round.sort((a, b) => {
+        if (getAverageNoFormat(a.solves) === 0) return -1; // Place 0 at the top
+        if (getAverageNoFormat(b.solves) === 0) return 1; // Place 0 at the top
+        if (getAverageNoFormat(a.solves) === -1) return 1; // Place -1 below 0
+        if (getAverageNoFormat(b.solves) === -1) return -1; // Place -1 below 0
+        return getAverageNoFormat(a.solves) - getAverageNoFormat(b.solves); // Regular sorting for other numbers
+      });
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
         const solves = SOLVE.solves;
@@ -105,7 +112,7 @@ async function displayCompetition(data) {
         const solveNumber = index + 1;
         html += `<div class="solve"> 
         <p  class="solves">    
-        <span class="bold">${name} </span>
+        <span class="bold">${solveNumber}. ${name} </span>
         <span class="${
           average === "DNF" ? "red" : "average"
         }">(Prosjek: ${average})</span>
@@ -150,6 +157,34 @@ function getAverage(solves) {
 
   // Return average rounded to 2 decimal places
   return formatTime(average);
+}
+function getAverageNoFormat(solves) {
+  if (solves.length !== 5) {
+    return -1;
+  }
+
+  // Create a copy of the solves array
+  let sortedSolves = solves.slice();
+
+  sortedSolves.sort((a, b) => {
+    if (a === 0) return 1; // Place 0 at the last element
+    if (b === 0) return -1; // Place 0 at the last element
+    return a - b; // Regular sorting for other numbers
+  });
+  // Remove the smallest and largest elements
+  let trimmedSolves = sortedSolves.slice(1, sortedSolves.length - 1);
+
+  // Calculate average
+  let average =
+    trimmedSolves.reduce((acc, val) => acc + val, 0) / trimmedSolves.length;
+
+  // Check if trimmedSolves contains DNF
+  if (trimmedSolves.includes(0)) {
+    return 0;
+  }
+
+  // Return average rounded to 2 decimal places
+  return average.toFixed(2);
 }
 function formatTime(seconds) {
   // Convert seconds to milliseconds without rounding
