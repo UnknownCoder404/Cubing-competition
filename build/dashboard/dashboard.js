@@ -138,6 +138,11 @@ function getScramblePasswords() {
 document
   .querySelector(".scramblepasswords")
   .addEventListener("click", getScramblePasswords);
+function getScrambles(group = 1) {
+  const redirect = `../../backend/Scrambles/Scramblovi za 03-05-2024 grupa ${group}.zip`;
+  // Redirect with target="_blank"
+  window.open(redirect, "_blank");
+}
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
