@@ -105,7 +105,7 @@ async function displayCompetition(data) {
         const solveNumber = index + 1;
         html += `<div class="solve"> 
         <p  class="solves">    
-        <span class="bold">${solveNumber}. ${name}</span>
+        <span class="bold">${name} </span>
         <span class="${
           average === "DNF" ? "red" : "average"
         }">(Prosjek: ${average})</span>
