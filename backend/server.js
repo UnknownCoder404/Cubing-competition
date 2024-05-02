@@ -744,7 +744,7 @@ app.get("/get-winners", async (req, res) => {
     }));
     return res.status(200).json(response);
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Greška unutar servera." });
   }
 });
 app.get("/scrambles/passwords", verifyToken, (req, res) => {
@@ -777,12 +777,14 @@ app.get("/scrambles/passwords", verifyToken, (req, res) => {
         <body>
           <p style="font-size: 15px">Lozinka 1. grupe: ${process.env.G1PASSWORD}</p>
           <p>Lozinka 2. grupe: ${process.env.G2PASSWORD}</p>
+          <p>NE DIJELI OVAJ LINK!!!!</p>
         </body>
       </html>`;
     res.status(200).send(htmlResponse);
     return;
   }
-  res.status(401).send("<p>Pristupno tek 03.05.2024 u 14:00</p>");
+  res.status(401).send(`<p>Pristupno tek 03.05.2024 u 14:00</p>
+   <p>NE DIJELI OVAJ LINK!!!!</p>`);
 });
 
 app.get("/health-check", (req, res) => {
