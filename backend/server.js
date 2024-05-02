@@ -784,7 +784,15 @@ app.get("/scrambles/passwords", verifyToken, (req, res) => {
   }
   res.status(401).send("<p>Pristupno tek 03.05.2024 u 14:00</p>");
 });
-
+app.get("/scrambles", (req, res) => {
+  const group = req.params.group;
+  if (group !== 1 && group !== 2) {
+    return res.status(401).send("<p>Grupa mora biti 1 ili 2.</p>");
+  }
+  return res
+    .status(200)
+    .sendFile(`./Scrambles/Scramblovi za 03-05-2024 grupa ${grupa}.zip`);
+});
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
