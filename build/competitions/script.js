@@ -98,12 +98,20 @@ async function displayCompetition(data) {
     </div>`;
       html += `<div class="content">`;
       round.sort((a, b) => {
-        if (getAverageNoFormat(a.solves) === 0) return 1; // Place 0 at the top
-        if (getAverageNoFormat(b.solves) === 0) return -1; // Place 0 at the top
-        if (getAverageNoFormat(a.solves) === -1) return -1; // Place -1 below 0
-        if (getAverageNoFormat(b.solves) === -1) return 1; // Place -1 below 0
-        return getAverageNoFormat(a.solves) - getAverageNoFormat(b.solves); // Regular sorting for other numbers
+        const averageA = getAverageNoFormat(a.solves);
+        const averageB = getAverageNoFormat(b.solves);
+
+        if (averageA === 0 && averageB === 0) return 0; // If both averages are 0, maintain order
+        if (averageA === 0) return 1; // If only averageA is 0, put a later
+        if (averageB === 0) return -1; // If only averageB is 0, put b later
+        if (averageA === -1 && averageB === -1) return 0; // If both averages are -1, maintain order
+        if (averageA === -1) return 1; // If only averageA is -1, put a earlier
+        if (averageB === -1) return -1; // If only averageB is -1, put b earlier
+
+        // Regular sorting for other numbers
+        return averageA - averageB;
       });
+
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
         const solves = SOLVE.solves;
