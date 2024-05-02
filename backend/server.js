@@ -669,7 +669,6 @@ app.get("/passwords", verifyToken, async (req, res) => {
     res.status(500).send("An error occurred while generating the Excel file");
   }
 });
-// Route to announce the winner
 app.post("/announce-winner", verifyToken, async (req, res) => {
   try {
     const id = req.body.id;
@@ -681,36 +680,31 @@ app.post("/announce-winner", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Korisnik ne postoji." });
     }
     const group = user.group;
-    // Check if the winner already exists for the group
+    // Provjerite postoji li već pobjednik za grupu
     let existingWinner = await winner.findOne({ group });
-    if (existingWinner && existingWinner.id && existingWinner.id === id) {
-      await winner.findByIdAndDelete(id);
+    if (existingWinner && existingWinner.id === id) {
+      // Koristite _id za brisanje dokumenta pobjednika
+      await winner.findByIdAndDelete(existingWinner._id);
       return res.status(200).json({ message: "Pobjednik uspješno izbrisan." });
     }
     if (existingWinner) {
-      // If winner already exists, update the winner's ID
+      // Ako već postoji pobjednik, ažurirajte ID pobjednika
       existingWinner.id = id;
       await existingWinner.save();
-      return res
-        .status(200)
-        .json({ message: "Pobjednik uspješno promijenjen." });
+      return res.status(200).json({ message: "Pobjednik uspješno promijenjen." });
     }
 
-    // Create a new winner
-    const newWinner = new winner({
-      group,
-      id,
-    });
-
-    // Save the winner to the database
+    // Stvorite novog pobjednika
+    const newWinner = new winner({ group, id });
+    // Spremite pobjednika u bazu podataka
     await newWinner.save();
-
     res.status(201).json({ message: "Pobjednik uspješno objavljen." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Greška kod servera." });
   }
 });
+
 app.get("/get-winners", async (req, res) => {
   try {
     const winners = await winner.find({}, "id group");
