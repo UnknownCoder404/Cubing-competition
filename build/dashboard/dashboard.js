@@ -93,6 +93,9 @@ async function showCompetition(userId, index) {
 document.querySelector(".passwords").addEventListener("click", getPasswords);
 function getPasswords() {
   const token = localStorage.getItem("token");
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
   if (!token) {
     alert("Prijavi se ponovno.");
     window.location.href = "../Login";
@@ -105,6 +108,9 @@ function getPasswords() {
 function getResults() {
   const token = localStorage.getItem("token");
   if (!token) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
     alert("Prijavi se ponovno.");
     window.location.href = "../Login";
     return;
@@ -114,6 +120,24 @@ function getResults() {
   window.open(redirect, "_blank");
 }
 document.querySelector(".results").addEventListener("click", getResults);
+
+function getScramblePasswords() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
+    alert("Prijavi se ponovno.");
+    window.location.href = "../Login";
+    return;
+  }
+  const redirect = `${url}/scrambles/passwords?token=${token}`;
+  // Redirect with target="_blank"
+  window.open(redirect, "_blank");
+}
+document
+  .querySelector(".scramblepasswords")
+  .addEventListener("click", getScramblePasswords);
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
