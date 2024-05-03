@@ -79,7 +79,7 @@ async function showCompetition(userId, index) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Slaganje:</label>`;
       html += `<input placeholder="npr. 15467" type="number" id="solve-${i}" name="solve">`;
-      html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj slaganje</button>
+      html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
       </form>
     `;
     }
