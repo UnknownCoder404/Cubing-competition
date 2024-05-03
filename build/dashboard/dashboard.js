@@ -71,7 +71,7 @@ async function showCompetition(userId, index) {
       }
       html += `</ul>`;
     } else {
-      html += `<p>No solves for this round.</p>`;
+      html += `<p>Nema slaganja za ovu rundu.</p>`;
     }
 
     // Add form to add solves (assuming you have elements with these IDs)
