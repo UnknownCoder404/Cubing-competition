@@ -61,7 +61,7 @@ async function showCompetition(userId, index) {
     html += `<h3>Runda ${i + 1}</h3>`;
     // Check if solves exist for the round
     if (round.solves && round.solves.length > 0) {
-      html += `Ao5: ${getAverage(round.solves)}`;
+      html += `<p>Ao5: ${getAverage(round.solves)}</p>`;
       html += `<ul>`;
       for (let j = 0; j < round.solves.length; j++) {
         const time =
@@ -89,59 +89,6 @@ async function showCompetition(userId, index) {
 
   userDiv.querySelector(".comp").innerHTML = html;
   showCompBtn.innerHTML = prevHTML;
-}
-document.querySelector(".passwords").addEventListener("click", getPasswords);
-function getPasswords() {
-  const token = localStorage.getItem("token");
-  localStorage.removeItem("token");
-  localStorage.removeItem("username");
-  localStorage.removeItem("role");
-  if (!token) {
-    alert("Prijavi se ponovno.");
-    window.location.href = "../Login";
-    return;
-  }
-  const redirect = `${url}/passwords?token=${token}`;
-  // Redirect with target="_blank"
-  window.open(redirect, "_blank");
-}
-function getResults() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("role");
-    alert("Prijavi se ponovno.");
-    window.location.href = "../Login";
-    return;
-  }
-  const redirect = `${url}/results?token=${token}`;
-  // Redirect with target="_blank"
-  window.open(redirect, "_blank");
-}
-document.querySelector(".results").addEventListener("click", getResults);
-
-function getScramblePasswords() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("role");
-    alert("Prijavi se ponovno.");
-    window.location.href = "../Login";
-    return;
-  }
-  const redirect = `${url}/scrambles/passwords?token=${token}`;
-  // Redirect with target="_blank"
-  window.open(redirect, "_blank");
-}
-document
-  .querySelector(".scramblepasswords")
-  .addEventListener("click", getScramblePasswords);
-function getScrambles(group = 1) {
-  const redirect = `../Scrambles/Scramblovi za 03-05-2024 grupa ${group}.zip`;
-  // Redirect with target="_blank"
-  window.open(redirect, "_blank");
 }
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
