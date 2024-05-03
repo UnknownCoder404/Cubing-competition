@@ -78,7 +78,7 @@ async function showCompetition(userId, index) {
     if ((round.solves && round.solves.length < 5) || !round.solves) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Slaganje:</label>`;
-      html += `<input placeholder="Format: MMSSTT" type="number" id="solve-${i}" name="solve">`;
+      html += `<input placeholder="npr. 15467" type="number" id="solve-${i}" name="solve">`;
       html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj slaganje</button>
       </form>
     `;
