@@ -186,7 +186,7 @@ async function assignAdmin(id, username) {
     },
   };
   try {
-    const data = await fetch(`${url}/assign-admin/${id}`, body);
+    const data = await fetch(`${url}/admin/assign/${id}`, body);
     const result = await data.json();
 
     if (data.ok) {
