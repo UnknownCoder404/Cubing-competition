@@ -55,8 +55,8 @@ app.use("/admin/assign", require("./routes/admin/assign"));
 app.use("/solves/add", require("./routes/solves/add"));
 app.use("/solves/delete", require("./routes/solves/delete"));
 app.use("/users/all", require("./routes/users/all"));
-app.use("/users", requier("./routes/users/get"));
-app.use("/users", requier("./routes/users/delete"));
+app.use("/users", require("./routes/users/get"));
+app.use("/users", require("./routes/users/delete"));
 
 // Route handler for getting live solves
 app.get("/live/solves", async (req, res) => {
