@@ -51,37 +51,8 @@ mongoose
 console.log(getCurrentDateTimeInZagreb());
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
-app.get("/profile", verifyToken, async (req, res) => {
-  try {
-    const user = await User.findbyId(req.userId);
-    return res
-      .status(200)
-      .json({ userId: req.userId, username: user.username, role: user.role });
-  } catch (err) {
-    return res.status(500).json({ error: err });
-  }
-});
+app.user("/users/delete", require("./routes/users/delete"));
 
-app.delete("/users/delete/:userId", verifyToken, (req, res) => {
-  if (req.userRole !== "admin") {
-    res
-      .status(403)
-      .json({ message: "Samo administratori mogu brisati korisnike." });
-  }
-
-  const userId = req.params.userId;
-
-  // Delete user using mongoose
-  User.findByIdAndDelete(userId)
-    .then(() =>
-      res.status(200).json({ message: "Korisnik je uspješno izbrisan." })
-    )
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ message: "Greška prilikom brisanja korisnika.", error: err })
-    );
-});
 app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
   try {
     const userId = req.params.userId;
