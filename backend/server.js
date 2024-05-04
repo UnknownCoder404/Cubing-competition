@@ -53,79 +53,8 @@ app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
 app.use("/users/delete", require("./routes/users/delete"));
 app.use("/admin/assign", require("./routes/admin/assign"));
-
-app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
-  const solverId = req.params.solverId;
-  const solver = await User.findById(solverId);
-  const judgeId = req.userId;
-  const judgeRole = req.userRole;
-  const solves = req.body.solves;
-  const round = req.body.round - 1; // indexing starts at 0
-  if (judgeRole !== "admin") {
-    return res
-      .status(403)
-      .json({ message: "Samo administratori mogu dodavati slaganja." });
-  }
-  if (!solver) {
-    return res.status(400).json({
-      message: `Natjecatelj ne postoji. Kontaktirajte programere za pomoć. (Naveli ste: ${solverId})`,
-    });
-  }
-  if (!solves) {
-    return res.status(400).json({ message: "Nema ponuđenih slaganja." });
-  }
-  for (let i = 0; i < solves.length; i++) {
-    if (solves[i] < 0) {
-      return res
-        .status(400)
-        .json({ message: `Slaganje #${i + 1} je negativno.` });
-    }
-  }
-  const response = await addSolves(solver, solves, round);
-  if (response > 0) {
-    return res
-      .status(200)
-      .json({ message: `Slaganje dodano korisniku ${solver.username}.` });
-  } else {
-    return res.status(400).json({
-      message: `Nije uspjelo dodavanje slaganja korisniku ${solver.username}. Kontaktirajte programere za pomoć.`,
-    });
-  }
-});
-
-app.delete("/solves/delete/:userId", verifyToken, async (req, res) => {
-  const userId = req.params.userId; // userid to delete solves
-  const roundToDelete = req.body.round;
-  const solveToDelete = req.body.solve;
-
-  if (!roundToDelete) {
-    res.status(400).json({ message: "Nedostaje runda za brisanje." });
-  }
-  if (typeof roundToDelete !== "number") {
-    res.status(400).json({ message: "Runda za brisanje treba biti broj." });
-  }
-
-  if (typeof solveToDelete !== "number") {
-    res.status(400).json({ message: "Slaganje za brisanje treba biti broj." });
-  }
-
-  const user = await User.findById(userId);
-
-  // Delete the specified solve
-  if (user.rounds && user.rounds[roundToDelete - 1]) {
-    user.rounds[roundToDelete - 1].solves.splice(solveToDelete - 1, 1); // Remove the element at index
-  } else {
-    // Handle case where round doesn't exist
-    return res
-      .status(400)
-      .json({ message: "Runda za korisnika nije pronađena." });
-  }
-
-  await user.save();
-  return res.status(200).json({
-    message: `Slaganje ${solveToDelete} u rundi ${roundToDelete} je uspješno izbrisano.`,
-  });
-});
+app.use("/solves/add", require("./routes/solves/add"));
+app.use("/solves/delete", require("./routes/solves/delete"));
 
 app.get("/users/all", verifyToken, async (req, res) => {
   try {
