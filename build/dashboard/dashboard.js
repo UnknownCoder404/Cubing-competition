@@ -93,16 +93,15 @@ async function showCompetition(userId, index) {
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}`);
   let solveValue = solveInput.value;
-  solveValue = formatTimeString(solveValue);
   // Check if solve value is a number
   if (
-    isNaN(solveValue) ||
     (!solveValue && solveValue !== 0) || // If falsy, but not 0
     solveValue.toString().trim() === ""
   ) {
     alert("Please enter a valid solve value (number).");
     return;
   }
+  solveValue = formatTimeString(solveValue);
   const solveData = {
     round: roundIndex + 1,
     solves: [parseFloat(solveValue)],
