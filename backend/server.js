@@ -7,9 +7,10 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const exceljs = require("exceljs");
 const verifyToken = require("./middleware/verifyToken");
+const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
 const User = require("./Models/user");
 const Post = require("./Models/post");
-const winner = require("./Models/winners");
+const winner = require("./Models/winner");
 // Load the environment variables from the .env file
 dotenv.config();
 
@@ -45,28 +46,6 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
-function getCurrentDateTimeInZagreb() {
-  const now = new Date();
-  const options = { timeZone: "Europe/Zagreb", hour12: false };
-  const zagrebDateTimeString = now.toLocaleString("en-US", options);
-
-  // Parse the string to get date and time components
-  const [datePart, timePart] = zagrebDateTimeString.split(", ");
-  const [month, day, year] = datePart.split("/");
-  const [hour, minute, second] = timePart.split(":");
-
-  // Construct the date object
-  const zagrebDateTimeObj = {
-    year: parseInt(year),
-    month: parseInt(month),
-    day: parseInt(day),
-    hour: parseInt(hour),
-    minute: parseInt(minute),
-    second: parseInt(second),
-  };
-
-  return zagrebDateTimeObj;
-}
 console.log(getCurrentDateTimeInZagreb());
 
 // Define a route for user registration
