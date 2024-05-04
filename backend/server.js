@@ -51,7 +51,6 @@ mongoose
 console.log(getCurrentDateTimeInZagreb());
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
-app.use("/users/delete", require("./routes/users/delete"));
 app.use("/admin/assign", require("./routes/admin/assign"));
 app.use("/solves/add", require("./routes/solves/add"));
 app.use("/solves/delete", require("./routes/solves/delete"));
@@ -59,30 +58,6 @@ app.use("/users/all", require("./routes/users/all"));
 app.use("/users", requier("./routes/users/get"));
 app.use("/users", requier("./routes/users/delete"));
 
-app.delete("/users/:userId", verifyToken, async (req, res) => {
-  try {
-    // Ensure only admins can access this route
-    if (req.userRole !== "admin") {
-      return res
-        .status(401)
-        .json({ message: "Samo administratori mogu brisati korisnike." });
-    }
-
-    const userId = req.params.userId; // Id of user to delete
-
-    // Delete user with this id.
-    const deletedUser = await User.findByIdAndDelete(userId);
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: "Korisnik nije pronađen." });
-    }
-
-    return res.status(200).json({ message: "Korisnik je uspješno izbrisan." });
-  } catch (error) {
-    // Handle errors
-    return res.status(500).json({ message: error.message });
-  }
-});
 // Route handler for getting live solves
 app.get("/live/solves", async (req, res) => {
   try {
