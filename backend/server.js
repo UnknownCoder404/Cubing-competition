@@ -51,7 +51,7 @@ mongoose
 console.log(getCurrentDateTimeInZagreb());
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
-app.user("/users/delete", require("./routes/users/delete"));
+app.use("/users/delete", require("./routes/users/delete"));
 
 app.post("/assign-admin/:userId", verifyToken, async (req, res) => {
   try {
