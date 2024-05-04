@@ -52,7 +52,7 @@ console.log(getCurrentDateTimeInZagreb());
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
 app.use("/users/delete", require("./routes/users/delete"));
-app.user("/admin/assign", require("./routes/admin/assign"));
+app.use("/admin/assign", require("./routes/admin/assign"));
 
 app.post("/solves/add/:solverId", verifyToken, async (req, res) => {
   const solverId = req.params.solverId;
