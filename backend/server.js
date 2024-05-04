@@ -1,3 +1,4 @@
+// TODO: SEPERATE MONGOOSE MODELS, AND AFTER THE ROUTES
 // Require the necessary modules
 const express = require("express");
 const mongoose = require("mongoose");
@@ -5,6 +6,10 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const exceljs = require("exceljs");
+const verifyToken = require("./middleware/verifyToken");
+const User = require("./Models/user");
+const Post = require("./Models/post");
+const winner = require("./Models/winner");
 // Load the environment variables from the .env file
 dotenv.config();
 
@@ -40,45 +45,6 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
-const solveSchema = new mongoose.Schema({ solves: [Number] });
-// Define a schema for the user model
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true, enum: ["admin", "user"] },
-  rounds: [solveSchema],
-  group: { type: Number, enum: [1, 2], required: true },
-});
-const winnerSchema = new mongoose.Schema({
-  group: { type: Number, enum: [1, 2], required: true }, // Only 1 winner per group
-  id: { type: String, required: true },
-});
-const winner = mongoose.model("winners", winnerSchema);
-// Define the schema for the Post model
-const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  author: {
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    username: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-// Create the Post model using the schema
-const Post = mongoose.model("Post", postSchema);
 function getCurrentDateTimeInZagreb() {
   const now = new Date();
   const options = { timeZone: "Europe/Zagreb", hour12: false };
@@ -103,49 +69,6 @@ function getCurrentDateTimeInZagreb() {
 }
 console.log(getCurrentDateTimeInZagreb());
 
-// Define a middleware to verify the token
-const verifyToken = async (req, res, next) => {
-  try {
-    // Get the token from the request header or from parameters in the URL
-    const token = req.headers["authorization"]
-      ? req.headers["authorization"].replace(/^Bearer\s/, "")
-      : new URLSearchParams(req.url.split("?")[1]).get("token");
-    // Check if the token exists
-    if (!token) {
-      return res
-        .status(403)
-        .json({ message: "Nema tokena. Prijavi se ponovno." });
-    }
-    // Verify the token with the secret key
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // Set the user id to the request object
-    req.userId = decoded.id;
-    const USER = await User.findById(decoded.id);
-    req.user = USER;
-    req.userRole = USER.role;
-    // Call the next middleware
-    next();
-  } catch (err) {
-    // Handle the error
-    res
-      .status(401)
-      .json({ message: "Pogrešan token. Pokušajte se ponovno prijaviti." });
-  }
-};
-
-// Add a method to compare the password with the hashed one
-userSchema.methods.comparePassword = async function (password) {
-  try {
-    // Return a boolean value indicating the match
-    return password === this.password;
-  } catch (err) {
-    // Handle the error
-    throw err;
-  }
-};
-
-// Create a user model from the schema
-const User = mongoose.model("User", userSchema);
 // Define a route for user registration
 app.post("/register", verifyToken, async (req, res) => {
   try {
