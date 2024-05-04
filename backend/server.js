@@ -9,7 +9,7 @@ const exceljs = require("exceljs");
 const verifyToken = require("./middleware/verifyToken");
 const User = require("./Models/user");
 const Post = require("./Models/post");
-const winner = require("./Models/winner");
+const winner = require("./Models/winners");
 // Load the environment variables from the .env file
 dotenv.config();
 

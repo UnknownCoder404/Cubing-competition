@@ -4,4 +4,5 @@ const winnerSchema = new mongoose.Schema({
   id: { type: String, required: true },
 });
 const winner = mongoose.model("winners", winnerSchema);
+
 module.exports = winner;
