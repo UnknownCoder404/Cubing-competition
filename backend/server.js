@@ -57,20 +57,18 @@ app.use("/solves/delete", require("./routes/solves/delete"));
 app.use("/users/all", require("./routes/users/all"));
 app.use("/users", require("./routes/users/get"));
 app.use("/users", require("./routes/users/delete"));
+
 // Route handler for getting live solves
 app.get("/live/solves", async (req, res) => {
   try {
-    const usersWithSolves = await (await User.find({}))
-      .select("username rounds group -_id")
-      .map((user) => {
-        // Loop through each user's rounds array
-        user.rounds = user.rounds.map((round) => {
-          // Check if solves is empty
-          return round.solves.length === 0 ? null : round;
-        });
-        return user;
-      });
-
+    const usersWithSolves = await User.find({
+      rounds: {
+        $elemMatch: {
+          index: { $eq: req.query.index },
+          solves: { $exists: true, $not: { $size: 0 } },
+        },
+      },
+    }).select("username rounds group -_id");
     res.json({
       solves: usersWithSolves,
       lastUpdated: new Intl.DateTimeFormat("en-US", {
