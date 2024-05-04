@@ -56,26 +56,9 @@ app.use("/admin/assign", require("./routes/admin/assign"));
 app.use("/solves/add", require("./routes/solves/add"));
 app.use("/solves/delete", require("./routes/solves/delete"));
 app.use("/users/all", require("./routes/users/all"));
+app.use("/users", requier("./routes/users/get"));
+app.use("/users", requier("./routes/users/delete"));
 
-app.get("/users/:userId", verifyToken, async (req, res) => {
-  try {
-    // Ensure only admins can access this route
-    if (req.userRole !== "admin") {
-      return res.status(401).json({
-        message: "Samo administratori mogu dobiti informacije o korisnicima.",
-      });
-    }
-
-    // Fetch all users from the database
-    const user = await User.findById(req.params.userId, "username role rounds");
-
-    // Send the response array
-    res.status(200).json(user);
-  } catch (error) {
-    // Handle errors
-    res.status(500).json({ message: error.message });
-  }
-});
 app.delete("/users/:userId", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
