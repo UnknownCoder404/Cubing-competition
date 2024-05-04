@@ -63,7 +63,7 @@ app.get("/live/solves", async (req, res) => {
   try {
     const usersWithSolves = await User.find({
       "rounds.solves": { $exists: true, $not: { $size: 0 } },
-    }).select("username rounds group -_id");
+    }).select("username solves rounds group -_id");
     res.json({
       solves: usersWithSolves,
       lastUpdated: new Intl.DateTimeFormat("en-US", {
