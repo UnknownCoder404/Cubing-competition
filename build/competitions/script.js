@@ -117,6 +117,7 @@ async function displayCompetition(data) {
       round.forEach((SOLVE, index) => {
         const solve = SOLVE.solve;
         const solves = SOLVE.solves;
+        if (!solves || solves.length === 0) return;
         const average = getAverage(solves);
         const name = SOLVE.name;
         const solveNumber = index + 1;
