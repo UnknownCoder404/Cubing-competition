@@ -49,7 +49,7 @@ mongoose
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
 console.log(getCurrentDateTimeInZagreb());
-app.use("/", require("./routes/register"));
+app.use("/register", require("./routes/register"));
 // Define a route for user login
 app.post("/login", async (req, res) => {
   try {

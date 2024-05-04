@@ -3,7 +3,7 @@ const User = require("../Models/user");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
 // Define a route for user registration
-router.post("/register", verifyToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
     // Get the username and password from the request body
     const { username, password, group } = req.body;
