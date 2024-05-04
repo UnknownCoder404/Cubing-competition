@@ -1,4 +1,7 @@
 const User = require("../Models/user");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 // Define a middleware to verify the token
 const verifyToken = async (req, res, next) => {
   try {
