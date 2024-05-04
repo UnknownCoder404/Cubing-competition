@@ -8,6 +8,7 @@ const cors = require("cors");
 const exceljs = require("exceljs");
 const verifyToken = require("./middleware/verifyToken");
 const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
+// Import mongoose models
 const User = require("./Models/user");
 const Post = require("./Models/post");
 const winner = require("./Models/winner");
@@ -43,7 +44,7 @@ app.use(cors(corsOptions));
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB"))
+  .then(() => {})
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
 console.log(getCurrentDateTimeInZagreb());
@@ -693,5 +694,9 @@ app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
 // Start the server on the specified port
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const PORT = process.env.PORT || 3000;
+
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
