@@ -1,7 +1,6 @@
 const express = require("express");
 const Post = require("../../Models/post");
 const verifyToken = require("../../middleware/verifyToken");
-const addSolves = require("../../functions/addSolves");
 const router = express.Router();
 router.post("/", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
