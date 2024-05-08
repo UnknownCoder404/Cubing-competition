@@ -28,7 +28,7 @@ function createNewPostDialog() {
     const description = document.getElementById("description").value;
 
     try {
-      const response = await fetch(`${url}/new-post`, {
+      const response = await fetch(`${url}/posts/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function createNewPostDialog() {
   });
 }
 async function getPosts() {
-  const data = await fetch(`${url}/post`);
+  const data = await fetch(`${url}/posts`);
   const posts = await data.json();
   return posts;
 }

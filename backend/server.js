@@ -62,7 +62,9 @@ app.use("/solves/get", require("./routes/solves/get"));
 app.use("/users/all", require("./routes/users/all"));
 app.use("/users", require("./routes/users/get"));
 app.use("/users", require("./routes/users/delete"));
-
+// Posts
+app.use("/posts/new", require("./routes/posts/new"));
+/*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
   const newPassword = req.body.newPassword;
@@ -84,34 +86,9 @@ app.post("/change-password", verifyToken, async (req, res) => {
   await user.save();
   return res.status(200).json({ message: "Lozinka promijenjena." });
 });
+*/
 
-app.post("/new-post", verifyToken, async (req, res) => {
-  if (req.userRole !== "admin") {
-    return res
-      .status(400)
-      .json({ message: "Samo administratori smiju objavljivati." });
-  }
-  const username = req.user.username;
-  const userId = req.userId;
-  const title = req.body.title;
-  const description = req.body.description;
-
-  try {
-    const newPost = await Post.create({
-      title: title,
-      description: description,
-      author: {
-        id: userId,
-        username: username,
-      },
-    });
-    res.status(201).json(newPost);
-  } catch (err) {
-    res.status(500).json({ message: "Neuspješno objavljivanje posta." });
-  }
-});
-
-app.get("/post", async (req, res) => {
+app.get("/posts", async (req, res) => {
   try {
     const posts = await Post.find();
     // Construct response object with usernames
