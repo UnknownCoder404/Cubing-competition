@@ -64,6 +64,7 @@ app.use("/users", require("./routes/users/get"));
 app.use("/users", require("./routes/users/delete"));
 // Posts
 app.use("/posts/new", require("./routes/posts/new"));
+app.use("/posts", require("./routes/posts/get"));
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
@@ -87,27 +88,6 @@ app.post("/change-password", verifyToken, async (req, res) => {
   return res.status(200).json({ message: "Lozinka promijenjena." });
 });
 */
-
-app.get("/posts", async (req, res) => {
-  try {
-    const posts = await Post.find();
-    // Construct response object with usernames
-    const response = await Promise.all(
-      posts.map(async (post) => ({
-        title: post.title,
-        description: post.description,
-        author: {
-          id: post.author.id, // Assuming this is the correct field for the author's id
-          username: (await User.findById(post.author.id)).username,
-        },
-        createdAt: post.createdAt,
-      }))
-    );
-    res.status(200).json(response); // Sending the constructed response
-  } catch (err) {
-    res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
-  }
-});
 
 app.get("/results", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
