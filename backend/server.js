@@ -1,8 +1,6 @@
-// TODO: SEPERATE MONGOOSE MODELS, AND AFTER THE ROUTES
 // Require the necessary modules
 const express = require("express");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const exceljs = require("exceljs");
