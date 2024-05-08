@@ -27,10 +27,6 @@
   align-items: center;
   margin-left: 10px;
 }
-/* Page content */
-.content {
-  padding: 16px;
-}
 /* The sticky class is added to the header with JS when it reaches its scroll position */
 .sticky {
   position: fixed;
