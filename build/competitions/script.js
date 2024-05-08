@@ -19,7 +19,7 @@ function addInteractive() {
 }
 
 async function getSolves() {
-  const data = await fetch(`${url}/live/solves`, { method: "GET" });
+  const data = await fetch(`${url}/solves/get`, { method: "GET" });
   const competitions = await data.json();
   let solvesData = [[], []]; // Assuming there are only two groups
   competitions.solves.forEach((user) => {

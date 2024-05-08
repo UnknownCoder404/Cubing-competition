@@ -49,37 +49,19 @@ mongoose
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 
 console.log(getCurrentDateTimeInZagreb());
+// register and login
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
+// admin
 app.use("/admin/assign", require("./routes/admin/assign"));
+// solves
 app.use("/solves/add", require("./routes/solves/add"));
 app.use("/solves/delete", require("./routes/solves/delete"));
+app.use("/solves/get", require("./routes/solves/get"));
+// users
 app.use("/users/all", require("./routes/users/all"));
 app.use("/users", require("./routes/users/get"));
 app.use("/users", require("./routes/users/delete"));
-
-// Route handler for getting live solves
-app.get("/live/solves", async (req, res) => {
-  try {
-    const usersWithSolves = await User.find({
-      rounds: {
-        $elemMatch: {
-          index: { $eq: req.query.index },
-          solves: { $exists: true, $not: { $size: 0 } },
-        },
-      },
-    }).select("username rounds group -_id");
-    res.json({
-      solves: usersWithSolves,
-      lastUpdated: new Intl.DateTimeFormat("en-US", {
-        minute: "2-digit",
-        second: "2-digit",
-      }).format(new Date()),
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Error retrieving solves" });
-  }
-});
 
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
