@@ -31,7 +31,7 @@ router.get("/", verifyToken, async (req, res) => {
       // Assuming 'rounds' is an array of objects with a 'solves' property
       user.rounds.forEach((round, index) => {
         if (!round) return; // Sometimes round is null
-        let solves = round.solves;
+        let solves = round.solves.slice(); // Create a copy
         if (!solves || solves.length === 0) return;
         solves.forEach((solve, index) => {
           console.log(solve);
