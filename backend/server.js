@@ -6,11 +6,7 @@ const cors = require("cors");
 const exceljs = require("exceljs");
 const verifyToken = require("./middleware/verifyToken");
 const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
-const addSolves = require("./functions/addSolves");
 // Import mongoose models
-const User = require("./Models/user");
-const Post = require("./Models/post");
-const winner = require("./Models/winner");
 // Load the environment variables from the .env file
 dotenv.config();
 
@@ -71,6 +67,7 @@ app.use("/winner", require("./routes/winner/announce"));
 app.use("/winner", require("./routes/winner/get"));
 // Scrambles
 app.use("/scrambles", require("./routes/scrambles/passwords"));
+// Token validation
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;

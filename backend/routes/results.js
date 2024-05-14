@@ -2,6 +2,7 @@ const express = require("express");
 const exceljs = require("exceljs");
 const User = require("../Models/user");
 const verifyToken = require("../middleware/verifyToken");
+const formatTime = require("../functions/formatTime");
 const router = express.Router();
 router.get("/", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
@@ -30,10 +31,13 @@ router.get("/", verifyToken, async (req, res) => {
       // Assuming 'rounds' is an array of objects with a 'solves' property
       user.rounds.forEach((round, index) => {
         if (!round) return; // Sometimes round is null
-        const solves = round.solves;
+        let solves = round.solves;
         if (!solves || solves.length === 0) return;
+        solves.forEach((solve, index) => {
+          solves[index] = formatTime(solve);
+        });
         // Add the solves to the corresponding round in the row object
-        row[`round${index + 1}`] = round.solves.join(", ");
+        row[`round${index + 1}`] = solves.join(", ");
       });
 
       // Add the row to the sheet
