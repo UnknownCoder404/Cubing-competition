@@ -74,7 +74,7 @@ async function setWinner(id) {
   const previousHtml = setWinnerBtn.innerHTML;
   setWinnerBtn.disabled = true;
   setWinnerBtn.innerHTML = loadingHTML;
-  const data = await fetch(`${url}/announce-winner`, {
+  const data = await fetch(`${url}/winner/announce`, {
     method: "POST",
     body: JSON.stringify({
       id: id,

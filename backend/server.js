@@ -90,7 +90,7 @@ app.post("/change-password", verifyToken, async (req, res) => {
 });
 */
 
-app.post("/announce-winner", verifyToken, async (req, res) => {
+app.post("/winner/announce", verifyToken, async (req, res) => {
   try {
     const id = req.body.id;
     if (!id) {
