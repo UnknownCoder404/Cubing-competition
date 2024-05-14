@@ -229,7 +229,15 @@ app.get("/scrambles/passwords", verifyToken, (req, res) => {
   res.status(401).send(`<p>Pristupno tek 03.05.2024 u 14:00</p>
    <p>NE DIJELI OVAJ LINK!!!!</p>`);
 });
-
+app.get("/token", verifyToken, (req, res) => {
+  try {
+    // Assuming verifyToken throws an error on invalid token
+    res.status(200).json({ message: "Token is valid" });
+  } catch (err) {
+    console.error(err); // Log the error for debugging
+    res.status(500);
+  }
+});
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });

@@ -2,6 +2,36 @@ const url = "https://cubing-competition.onrender.com";
 const logInEle = document.querySelector(".js-log-in");
 const username = localStorage.getItem("username");
 const cardsDiv = document.querySelector(".cards");
+function getRole() {
+  const role = localStorage.getItem("role");
+  if (!role) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return role;
+}
+function getId() {
+  const id = localStorage.getItem("id");
+  if (!id) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return id;
+}
+function getToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return token;
+}
 function createNewPostDialog() {
   const dialog = document.createElement("dialog");
   dialog.innerHTML = `
@@ -151,3 +181,8 @@ async function main() {
   });
 }
 main();
+async function tokenValid() {
+  const token = getToken();
+  const data = await fetch(`${url}/token?token=${token}`);
+  return data.ok;
+}
