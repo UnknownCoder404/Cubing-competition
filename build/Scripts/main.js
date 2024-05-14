@@ -161,6 +161,7 @@ document.querySelector(".share").addEventListener("click", async () => {
   }
 });
 async function main() {
+  tokenValid(true);
   const posts = await getPosts();
   posts.forEach((post) => {
     let html = "";
@@ -177,7 +178,14 @@ async function main() {
   });
 }
 main();
-async function tokenValid() {
+async function tokenValid(action = false) {
+  // action, if true it will logout user if token is not valid
+  console.log("Checking if token is valid...");
   const data = await fetch(`${url}/token`.addToken());
+  console.log(data.ok ? "Token is valid." : "Token is invalid.");
+  if (action && !data.ok) {
+    console.log("Reloading and logging out...");
+    logOut(true);
+  }
   return data.ok;
 }
