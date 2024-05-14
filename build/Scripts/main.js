@@ -204,8 +204,10 @@ async function tokenValid(action = false) {
   const data = await fetch(`${url}/token`.addToken());
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
   if (action && !data.ok) {
-    console.log("Reloading and logging out...");
-    logOut(true);
+    console.log("Logging out...");
+    logOut();
+    alert("Prijavi se ponovno");
+    window.location.href = "../Login";
   }
   return data.ok;
 }

@@ -10,6 +10,9 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+String.prototype.addToken = function (token = getToken()) {
+  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
+};
 Object.prototype.addToken = function (token = getToken()) {
   let object = this;
   object.Authorization = token;
@@ -308,7 +311,14 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
     alert(error.message);
   }
 }
-
+function getResults() {
+  // Open the URL in a new window with "noopener" and "noreferrer" options
+  window.open(`${url}/results`.addToken(), "_blank", "noopener,noreferrer");
+}
+function getPasswords() {
+  // Open the URL in a new window with "noopener" and "noreferrer" options
+  window.open(`${url}/passwords`.addToken(), "_blank", "noopener,noreferrer");
+}
 function getAverage(solves) {
   if (solves.length !== 5) {
     return "Need 5 solves";
