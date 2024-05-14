@@ -3,7 +3,7 @@ const exceljs = require("exceljs");
 const User = require("../Models/user");
 const verifyToken = require("../middleware/verifyToken");
 const router = express.Router();
-router.get("/passwords", verifyToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
     return res
       .status(400)
