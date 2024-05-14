@@ -16,6 +16,16 @@ String.prototype.isUser = function () {
 String.prototype.isAdmin = function () {
   return this.toUpperCase() === "ADMIN";
 };
+function getUsername() {
+  const username = localStorage.getItem("username");
+  if (!username) {
+    logOut();
+    alert("Prijavi se ponovno.");
+    location.href = "../Login/";
+    return null;
+  }
+  return username;
+}
 function getRole() {
   const role = localStorage.getItem("role");
   if (!role) {

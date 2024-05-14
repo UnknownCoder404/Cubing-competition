@@ -1,38 +1,30 @@
 const url = "https://cubing-competition.onrender.com";
 const logInEle = document.querySelector(".js-log-in");
-const username = localStorage.getItem("username");
+const username = getUsername();
 const cardsDiv = document.querySelector(".cards");
+String.prototype.isUser = function () {
+  return this.toUpperCase() === "USER";
+};
+String.prototype.isAdmin = function () {
+  return this.toUpperCase() === "ADMIN";
+};
 String.prototype.addToken = function (token = getToken()) {
   return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
 };
+function getUsername() {
+  const username = localStorage.getItem("username");
+  return username;
+}
 function getRole() {
   const role = localStorage.getItem("role");
-  if (!role) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
   return role;
 }
 function getId() {
   const id = localStorage.getItem("id");
-  if (!id) {
-    logOut();
-    alert("Prijavi se ponovni.");
-    location.href = "../Login/";
-    return null;
-  }
   return id;
 }
 function getToken() {
   const token = localStorage.getItem("token");
-  if (!token) {
-    logOut();
-    alert("Prijavi se ponovni.");
-    location.href = "../Login/";
-    return null;
-  }
   return token;
 }
 function createNewPostDialog() {
@@ -65,7 +57,7 @@ function createNewPostDialog() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"), // Include your authorization token
+          Authorization: getToken(),
         },
         body: JSON.stringify({ title, description }),
       });
@@ -93,9 +85,9 @@ async function getPosts() {
 if (username) {
   logInEle.innerHTML = username;
 }
-const role = localStorage.getItem("role");
+const role = getRole();
 
-if (role === "admin") {
+if (typeof role === "string" && role.isAdmin()) {
   let html = "";
   html += `
   <div class="card">
@@ -107,7 +99,7 @@ if (role === "admin") {
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
-if (role === "admin") {
+if (typeof role === "string" && role.isAdmin()) {
   cardsDiv.insertAdjacentHTML(
     "beforeend",
     `
