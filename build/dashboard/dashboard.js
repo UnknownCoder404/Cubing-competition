@@ -10,6 +10,50 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+String.prototype.isUser = function () {
+  return this.toUpperCase() === "USER";
+};
+String.prototype.isAdmin = function () {
+  return this.toUpperCase() === "ADMIN";
+};
+function getRole() {
+  const role = localStorage.getItem("role");
+  if (!role) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return role;
+}
+function getId() {
+  const id = localStorage.getItem("id");
+  if (!id) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return id;
+}
+function getToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    logOut();
+    alert("Prijavi se ponovni.");
+    location.href = "../Login/";
+    return null;
+  }
+  return token;
+}
+function logOut(refresh = false) {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+  if (refresh) {
+    window.location.reload();
+  }
+}
 async function setWinner(id) {
   const setWinnerBtn = document.querySelector(`.set-winner-${id}`);
   const previousHtml = setWinnerBtn.innerHTML;
@@ -130,19 +174,18 @@ async function addSolve(userId, roundIndex, index) {
 }
 
 async function getUsers() {
+  const token = getToken();
   const body = {
     method: "GET",
     headers: {
-      Authorization: localStorage.getItem("token"),
+      Authorization: token,
     },
   };
   try {
     const data = await fetch(`${url}/users/all`, body);
     if (data.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("role");
-      alert("Login again.");
+      logOut();
+      alert("Prijavi se ponovni.");
       location.href = "../Login/";
     }
     const result = await data.json();
@@ -153,15 +196,15 @@ async function getUsers() {
 }
 
 async function deleteUser(id) {
-  if (id === localStorage.getItem("id")) {
-    alert("Cannot delete own account.");
+  if (id === getId()) {
+    alert("Nedopušteno brisanje vlastitog računa.");
     return;
   }
   try {
     const body = {
       method: "DELETE",
       headers: {
-        Authorization: localStorage.getItem("token"),
+        Authorization: getToken(),
       },
     };
     const data = await fetch(`${url}/users/${id}`, body);
@@ -178,10 +221,11 @@ async function deleteUser(id) {
 }
 
 async function assignAdmin(id, username) {
+  const token = getToken();
   const body = {
     method: "POST",
     headers: {
-      Authorization: localStorage.getItem("token"),
+      Authorization: token,
     },
   };
   try {
@@ -189,7 +233,7 @@ async function assignAdmin(id, username) {
     const result = await data.json();
 
     if (data.ok) {
-      alert(`Successfully made ${username} admin.`);
+      alert(`Korisnik "${username}" je administrator.`);
       main();
     } else {
       alert(result.message);
@@ -210,7 +254,7 @@ function displayUsers(users) {
     const group = user.group;
     html += `<div class="user">`;
     html += `<div class="username-div">`;
-    html += `<p class="username">${username} (${id})</p>`;
+    html += `<p class="username">${username}</p>`;
     html += `<img class="manage-accounts" src="../Images/manage_accounts.svg"/>`;
     html += `</div>`; // close .username-div
     html += `<p class="role">Uloga: ${role}</p>`;
@@ -250,7 +294,7 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: localStorage.getItem("token"),
+      Authorization: getToken(),
     },
     body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
   });
@@ -350,14 +394,11 @@ function formatTimeString(str) {
 }
 
 async function main() {
-  if (localStorage.getItem("role") === "user") {
+  if (getRole().isUser()) {
     alert("Admins only!");
     location.href = "../";
   }
-  if (!localStorage.getItem("token")) {
-    alert("Login again.");
-    location.href = "../Login";
-  }
+  getToken();
 
   let users = await getUsers();
   displayUsers(users);
