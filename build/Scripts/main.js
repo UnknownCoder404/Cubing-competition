@@ -11,6 +11,11 @@ String.prototype.isAdmin = function () {
 String.prototype.addToken = function (token = getToken()) {
   return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
 };
+Object.prototype.addToken = function (token = getToken()) {
+  let object = this;
+  object.Authorization = token;
+  return object;
+};
 function loggedIn() {
   return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
 }
@@ -52,16 +57,19 @@ function createNewPostDialog() {
   const postForm = document.getElementById("postForm");
   postForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
+
+    const titleElement = document.getElementById("title");
+    const descriptionElement = document.getElementById("description");
+
+    const title = titleElement.value;
+    const description = descriptionElement.value;
 
     try {
       const response = await fetch(`${url}/posts/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: getToken(),
-        },
+        }.addToken(),
         body: JSON.stringify({ title, description }),
       });
 
@@ -81,6 +89,7 @@ function createNewPostDialog() {
   });
 }
 async function getPosts() {
+  // Returns json of posts
   const data = await fetch(`${url}/posts`);
   const posts = await data.json();
   return posts;
