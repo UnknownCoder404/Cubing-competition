@@ -10,6 +10,9 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+String.prototype.isAdmin = function () {
+  return this.toUpperCase() === "ADMIN";
+};
 document
   .getElementById("loginForm")
   .addEventListener("submit", async function (event) {
@@ -37,14 +40,17 @@ document
       submitBtn.disabled = false;
       if (response.ok) {
         // Save token to local storage or session storage
-        localStorage.setItem("token", data.info.token);
-        localStorage.setItem("id", data.info.id);
-        localStorage.setItem("username", data.info.username);
-        localStorage.setItem("role", data.info.role);
+        const { token, id, username, role } = data.info;
+        localStorage.setItem("token", token);
+        localStorage.setItem("id", id);
+        localStorage.setItem("username", username);
+        localStorage.setItem("role", role);
         // Redirect to a dashboard or another page
-        if (data.info.role === "admin") {
+        if (data.info.role.isAdmin()) {
+          // Dashboard
           window.location.href = "../dashboard/";
         } else {
+          // Home page
           window.location.href = "../";
         }
       }
