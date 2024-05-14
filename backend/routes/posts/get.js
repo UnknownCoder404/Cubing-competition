@@ -1,8 +1,9 @@
 const express = require("express");
 const User = require("../../Models/user");
 const Post = require("../../Models/post");
+const cache = require("../../middleware/cache");
 const router = express.Router();
-router.get("/", async (req, res) => {
+router.get("/", cache(300), async (req, res) => {
   try {
     const posts = await Post.find();
     // Construct response object with usernames
@@ -19,7 +20,7 @@ router.get("/", async (req, res) => {
     );
     res.status(200).json(response); // Sending the constructed response
   } catch (err) {
-    res.status(500).json({ message: "Neuspješno dohvaćanje postova." });
+    res.status(500).json({ message: "Neuspješno dohvaćanje objava." });
   }
 });
 module.exports = router;
