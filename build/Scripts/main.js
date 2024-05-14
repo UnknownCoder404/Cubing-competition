@@ -1,5 +1,5 @@
 const url = "https://cubing-competition.onrender.com";
-const logInEle = document.querySelector(".js-log-in");
+const logInElement = document.querySelector(".js-log-in");
 const username = getUsername();
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
@@ -11,6 +11,9 @@ String.prototype.isAdmin = function () {
 String.prototype.addToken = function (token = getToken()) {
   return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
 };
+function loggedIn() {
+  return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
+}
 function getUsername() {
   const username = localStorage.getItem("username");
   return username;
@@ -83,7 +86,7 @@ async function getPosts() {
   return posts;
 }
 if (username) {
-  logInEle.innerHTML = username;
+  logInElement.innerHTML = username;
 }
 const role = getRole();
 
@@ -180,6 +183,7 @@ async function main() {
 main();
 async function tokenValid(action = false) {
   // action, if true it will logout user if token is not valid
+  if (!loggedIn()) return true;
   console.log("Checking if token is valid...");
   const data = await fetch(`${url}/token`.addToken());
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
