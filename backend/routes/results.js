@@ -34,6 +34,7 @@ router.get("/", verifyToken, async (req, res) => {
         let solves = round.solves;
         if (!solves || solves.length === 0) return;
         solves.forEach((solve, index) => {
+          print(solve);
           solves[index] = formatTime(solve);
         });
         // Add the solves to the corresponding round in the row object
