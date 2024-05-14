@@ -89,8 +89,7 @@ if (username) {
   logInElement.innerHTML = username;
 }
 const role = getRole();
-
-if (typeof role === "string" && role.isAdmin()) {
+function addDashboardCard() {
   let html = "";
   html += `
   <div class="card">
@@ -102,22 +101,25 @@ if (typeof role === "string" && role.isAdmin()) {
   `;
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
-if (typeof role === "string" && role.isAdmin()) {
-  cardsDiv.insertAdjacentHTML(
-    "beforeend",
-    `
-    <div class="card">
-    <div class="container">
-      <h2>Objava</h2>
-      <p>
-        Ti si admin! Oni mogu objaviti bilo što!
-        Klikni <span onclick="createNewPostDialog()" class="post">ovdje</span> da objaviš nešto.
-      </p>
-    </div>
+function addCreatePostCard() {
+  const html = `
+  <div class="card">
+  <div class="container">
+    <h2>Objava</h2>
+    <p>
+      Ti si admin! Oni mogu objaviti bilo što!
+      Klikni <span onclick="createNewPostDialog()" class="post">ovdje</span> da objaviš nešto.
+    </p>
   </div>
-  `
-  );
+</div>
+  `;
+  cardsDiv.insertAdjacentHTML("beforeend", html);
 }
+if (typeof role === "string" && role.isAdmin()) {
+  addDashboardCard();
+  addCreatePostCard();
+}
+
 function logOut(refresh = false) {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
@@ -163,20 +165,25 @@ document.querySelector(".share").addEventListener("click", async () => {
     );
   }
 });
+function createPostHtml(post) {
+  const { title, description } = post;
+  const authorUsername = post.author.username;
+  const html = `<div class="card">
+  <div class="container">
+    <h2 class="post-title">${title}</h2>
+    <p class="post-description">
+      ${description}
+    </p>
+    Objavio <span class="post-author">"${authorUsername}"</span>
+  </div>
+</div>`;
+  return html;
+}
 async function main() {
   tokenValid(true);
   const posts = await getPosts();
   posts.forEach((post) => {
-    let html = "";
-    html += `<div class="card">
-    <div class="container">
-      <h2 class="post-title">${post.title}</h2>
-      <p class="post-description">
-        ${post.description}
-      </p>
-      Objavio <span class="post-author">"${post.author.username}"</span>
-    </div>
-  </div>`;
+    const html = createPostHtml(post);
     cardsDiv.insertAdjacentHTML("beforeend", html);
   });
 }
