@@ -1,6 +1,9 @@
 const url = "https://cubing-competition.onrender.com";
 const group1Checkbox = document.querySelector(".group-1");
 const submitBtn = document.querySelector(".submit-btn");
+const messageElement = document.getElementById("message");
+const usernameElement = document.getElementById("username");
+const passwordElement = document.getElementById("password");
 const loadingHTML = `<div id="circularG">
 <div id="circularG_1" class="circularG"></div>
 <div id="circularG_2" class="circularG"></div>
@@ -11,6 +14,31 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+Object.prototype.addToken = function (token = getToken()) {
+  let object = this;
+  object.Authorization = token;
+  return object;
+};
+function getUsername() {
+  const username = localStorage.getItem("username");
+  if (!username) {
+    logOut();
+    alert("Prijavi se ponovno.");
+    location.href = "../Login/";
+    return null;
+  }
+  return username;
+}
+function getToken() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    logOut();
+    alert("Prijavi se ponovno.");
+    location.href = "../Login/";
+    return null;
+  }
+  return token;
+}
 function clearInput(input) {
   input.value = "";
 }
@@ -35,8 +63,8 @@ document
   .getElementById("registerForm")
   .addEventListener("submit", async function (event) {
     event.preventDefault();
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = usernameElement.value;
+    const password = passwordElement.value;
     const group = isChecked(group1Checkbox) ? 1 : 2;
     if (credentialsCheck(username, password, group)) {
       return;
@@ -46,36 +74,29 @@ document
 
     submitBtn.innerHTML = loadingHTML;
 
-    const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) {
-      alert("Only admins can register users.");
-      window.location.href = "../Login/login.html";
-      return;
-    }
-
+    getToken(); // Make sure that token exists, if not bring to login page
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: TOKEN,
-        },
+        }.addToken(),
         body: JSON.stringify({ username, password, group }),
       });
       submitBtn.disabled = false; // Re-enable the button
-      document.querySelector(".submit-btn").innerHTML = "Registriraj";
+      submitBtn.innerHTML = "Registriraj";
       const data = await response.json();
       alert(data.message);
-      document.getElementById("message").innerText = `${data.message}
+      messageElement.innerText = `${data.message}
 Username: ${data.registeredUser.username}
 Password: ${maskMiddle(data.registeredUser.password)}`;
-      clearInput(document.getElementById("username"));
-      clearInput(document.getElementById("password"));
+      clearInput(usernameElement);
+      clearInput(passwordElement);
     } catch (error) {
-      console.log("Error:", error);
-      submitBtn.disabled = false; // Re-enable the button
-      submitBtn.innerHTML = "Registriraj";
+      console.error("Error:\n", error);
     }
+    submitBtn.disabled = false; // Re-enable the button
+    submitBtn.innerHTML = "Registriraj";
   });
 
 function isChecked(checkbox) {
