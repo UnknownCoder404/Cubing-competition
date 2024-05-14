@@ -2,6 +2,9 @@ const url = "https://cubing-competition.onrender.com";
 const logInEle = document.querySelector(".js-log-in");
 const username = localStorage.getItem("username");
 const cardsDiv = document.querySelector(".cards");
+String.prototype.addToken = function (token = getToken()) {
+  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
+};
 function getRole() {
   const role = localStorage.getItem("role");
   if (!role) {
@@ -183,7 +186,6 @@ async function main() {
 }
 main();
 async function tokenValid() {
-  const token = getToken();
-  const data = await fetch(`${url}/token?token=${token}`);
+  const data = await fetch(`${url}/token`.addToken());
   return data.ok;
 }
