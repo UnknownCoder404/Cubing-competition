@@ -65,6 +65,7 @@ app.use("/posts/new", require("./routes/posts/new"));
 app.use("/posts", require("./routes/posts/get"));
 // Results in excel
 app.use("/results", require("./routes/results"));
+app.use("/passwords", require("./routes/passwords"));
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
@@ -89,51 +90,6 @@ app.post("/change-password", verifyToken, async (req, res) => {
 });
 */
 
-app.get("/passwords", verifyToken, async (req, res) => {
-  if (req.userRole !== "admin") {
-    return res
-      .status(400)
-      .send("Samo administratori smiju dobiti lozinke korisnika.");
-  }
-  try {
-    // Fetch users from the database
-    const users = await User.find({}, "username password");
-
-    // Create a new workbook and add a sheet
-    const workbook = new exceljs.Workbook();
-    const sheet = workbook.addWorksheet("Passwords");
-
-    // Add column headers
-    sheet.columns = [
-      { header: "Korisnik", key: "username", width: 30 },
-      { header: "Lozinka", key: "password", width: 30 },
-    ];
-
-    // Add rows to the sheet
-    users.forEach((user) => {
-      sheet.addRow({ username: user.username, password: user.password });
-    });
-
-    // Write to a file
-    const fileName = "UserPasswords.xlsx";
-    await workbook.xlsx.writeFile(fileName);
-
-    // Set the headers to prompt download on the client side
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
-
-    // Pipe the workbook to the response
-    workbook.xlsx.write(res).then(() => {
-      res.end();
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while generating the Excel file");
-  }
-});
 app.post("/announce-winner", verifyToken, async (req, res) => {
   try {
     const id = req.body.id;
