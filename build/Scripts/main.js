@@ -6,7 +6,7 @@ function getRole() {
   const role = localStorage.getItem("role");
   if (!role) {
     logOut();
-    alert("Prijavi se ponovni.");
+    alert("Prijavi se ponovno.");
     location.href = "../Login/";
     return null;
   }
@@ -120,12 +120,13 @@ if (role === "admin") {
   `
   );
 }
-async function logOut() {
-  localStorage.removeItem("id");
-  localStorage.removeItem("role");
+function logOut(refresh = false) {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
-  location.reload();
+  localStorage.removeItem("role");
+  if (refresh) {
+    window.location.reload();
+  }
 }
 if (username) {
   let html = "";
@@ -137,7 +138,7 @@ if (username) {
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
   let logOutSpan = document.querySelector(".logout-span");
   logOutSpan.addEventListener("click", async () => {
-    await logOut();
+    logOut(true);
   });
 }
 document.querySelector(".share").addEventListener("click", async () => {

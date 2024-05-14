@@ -20,7 +20,7 @@ function getRole() {
   const role = localStorage.getItem("role");
   if (!role) {
     logOut();
-    alert("Prijavi se ponovni.");
+    alert("Prijavi se ponovno.");
     location.href = "../Login/";
     return null;
   }
@@ -30,7 +30,7 @@ function getId() {
   const id = localStorage.getItem("id");
   if (!id) {
     logOut();
-    alert("Prijavi se ponovni.");
+    alert("Prijavi se ponovno.");
     location.href = "../Login/";
     return null;
   }
@@ -40,7 +40,7 @@ function getToken() {
   const token = localStorage.getItem("token");
   if (!token) {
     logOut();
-    alert("Prijavi se ponovni.");
+    alert("Prijavi se ponovno.");
     location.href = "../Login/";
     return null;
   }
@@ -185,7 +185,7 @@ async function getUsers() {
     const data = await fetch(`${url}/users/all`, body);
     if (data.status === 401) {
       logOut();
-      alert("Prijavi se ponovni.");
+      alert("Prijavi se ponovno.");
       location.href = "../Login/";
     }
     const result = await data.json();
