@@ -10,6 +10,11 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+Object.prototype.addToken = function (token = getToken()) {
+  let object = this;
+  object.Authorization = token;
+  return object;
+};
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
 };
@@ -75,9 +80,8 @@ async function setWinner(id) {
       id: id,
     }),
     headers: {
-      Authorization: localStorage.getItem("token"),
       "Content-Type": "application/json",
-    },
+    }.addToken(),
   });
   const response = await data.json();
   setWinnerBtn.disabled = false;
@@ -184,20 +188,12 @@ async function addSolve(userId, roundIndex, index) {
 }
 
 async function getUsers() {
-  const token = getToken();
   const body = {
     method: "GET",
-    headers: {
-      Authorization: token,
-    },
+    headers: {}.addToken(),
   };
   try {
     const data = await fetch(`${url}/users/all`, body);
-    if (data.status === 401) {
-      logOut();
-      alert("Prijavi se ponovno.");
-      location.href = "../Login/";
-    }
     const result = await data.json();
     return result;
   } catch (error) {
@@ -213,9 +209,7 @@ async function deleteUser(id) {
   try {
     const body = {
       method: "DELETE",
-      headers: {
-        Authorization: getToken(),
-      },
+      headers: {}.addToken(),
     };
     const data = await fetch(`${url}/users/${id}`, body);
     const result = await data.json();
@@ -231,12 +225,9 @@ async function deleteUser(id) {
 }
 
 async function assignAdmin(id, username) {
-  const token = getToken();
   const body = {
     method: "POST",
-    headers: {
-      Authorization: token,
-    },
+    headers: {}.addToken(),
   };
   try {
     const data = await fetch(`${url}/admin/assign/${id}`, body);
@@ -304,8 +295,7 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: getToken(),
-    },
+    }.addToken(),
     body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
   });
 
@@ -410,7 +400,7 @@ async function main() {
   }
   getToken();
 
-  let users = await getUsers();
+  const users = await getUsers();
   displayUsers(users);
 }
 getTime();
