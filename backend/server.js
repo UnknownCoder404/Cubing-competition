@@ -92,7 +92,7 @@ app.post("/change-password", verifyToken, async (req, res) => {
 });
 */
 
-app.get("/get-winners", async (req, res) => {
+app.get("/winner/get", async (req, res) => {
   try {
     const winners = await winner.find({}, "id group");
     for (let index = 0; index < winners.length; index++) {

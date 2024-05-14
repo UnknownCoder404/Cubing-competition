@@ -49,7 +49,7 @@ async function getSolves() {
   return { solves: solvesData, lastUpdated: competitions.lastUpdated };
 }
 async function getWinner() {
-  const data = await fetch(`${url}/get-winners`);
+  const data = await fetch(`${url}/winner/get`);
   const response = await data.json();
   return response;
 }
