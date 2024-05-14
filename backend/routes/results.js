@@ -29,6 +29,8 @@ router.get("/", verifyToken, async (req, res) => {
 
       // Assuming 'rounds' is an array of objects with a 'solves' property
       user.rounds.forEach((round, index) => {
+        console.log(round);
+        console.log(round.solves);
         const solves = round.solves;
         if (!solves || solves.length === 0) return;
         // Add the solves to the corresponding round in the row object
