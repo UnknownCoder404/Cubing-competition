@@ -68,6 +68,7 @@ app.use("/results", require("./routes/results"));
 app.use("/passwords", require("./routes/passwords"));
 // Winner
 app.use("/winner", require("./routes/winner/announce"));
+app.user("/winner", require("./routes/winner/get"));
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
@@ -92,24 +93,6 @@ app.post("/change-password", verifyToken, async (req, res) => {
 });
 */
 
-app.get("/winner/get", async (req, res) => {
-  try {
-    const winners = await winner.find({}, "id group");
-    for (let index = 0; index < winners.length; index++) {
-      const user = await User.findById(winners[index].id);
-      winners[index].username = user ? user.username : "Nepoznato";
-    }
-    // Construct response object with usernames
-    const response = winners.map((winner) => ({
-      id: winner.id,
-      group: winner.group,
-      username: winner.username,
-    }));
-    return res.status(200).json(response);
-  } catch (error) {
-    return res.status(500).json({ error: "Greška unutar servera." });
-  }
-});
 app.get("/scrambles/passwords", verifyToken, (req, res) => {
   if (req.userRole !== "admin") {
     res.status(401).send("<p>Samo administratori imaju pristup lozinkama.</p>");
