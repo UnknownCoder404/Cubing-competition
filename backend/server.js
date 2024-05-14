@@ -68,7 +68,7 @@ app.use("/results", require("./routes/results"));
 app.use("/passwords", require("./routes/passwords"));
 // Winner
 app.use("/winner", require("./routes/winner/announce"));
-app.user("/winner", require("./routes/winner/get"));
+app.use("/winner", require("./routes/winner/get"));
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
