@@ -66,6 +66,8 @@ app.use("/posts", require("./routes/posts/get"));
 // Results in excel
 app.use("/results", require("./routes/results"));
 app.use("/passwords", require("./routes/passwords"));
+// Winner
+app.use("/winner", require("./routes/winner/announce"));
 /*
 app.post("/change-password", verifyToken, async (req, res) => {
   const userId = req.body.userId;
@@ -89,44 +91,6 @@ app.post("/change-password", verifyToken, async (req, res) => {
   return res.status(200).json({ message: "Lozinka promijenjena." });
 });
 */
-
-app.post("/winner/announce", verifyToken, async (req, res) => {
-  try {
-    const id = req.body.id;
-    if (!id) {
-      return res.status(400).json({ message: "Id korisnika je potreban." });
-    }
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(400).json({ message: "Korisnik ne postoji." });
-    }
-    const group = user.group;
-    // Provjerite postoji li već pobjednik za grupu
-    let existingWinner = await winner.findOne({ group });
-    if (existingWinner && existingWinner.id === id) {
-      // Koristite _id za brisanje dokumenta pobjednika
-      await winner.findByIdAndDelete(existingWinner._id);
-      return res.status(200).json({ message: "Pobjednik uspješno izbrisan." });
-    }
-    if (existingWinner) {
-      // Ako već postoji pobjednik, ažurirajte ID pobjednika
-      existingWinner.id = id;
-      await existingWinner.save();
-      return res
-        .status(200)
-        .json({ message: "Pobjednik uspješno promijenjen." });
-    }
-
-    // Stvorite novog pobjednika
-    const newWinner = new winner({ group, id });
-    // Spremite pobjednika u bazu podataka
-    await newWinner.save();
-    res.status(201).json({ message: "Pobjednik uspješno objavljen." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Greška kod servera." });
-  }
-});
 
 app.get("/get-winners", async (req, res) => {
   try {
