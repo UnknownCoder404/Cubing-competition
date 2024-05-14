@@ -10,6 +10,9 @@ const loadingHTML = `<div id="circularG">
 <div id="circularG_7" class="circularG"></div>
 <div id="circularG_8" class="circularG"></div>
 </div>`;
+Element.prototype.toggleDisabled = function () {
+  this.disabled = !this.disabled;
+};
 String.prototype.isAdmin = function () {
   return this.toUpperCase() === "ADMIN";
 };
@@ -23,7 +26,7 @@ document
       return;
     }
     submitBtn.innerHTML = loadingHTML;
-    submitBtn.disabled = true;
+    submitBtn.toggleDisabled();
 
     try {
       const response = await fetch(`${url}/login`, {
@@ -36,8 +39,6 @@ document
 
       const data = await response.json();
       document.getElementById("message").innerText = data.message;
-      submitBtn.innerHTML = "Prijava";
-      submitBtn.disabled = false;
       if (response.ok) {
         // Save token to local storage or session storage
         const { token, id, username, role } = data.info;
@@ -56,9 +57,9 @@ document
       }
     } catch (error) {
       console.error("Error:", error);
-      submitBtn.innerHTML = "Prijava";
-      submitBtn.disabled = false;
     }
+    submitBtn.innerHTML = "Prijava";
+    submitBtn.disabled = false;
   });
 function credentialsCheck(username, password) {
   if (!username || !password) {
