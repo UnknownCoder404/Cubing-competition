@@ -1,54 +1,43 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const {
+  checkUsernameAndPassword,
+  checkUsernameLength,
+  checkPasswordLength,
+  checkUsernameAndPasswordEquality,
+  checkGroup,
+  checkPasswordSpaces,
+} = require("../../functions/registerValidations");
 const router = express.Router();
 // Define a route for user registration
 router.post("/", verifyToken, async (req, res) => {
   try {
-    // Get the username and password from the request body
     const { username, password, group } = req.body;
     const USER = await User.findById(req.userId);
     const userRole = USER.role;
-    // Validate the input
+
+    // Validate user role
     if (userRole !== "admin") {
       return res.status(403).json({
         message: "Neovlašteno: samo administratori mogu registrirati korisnike",
       });
     }
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ message: "Korisničko ime i lozinka su obavezni." });
-    }
-    if (username.length < 5) {
-      return res
-        .status(400)
-        .json({ message: "Korisničko ime mora biti duže od 4 znaka." });
-    }
-    if (password.length < 8) {
-      return res
-        .status(400)
-        .json({ message: "Lozinka mora biti duža od 7 znakova." });
-    }
-    if (username === password) {
-      return res
-        .status(400)
-        .json({ message: "Korisničko ime i lozinka ne mogu biti isti." });
-    }
-    if (group !== 1 && group !== 2) {
-      return res.status(400).json({ message: "Grupa mora biti 1 ili 2." });
-    }
-    if (password.split("").includes(" ")) {
-      return res
-        .status(400)
-        .json({ message: "Lozinka ne smije koristiti razmak." });
-    }
-    // Create a new user instance
-    const user = new User({ username, password, role: "user", group }); // Set default role to 'user'
-    // Save the user to the database
+
+    // Call validation functions
+    checkUsernameAndPassword(username, password, res);
+    checkUsernameLength(username, res);
+    checkPasswordLength(password, res);
+    checkUsernameAndPasswordEquality(username, password, res);
+    checkGroup(group, res);
+    checkPasswordSpaces(password, res);
+
+    // If all validations pass, proceed with user registration
+    const user = new User({ username, password, role: "user", group });
     await user.save();
+
     res.status(201).json({
-      message: "Korisnik  uspješno registriran.",
+      message: "Korisnik uspješno registriran.",
       registeredUser: {
         username,
         password,
@@ -56,12 +45,10 @@ router.post("/", verifyToken, async (req, res) => {
       },
     });
   } catch (err) {
-    // Handle the error
     if (err.code === 11000) {
-      // Duplicate username
+      // 11000 duplicate error (mongoose)
       res.status(409).json({ message: "Korisničko ime već postoji." });
     } else {
-      // Other errors
       res.status(500).json({ message: err.message });
     }
   }
