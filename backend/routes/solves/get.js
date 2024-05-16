@@ -1,9 +1,9 @@
 const express = require("express");
 const User = require("../../Models/user");
-const verifyToken = require("../../middleware/verifyToken");
+const cache = require("../../middleware/cache");
 const router = express.Router();
 // Route handler for getting live solves
-router.get("/", async (req, res) => {
+router.get("/", cache(300), async (req, res) => {
   try {
     const usersWithSolves = await User.find({
       rounds: {
