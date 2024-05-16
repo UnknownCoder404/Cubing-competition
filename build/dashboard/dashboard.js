@@ -102,9 +102,7 @@ async function showCompetition(userId, index) {
 
   let html = "";
   const user = await fetch(`${url}/users/${userId}`, {
-    headers: {
-      Authorization: localStorage.getItem("token"),
-    },
+    headers: {}.addToken(),
   }).then((response) => response.json());
   showCompBtn.disabled = false;
   // Check if user data exists
@@ -112,7 +110,6 @@ async function showCompetition(userId, index) {
     html = `<p>User not found.</p>`;
     userDiv.querySelector(".comp").innerHTML = html;
     showCompBtn.innerHTML = prevHTML;
-    showCompBtn.disabled = false;
     return;
   }
   // Loop through rounds
@@ -136,10 +133,10 @@ async function showCompetition(userId, index) {
     }
 
     // Add form to add solves (assuming you have elements with these IDs)
-    if ((round.solves && round.solves.length < 5) || !round.solves) {
+    if (!round.solves || round.solves.length < 5) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Slaganje:</label>`;
-      html += `<input placeholder="npr. 15467" type="number" id="solve-${i}" name="solve">`;
+      html += `<input placeholder="npr. 15467" type="number" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input">`;
       html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
       </form>
     `;
@@ -150,9 +147,21 @@ async function showCompetition(userId, index) {
 
   userDiv.querySelector(".comp").innerHTML = html;
   showCompBtn.innerHTML = prevHTML;
+  const solveTimeInputs = document.querySelectorAll(".solve-input");
+  solveTimeInputs.forEach((input) => {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const userId = input.dataset.id;
+        const i = +input.dataset.i;
+        const index = +input.dataset.index;
+        addSolve(userId, i, index);
+      }
+    });
+  });
 }
 async function addSolve(userId, roundIndex, index) {
-  const solveInput = document.getElementById(`solve-${roundIndex}`);
+  const solveInput = document.getElementById(`solve-${roundIndex}-${index}`);
   let solveValue = solveInput.value;
   // Check if solve value is a number
   if (
