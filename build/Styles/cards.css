@@ -2,6 +2,14 @@ body {
   background-color: rgb(53, 53, 53);
   color: white;
 }
+a {
+  color: rgb(0, 102, 204); /* Default color for unvisited links */
+}
+
+/* Visited link styles */
+a:visited {
+  color: rgb(222, 220, 220); /* Color for visited links */
+}
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
