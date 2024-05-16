@@ -34,13 +34,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // Connect to the MongoDB database using mongoose
-
+console.log("Trying to connect to mongoDB...");
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {})
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
-
-console.log(getCurrentDateTimeInZagreb());
+console.log("Current Date and time in Zagreb:");
+console.table(getCurrentDateTimeInZagreb());
 // register and login
 app.use("/register", require("./routes/users/register"));
 app.use("/login", require("./routes/users/login"));
@@ -58,8 +58,8 @@ app.use("/users", require("./routes/users/delete"));
 app.use("/posts/new", require("./routes/posts/new"));
 app.use("/posts", require("./routes/posts/get"));
 // Results in excel
-app.use("/results", require("./routes/results"));
-app.use("/passwords", require("./routes/passwords"));
+app.use("/results", require("./routes/excel/results"));
+app.use("/passwords", require("./routes/excel/passwords"));
 // Winner
 app.use("/winner", require("./routes/winner/announce"));
 app.use("/winner", require("./routes/winner/get"));
@@ -67,11 +67,9 @@ app.use("/winner", require("./routes/winner/get"));
 app.use("/scrambles", require("./routes/scrambles/passwords"));
 // Token validation
 app.use("/token", require("./routes/token/validate"));
-
-app.get("/health-check", (req, res) => {
-  return res.status(200).send();
-});
+app.use("/health-check", require("./routes/health_check/health_check"));
 // Start the server on the specified port
+console.log(`ENV PORT: ${process.env.PORT}`);
 const PORT = process.env.PORT || 3000;
 
 mongoose.connection.once("open", () => {
