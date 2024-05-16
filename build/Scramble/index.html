@@ -13,7 +13,6 @@
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript><link rel="stylesheet" href="Styles/font.css" /></noscript>
-    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
     <script>
       var cube = {
         // Define the six faces of the cube
@@ -107,7 +106,10 @@
             // Only allow a line break every 5 moves
             result += scramble.slice(i, i + 5).join("&nbsp;") + " ";
           }
-          document.querySelector(".scramble-display").scramble = result.replace(/&nbsp;/g, ' ')
+          document.querySelector(".scramble-display").scramble = result.replace(
+            /&nbsp;/g,
+            " "
+          );
           document.getElementById("scramble").innerHTML = result;
         }
         displayScramble();
@@ -122,6 +124,8 @@
         margin: 0;
         padding: 0;
         text-align: center;
+        background-color: gray;
+        color: white;
       }
       #main {
         margin: 0 auto;
@@ -151,9 +155,21 @@
         width: 50vw;
       }
     </style>
-    <script src="https://cdn.cubing.net/js/scramble-display" type="module"></script>
+    <link rel="stylesheet" href="header.css" />
+    <script
+      src="https://cdn.cubing.net/js/scramble-display"
+      type="module"
+    ></script>
   </head>
   <body>
+    <div class="header">
+      <div class="interaction-container">
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+        </div>
+        <h1>Miješanje</h1>
+      </div>
+    </div>
     <div id="main">
       <div id="scramble"></div>
       <button id="btn-refresh">PROMIJEŠAJ</button>
