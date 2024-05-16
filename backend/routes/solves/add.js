@@ -24,6 +24,9 @@ router.post("/:solverId", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "Nema ponuđenih slaganja." });
   }
   for (let i = 0; i < solves.length; i++) {
+    if (solves !== 0 && !solves[i]) {
+      return res.status(400).json({ message: `Slaganje ne postoji.` });
+    }
     if (solves[i] < 0) {
       return res
         .status(400)
