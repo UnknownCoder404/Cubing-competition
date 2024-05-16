@@ -68,39 +68,8 @@ app.use("/winner", require("./routes/winner/get"));
 // Scrambles
 app.use("/scrambles", require("./routes/scrambles/passwords"));
 // Token validation
-/*
-app.post("/change-password", verifyToken, async (req, res) => {
-  const userId = req.body.userId;
-  const newPassword = req.body.newPassword;
-  if (req.userRole !== "admin") {
-    return res.status(401).json({
-      message: "Samo administratori smiju mijenjati lozinke.",
-    });
-  }
-  if (!userId || !newPassword || newPassword.trim() === "") {
-    return res.status(400).json({ message: "Nepotpun unos podataka." });
-  }
-  const user = await User.findById(userId);
-  if (!user) {
-    return res
-      .status(400)
-      .json({ message: "Ne postoji korisnik s tim ID-om." });
-  }
-  user.password = newPassword;
-  await user.save();
-  return res.status(200).json({ message: "Lozinka promijenjena." });
-});
-*/
+app.use("/token", require("./routes/token/validate"));
 
-app.get("/token", verifyToken, (req, res) => {
-  try {
-    // Assuming verifyToken throws an error on invalid token
-    res.status(200).json({ message: "Token is valid" });
-  } catch (err) {
-    console.error(err); // Log the error for debugging
-    res.status(500);
-  }
-});
 app.get("/health-check", (req, res) => {
   return res.status(200).send();
 });
