@@ -13,32 +13,41 @@
     />
     <noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
-    <link rel="preload" href="../dashboard/dashboard.js" as="script">
-    <link rel="preload" href="../dashboard/dashboard.css" as="style">
-    <link rel="stylesheet" href="header.css">
+    <link rel="preload" href="../dashboard/dashboard.js" as="script" />
+    <link rel="preload" href="../dashboard/dashboard.css" as="style" />
+    <link rel="stylesheet" href="header.css" />
   </head>
   <body>
     <div class="header">
       <div class="interaction-container">
-          <div class="logo-container">
-            <a href="../"><img class="logo" src="../favicon.ico" /></a>
-         
-          <h1>Prijava</h1>  
-          </div> 
-</div>
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+          <h1>Prijava korisnika</h1>
+        </div>
+      </div>
     </div>
-    <div><h1>Prijava korisnika</h1></div>
     <div>
-      <form id="loginForm">
-        <label for="username">Korisničko ime</label><br />
-        <input autocomplete="username" type="text" id="username" name="username" /><br />
-        <label for="password">Lozinka</label><br />
-        <input autocomplete="current-password" type="password" id="password" name="password" /><br /><br />
-        <button class="submit-btn" type="submit">Prijava</button>
-      </form>
-      <div id="message"></div>
+      <div class="form-container">
+        <form id="loginForm">
+          <label for="username">Korisničko ime</label><br />
+          <input
+            autocomplete="username"
+            type="text"
+            id="username"
+            name="username"
+          /><br />
+          <label for="password">Lozinka</label><br />
+          <input
+            autocomplete="current-password"
+            type="password"
+            id="password"
+            name="password"
+          /><br /><br />
+          <button class="submit-btn" type="submit">Prijava</button>
+        </form>
+      </div>
     </div>
-
+    <div id="message"></div>
     <script src="login.js"></script>
   </body>
 </html>
