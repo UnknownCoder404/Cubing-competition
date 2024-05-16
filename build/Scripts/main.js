@@ -207,7 +207,7 @@ async function tokenValid(action = false) {
     console.log("Logging out...");
     logOut();
     alert("Prijavi se ponovno");
-    window.location.href = "../Login";
+    window.location.href = "./Login";
   }
   return data.ok;
 }
