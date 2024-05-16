@@ -16,8 +16,8 @@ const cache = (duration, options = {}) => {
     const originalSend = res.send;
     res.send = (body) => {
       cacheStore.set(key, body, duration * 1000);
-      originalSend(body);
       res.setHeader("Cache-Control", `public, max-age=${duration}`); // Set cache headers
+      originalSend.call(res, body); // Call original send method
     };
 
     next();
@@ -30,4 +30,5 @@ function generateCacheKey(url, prefix = "__express__") {
   // You can include relevant parts like path and specific query string parameters
   return `${prefix}${url}`;
 }
+
 module.exports = cache;
