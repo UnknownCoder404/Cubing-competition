@@ -3,8 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const exceljs = require("exceljs");
-const verifyToken = require("./middleware/verifyToken");
 const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
 // Import mongoose models
 // Load the environment variables from the .env file
@@ -44,8 +42,8 @@ mongoose
 
 console.log(getCurrentDateTimeInZagreb());
 // register and login
-app.use("/register", require("./routes/register"));
-app.use("/login", require("./routes/login"));
+app.use("/register", require("./routes/users/register"));
+app.use("/login", require("./routes/users/login"));
 // admin
 app.use("/admin/assign", require("./routes/admin/assign"));
 // solves
