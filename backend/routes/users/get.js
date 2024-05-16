@@ -10,9 +10,14 @@ router.get("/:userId", verifyToken, async (req, res) => {
         message: "Samo administratori mogu dobiti informacije o korisnicima.",
       });
     }
-
+    const userId = req.params.userId;
+    if (!userId) {
+      return res.status(400).json({
+        message: "Nema ID korisnika.",
+      });
+    }
     // Fetch all users from the database
-    const user = await User.findById(req.params.userId, "username role rounds");
+    const user = await User.findById(userId, "username role rounds");
 
     // Send the response array
     res.status(200).json(user);
