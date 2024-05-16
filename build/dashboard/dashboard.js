@@ -159,7 +159,7 @@ async function addSolve(userId, roundIndex, index) {
     (!solveValue && solveValue !== 0) || // If falsy, but not 0
     solveValue.toString().trim() === ""
   ) {
-    alert("Please enter a valid solve value (number).");
+    alert("Unesi moguću vrijednost slaganja.");
     return;
   }
   solveValue = formatTimeString(solveValue);
@@ -175,19 +175,17 @@ async function addSolve(userId, roundIndex, index) {
     },
     body: JSON.stringify(solveData),
   });
-
+  const data = await response.json();
   if (response.ok) {
-    const data = await response.json();
     // Update the competition display after successful addition
     showCompetition(userId, index);
-  } else {
-    const data = await response.json();
-    if (data.message) {
-      alert(data.message);
-    } else {
-      alert("Failed to add solve. Please try again. Reason: Unknown");
-    }
+    return;
   }
+  if (data.message) {
+    alert(data.message);
+    return;
+  }
+  alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
 }
 
 async function getUsers() {
@@ -201,6 +199,7 @@ async function getUsers() {
     return result;
   } catch (error) {
     console.error(error);
+    alert("Greška prilikom povezivanja.");
   }
 }
 
@@ -218,9 +217,10 @@ async function deleteUser(id) {
     const result = await data.json();
     if (data.ok) {
       main();
-    } else {
-      alert("Failed to delete user.");
+      return;
     }
+    console.error("Greška prilikom brisanja korisnika.\n", result.message);
+    alert("Greška prilikom brisanja korisnika.");
   } catch (error) {
     console.error(error);
     alert(error);
@@ -239,9 +239,9 @@ async function assignAdmin(id, username) {
     if (data.ok) {
       alert(`Korisnik "${username}" je administrator.`);
       main();
-    } else {
-      alert(result.message);
+      return;
     }
+    alert(result.message);
   } catch (error) {
     console.error(error);
     alert(error);
@@ -293,30 +293,30 @@ function getTime() {
 }
 
 async function deleteSolve(userId, roundIndex, solveIndex, index) {
+  const roundNumber = roundIndex + 1;
+  const solveNumber = solveIndex + 1;
   // Call the backend to delete the solve
   const response = await fetch(`${url}/solves/delete/${userId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     }.addToken(),
-    body: JSON.stringify({ round: roundIndex + 1, solve: solveIndex + 1 }),
+    body: JSON.stringify({ round: roundNumber, solve: solveNumber }),
   });
 
   if (response.ok) {
     // Remove the solve from the DOM or refresh the list of solves
     showCompetition(userId, index);
-  } else {
-    // Handle errors
-    const error = await response.json();
-    alert(error.message);
+    return;
   }
+  // Handle errors
+  const error = await response.json();
+  alert(error.message);
 }
 function getResults() {
-  // Open the URL in a new window with "noopener" and "noreferrer" options
   window.open(`${url}/results`.addToken(), "_blank", "noopener,noreferrer");
 }
 function getPasswords() {
-  // Open the URL in a new window with "noopener" and "noreferrer" options
   window.open(`${url}/passwords`.addToken(), "_blank", "noopener,noreferrer");
 }
 function getAverage(solves) {
