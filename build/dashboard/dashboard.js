@@ -191,8 +191,9 @@ async function addSolve(userId, roundIndex, index) {
     alert("Mora biti barem 1 slaganje.");
     return;
   }
+  const roundNumber = roundIndex + 1;
   const solveData = {
-    round: roundIndex + 1,
+    round: roundNumber,
     solves,
   };
 
@@ -347,11 +348,25 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
   const error = await response.json();
   alert(error.message);
 }
-function getResults() {
-  window.open(`${url}/results`.addToken(), "_blank", "noopener,noreferrer");
+function downloadFile(url, fileName) {
+  if (!url || !fileName) return -1;
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  return 1;
 }
+
+function getResults() {
+  const resultsUrl = `${url}/results`.addToken();
+  downloadFile(resultsUrl, "results"); // You can specify the desired file name
+}
+
 function getPasswords() {
-  window.open(`${url}/passwords`.addToken(), "_blank", "noopener,noreferrer");
+  const passwordsUrl = `${url}/passwords`.addToken();
+  downloadFile(passwordsUrl, "passwords"); // You can specify the desired file name
 }
 function getAverage(solves) {
   if (solves.length !== 5) {
