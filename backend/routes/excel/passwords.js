@@ -2,8 +2,9 @@ const express = require("express");
 const exceljs = require("exceljs");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const cache = require("../../middleware/cache");
 const router = express.Router();
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", cache(30), verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
     return res
       .status(400)
