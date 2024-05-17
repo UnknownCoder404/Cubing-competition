@@ -136,7 +136,7 @@ async function showCompetition(userId, index) {
     if (!round.solves || round.solves.length < 5) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Slaganje:</label>`;
-      html += `<input placeholder="npr. 15467" type="number" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input">`;
+      html += `<input placeholder="npr. 15467" type="text" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input">`;
       html += `<button type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
       </form>
     `;
@@ -163,37 +163,62 @@ async function showCompetition(userId, index) {
 async function addSolve(userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}-${index}`);
   let solveValue = solveInput.value;
-  // Check if solve value is a number
-  if (
-    (!solveValue && solveValue !== 0) || // If falsy, but not 0
-    solveValue.toString().trim() === ""
-  ) {
-    alert("Unesi moguću vrijednost slaganja.");
+
+  // Provjerava odgovara li unos regularnom izrazu za brojeve odvojene razmacima
+  if (!solveValue.match(/^\d+(?: \d+)*$/)) {
+    console.error(
+      "Pokušali ste dodati slaganja, ali unos ne odgovara regularnom izrazu."
+    );
+    alert("Samo brojevi i razmaci. Ne koristi dva razmaka jedan pored drugog.");
     return;
   }
-  solveValue = formatTimeString(solveValue);
+
+  // Razdvaja unesene vrijednosti i filtrira prazne stringove
+  let solves = solveValue.split(" ").filter(Boolean);
+
+  // Uklanja null, NaN i brojeve dulje od 6 znamenki
+  solves = solves.filter((solve) => solve && solve.length <= 6);
+
+  // Ograničava na maksimalno 5 slaganja
+  if (solves.length > 5) {
+    solves = solves.slice(0, 5);
+    alert("Uneseno više od 5 slaganja, samo prvih 5 će biti poslano.");
+  }
+
+  // Formatira svako slaganje pomoću funkcije formatTimeString
+  solves = solves.map((solve) => formatTimeString(solve));
+  if (solves.length === 0) {
+    alert("Mora biti barem 1 slaganje.");
+    return;
+  }
   const solveData = {
     round: roundIndex + 1,
-    solves: [parseFloat(solveValue)],
+    solves,
   };
+
+  // Šalje podatke na server
   const response = await fetch(`${url}/solves/add/${userId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: localStorage.getItem("token"),
-    },
+    }.addToken(),
     body: JSON.stringify(solveData),
   });
+
   const data = await response.json();
+
+  // Ažurira prikaz natjecanja nakon uspješnog dodavanja
   if (response.ok) {
-    // Update the competition display after successful addition
     showCompetition(userId, index);
     return;
   }
+
+  // Prikazuje poruku o grešci ako postoji
   if (data.message) {
     alert(data.message);
     return;
   }
+
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
 }
 
@@ -375,10 +400,10 @@ function formatTime(seconds) {
 
   // Add seconds and milliseconds to the time parts
   timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
-  timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`); // Updated line
-  console.log(`Formatted ${seconds}s to ${timeParts.join("")}`);
+  timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`);
+  const formattedTime = timeParts.join("");
   // Return the formatted time string
-  return timeParts.join("");
+  return formattedTime;
 }
 
 function formatTimeString(str) {
