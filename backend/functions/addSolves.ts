@@ -1,4 +1,5 @@
-async function addSolves(solver, solves, round) {
+import type { user } from "../types/user";
+async function addSolves(solver: user, solves: any, round: number) {
   // Input validation
   if (!solver || !solves || typeof round !== "number") {
     return -1;

@@ -1,4 +1,5 @@
 export type user = {
+  save(): Promise<void>;
   username: string;
   password: string;
   role: "admin" | "user";
