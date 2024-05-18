@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "bun": "npm install -g bun",
-    "i": "bun install",
+    "install": "bun install",
     "start": "bun run server.js ",
     "s": "bun run server.js"
   },
