@@ -110,7 +110,9 @@
             /&nbsp;/g,
             " "
           );
-          document.getElementById("scramble").innerHTML = result;
+          document.getElementById(
+            "scramble"
+          ).innerHTML = `<p class="scramble-text">${result}</p>`;
         }
         displayScramble();
         document
@@ -152,6 +154,12 @@
         padding: 20px 0;
         max-width: 270px;
         width: 50vw;
+      }
+      .scramble-text {
+        line-height: 1.5em; /* visina jedne linije */
+        height: 3em; /* visina dvije linije */
+        overflow: hidden;
+        white-space: pre-wrap;
       }
     </style>
     <link rel="stylesheet" href="header.css" />
