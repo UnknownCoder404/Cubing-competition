@@ -22,10 +22,7 @@ const allowedOrigins = [
 
 // CORS middleware function to check the origin against the allowed list
 const corsOptions = {
-  origin: function (
-    origin: string,
-    callback: (error: Error | null, allow?: boolean) => void
-  ) {
+  origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
@@ -41,9 +38,7 @@ console.log("Trying to connect to mongoDB...");
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {})
-  .catch((err: Error) =>
-    console.error("Failed to connect to MongoDB: \n" + err)
-  );
+  .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 console.log("Current Date and time in Zagreb:");
 console.table(getCurrentDateTimeInZagreb());
 // register and login

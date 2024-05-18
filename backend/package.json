@@ -1,11 +1,12 @@
 {
-  "name": "cube-competition",
+  "name": "Cubecompetition",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "server.js",
   "scripts": {
-    "buninstall": "npm install -g bun",
+    "bun": "npm install -g bun",
     "i": "bun install",
-    "start": "bun run server.ts "
+    "start": "bun run server.js ",
+    "s": "bun run server.js"
   },
   "keywords": [],
   "author": "",
@@ -18,12 +19,5 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.0"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/node": "^20.12.12"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
   }
 }
