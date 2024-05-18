@@ -1,9 +1,19 @@
+import type { Request, Response, NextFunction } from "express";
+import type { user } from "../types/user";
 const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
+
+type RequestToken = {
+  headers: any;
+  url: string;
+  userId: string;
+  userRole: "user" | "admin";
+  user: user;
+} & Request;
 // Define a middleware to verify the token
-const verifyToken = async (req, res, next) => {
+const verifyToken = async (req: RequestToken, res: any, next: any) => {
   try {
     // Get the token from the request header or from parameters in the URL
     const token = req.headers["authorization"]
