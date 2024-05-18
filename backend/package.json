@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "i": "npm install",
-    "start": "node server.js",
-    "s": "node server.js"
+    "bun": "npm install -g bun",
+    "i": "bun install",
+    "start": "bun run server.js ",
+    "s": "bun run server.js"
   },
   "keywords": [],
   "author": "",
