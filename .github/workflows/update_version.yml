@@ -1,29 +1,25 @@
-name: Version Patch (Manual Commit)
+# .github/workflows/update-node-versions.yml
+name: update-node-versions
 
 on:
-  push: {}
-  pull_request: {}
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  version:
+  update-node-versions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: hongaar/update-node-versions@v2
+      - uses: peter-evans/create-pull-request@v5
+        with:
+          title: "feat: update node.js versions"
+          body: |
+            Automated changes by [update-node-versions](https://github.com/hongaar/update-node-versions) GitHub action
 
-      - name: Change directory to backend
-        run: cd ./backend
-
-      - name: Patch version (dry run)
-        run: npm version patch --dry-run
-
-      - name: Confirm version update
-        run: |
-          echo "New version: $(npm version patch --dry-run)"
-          read -r -p "Are you sure you want to update the version? (y/N) " response
-          case "$response" in
-            [yY][eE][sS]|[Yy]) ;;
-            *) echo "Version update cancelled."; exit 1 ;;
-          esac
-
-      - name: Update version and commit
-        run: npm version patch -m
+            BREAKING CHANGE: This updates the supported node.js versions
+          token: ${{ secrets.GH_PAT }}
