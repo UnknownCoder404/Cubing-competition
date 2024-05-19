@@ -19,6 +19,6 @@ jobs:
 
       - name: Update package version
         run: |
-          cd root/backend
+          cd ./backend
           npm version patch -m "Automatically bump version"
           git push origin master
