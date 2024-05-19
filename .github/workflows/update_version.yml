@@ -1,26 +1,38 @@
-name: Update Package Version
+name: Node.js Version Patch and Push
 
 on:
   push:
-    branches:
-      - main # Replace 'main' with the correct branch name if it's different
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  update_version:
+  version-patch:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
-          node-version: "20.12.1"
+          node-version: "14"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Update package version
-        env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      - name: Change directory to backend
+        run: cd ./backend
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Patch version
+        run: npm version patch -m "Upgrade to %s due to changes"
+
+      - name: Commit changes
         run: |
-          cd backend # Adjust the directory path if necessary
-          npm version patch -m "Automatically bump version"
-          git push origin main # Replace 'main' with the correct branch name
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Bump version to %s"
+
+      - name: Push changes
+        run: git push
