@@ -1,0 +1,24 @@
+name: Update Package Version
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.12.1"
+
+      - name: Update package version
+        run: |
+          cd root/backend
+          npm version patch -m "Automatically bump version"
+          git push origin master
