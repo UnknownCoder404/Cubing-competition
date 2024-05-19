@@ -9,7 +9,7 @@ router.post("/announce", verifyToken, async (req, res) => {
     if (!id) {
       return res.status(400).json({ message: "Id korisnika je potreban." });
     }
-    const user = await User.findById(id);
+    const user = await User.findOne({ _id: { $eq: id } });
     if (!user) {
       return res.status(400).json({ message: "Korisnik ne postoji." });
     }
