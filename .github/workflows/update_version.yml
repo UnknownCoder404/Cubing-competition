@@ -1,38 +1,29 @@
-name: Node.js Version Patch and Push
+name: Version Patch (Manual Commit)
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  push: {}
+  pull_request: {}
 
 jobs:
-  version-patch:
+  version:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14"
-          registry-url: "https://registry.npmjs.org"
+      - uses: actions/checkout@v3
 
       - name: Change directory to backend
         run: cd ./backend
 
-      - name: Install dependencies
-        run: npm install
+      - name: Patch version (dry run)
+        run: npm version patch --dry-run
 
-      - name: Patch version
-        run: npm version patch -m "Upgrade to %s due to changes"
-
-      - name: Commit changes
+      - name: Confirm version update
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Bump version to %s"
+          echo "New version: $(npm version patch --dry-run)"
+          read -r -p "Are you sure you want to update the version? (y/N) " response
+          case "$response" in
+            [yY][eE][sS]|[Yy]) ;;
+            *) echo "Version update cancelled."; exit 1 ;;
+          esac
 
-      - name: Push changes
-        run: git push
+      - name: Update version and commit
+        run: npm version patch -m
