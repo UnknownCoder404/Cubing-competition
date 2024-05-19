@@ -5,41 +5,43 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const loginLimiter = require("../../rateLimiter/login");
 dotenv.config();
-// Define a route for user login
+
 router.post("/", loginLimiter, async (req, res) => {
   try {
-    // Get the username and password from the request body
-    const username = req.body.username;
-    const password = req.body.password;
+    const { username, password } = req.body;
+
     // Validate the input
     if (!username || !password) {
       return res
         .status(400)
         .json({ message: "Korisničko ime i lozinka su obavezni." });
     }
+
     // Find the user by username
-    const user = await User.findOne({ username });
-    // Check if the user exists
-    if (!user) {
-      return res.status(404).json({ message: "Korisnik ne postoji." });
+    const user = await User.findOne({ username: { $eq: username } }).select(
+      "+password"
+    );
+    const errorMessage = "Korisničko ime ili lozinka nisu ispravni.";
+
+    // Check if the user exists and the password matches
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ message: errorMessage });
     }
-    // Compare the password with the hashed one
-    const match = await user.comparePassword(password);
-    // Check if the password matches
-    if (!match) {
-      return res.status(401).json({ message: "Netočna lozinka." });
-    }
+
     // Generate a JSON web token with the user id as the payload
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
     res.status(200).json({
       message: "Korisnik se uspješno prijavio.",
       info: { id: user._id, token, username: username, role: user.role },
     });
   } catch (err) {
-    // Handle the error
-    res.status(500).json({ message: err.message });
+    // Log the error for internal debugging, but don't expose details to the client
+    console.error(err);
+    res.status(500).json({ message: "Došlo je do pogreške na poslužitelju." });
   }
 });
+
 module.exports = router;
