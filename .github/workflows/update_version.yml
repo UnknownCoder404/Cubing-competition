@@ -24,4 +24,4 @@ jobs:
         run: |
           cd ./backend
           npm version patch -m "Automatically bump version"
-          git push origin master
+          git push origin main
