@@ -9,9 +9,10 @@ const {
   checkGroup,
   checkPasswordSpaces,
 } = require("../../functions/registerValidations");
+const registerLimiter = require("../../rateLimiter/register");
 const router = express.Router();
 // Define a route for user registration
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", registerLimiter, verifyToken, async (req, res) => {
   try {
     const { username, password, group } = req.body;
     const USER = await User.findById(req.userId);

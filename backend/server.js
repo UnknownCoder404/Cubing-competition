@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
+const generalLimiter = require("./rateLimiter/general");
 // Import mongoose models
 // Load the environment variables from the .env file
 dotenv.config();
@@ -33,6 +34,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(generalLimiter);
 // Connect to the MongoDB database using mongoose
 console.log("Trying to connect to mongoDB...");
 mongoose

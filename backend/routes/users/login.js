@@ -3,9 +3,10 @@ const router = express.Router();
 const User = require("../../Models/user");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const loginLimiter = require("../../rateLimiter/login");
 dotenv.config();
 // Define a route for user login
-router.post("/", async (req, res) => {
+router.post("/", loginLimiter, async (req, res) => {
   try {
     // Get the username and password from the request body
     const username = req.body.username;
