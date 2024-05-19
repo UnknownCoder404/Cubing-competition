@@ -1,12 +1,9 @@
 name: Update Package Version
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches:
+      - main # Replace 'main' with the correct branch name if it's different
 
 jobs:
   update_version:
@@ -21,7 +18,9 @@ jobs:
           node-version: "20.12.1"
 
       - name: Update package version
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          cd ./backend
+          cd backend # Adjust the directory path if necessary
           npm version patch -m "Automatically bump version"
-          git push origin main
+          git push origin main # Replace 'main' with the correct branch name
