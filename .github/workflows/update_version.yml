@@ -19,7 +19,7 @@ jobs:
 
       - name: Update package version
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           cd backend # Adjust the directory path if necessary
           npm version patch -m "Automatically bump version"
