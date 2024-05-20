@@ -3,15 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
 const generalLimiter = require("./rateLimiter/general");
 // Load the environment variables from the .env file
 dotenv.config();
 
 // Create an express app
 const app = express();
-app.set("trust proxy", 3);
-app.get("/ip", (request, response) => response.send(request.ip));
 // Use JSON middleware to parse the request body
 app.use(express.json());
 // Define the list of allowed origins
@@ -32,7 +29,7 @@ const corsOptions = {
   },
   optionsSuccessStatus: 200, // For legacy browser support
 };
-
+app.set("trust proxy", 3);
 app.use(cors(corsOptions));
 app.use(generalLimiter);
 // Connect to the MongoDB database using mongoose
@@ -41,8 +38,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {})
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
-console.log("Current Date and time in Zagreb:");
-console.table(getCurrentDateTimeInZagreb());
 // register and login
 app.use("/register", require("./routes/users/register"));
 app.use("/login", require("./routes/users/login"));

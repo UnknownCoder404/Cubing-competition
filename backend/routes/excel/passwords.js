@@ -30,7 +30,7 @@ router.get("/", cache(30), verifyToken, async (req, res) => {
     });
 
     // Write to a file
-    const fileName = "UserPasswords.xlsx";
+    const fileName = "lozinke.xlsx";
     await workbook.xlsx.writeFile(fileName);
 
     // Set the headers to prompt download on the client side
