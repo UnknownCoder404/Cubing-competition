@@ -5,13 +5,13 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const getCurrentDateTimeInZagreb = require("./functions/getCurrentDateTimeInZagreb");
 const generalLimiter = require("./rateLimiter/general");
-// Import mongoose models
 // Load the environment variables from the .env file
 dotenv.config();
 
 // Create an express app
 const app = express();
-
+app.set("trust proxy", 2);
+app.get("/ip", (request, response) => response.send(request.ip));
 // Use JSON middleware to parse the request body
 app.use(express.json());
 // Define the list of allowed origins
