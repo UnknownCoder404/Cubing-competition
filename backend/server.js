@@ -10,7 +10,7 @@ dotenv.config();
 
 // Create an express app
 const app = express();
-app.set("trust proxy", 2);
+app.set("trust proxy", 3);
 app.get("/ip", (request, response) => response.send(request.ip));
 // Use JSON middleware to parse the request body
 app.use(express.json());
