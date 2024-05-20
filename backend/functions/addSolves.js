@@ -26,7 +26,9 @@ async function addSolves(solver, solves, round) {
       solver.rounds[round].solves = [];
     }
     solver.rounds[round].solves.push(...solves);
-
+    if (solver.rounds[round].solves.length > 5) {
+      solver.rounds[round].solves = solver.rounds[round].solves.slice(0, 5);
+    }
     // Save the updated user data
     await solver.save();
 
