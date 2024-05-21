@@ -30,7 +30,7 @@ const corsOptions = {
   },
   optionsSuccessStatus: 200, // For legacy browser support
 };
-app.set("trust proxy", 3);
+app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(generalLimiter);
 // Connect to the MongoDB database using mongoose
@@ -39,6 +39,10 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {})
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
+// Redirect
+app.get("/", (req, res) => {
+  res.redirect("https://bit.ly/CroComp");
+});
 // register and login
 app.use("/register", require("./routes/users/register"));
 app.use("/login", require("./routes/users/login"));
@@ -66,6 +70,8 @@ app.use("/scrambles", require("./routes/scrambles/passwords"));
 // Token validation
 app.use("/token", require("./routes/token/validate"));
 app.use("/health-check", require("./routes/health_check/health_check"));
+
+app.use("/backup", require("./routes/backup/get"));
 // Start the server on the specified port
 console.log(`ENV PORT: ${process.env.PORT}`);
 const PORT = process.env.PORT || 3000;
