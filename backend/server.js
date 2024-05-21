@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const generalLimiter = require("./rateLimiter/general");
+console.log(`Running ${__filename}`);
 // Load the environment variables from the .env file
 dotenv.config();
 
