@@ -200,11 +200,11 @@ main();
 async function tokenValid(action = false) {
   // action, if true it will logout user if token is not valid
   if (!loggedIn()) return true;
-  console.log("Checking if token is valid...");
+  console.log("Provjera vrijednosti tokena...");
   const data = await fetch(`${url}/token`.addToken());
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
   if (action && !data.ok) {
-    console.log("Logging out...");
+    console.log("Odjavljivanje...");
     logOut();
     alert("Prijavi se ponovno");
     window.location.href = "./Login";

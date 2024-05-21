@@ -460,6 +460,7 @@ function formatTimeString(str) {
 }
 
 async function main() {
+  tokenValid(true);
   if (getRole().isUser()) {
     alert("Admins only!");
     location.href = "../";
@@ -471,6 +472,21 @@ async function main() {
 }
 getTime();
 main();
+async function tokenValid(action = false) {
+  // action, if true it will logout user if token is not valid
+  if (!loggedIn()) return true;
+  console.log("Provjera vrijednosti tokena...");
+  const data = await fetch(`${url}/token`.addToken());
+  console.log(data.ok ? "Token is valid." : "Token is invalid.");
+  if (action && !data.ok) {
+    console.log("Odjavljivanje...");
+    logOut();
+    alert("Prijavi se ponovno");
+    window.location.href = "./Login";
+  }
+  return data.ok;
+}
 
 // Call the function every 10 seconds to update the time automatically
 setInterval(getTime, 1000 * 10);
+setInterval(() => tokenValid(true), 1000 * 60 * 10); // Every 10 minutes
