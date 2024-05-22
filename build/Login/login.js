@@ -22,10 +22,12 @@ String.prototype.isAdmin = function () {
 const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
+  const messageElement = document.getElementById("message");
   const usernameInput = document.querySelector(".username-input");
   const passwordInput = document.querySelector(".password-input");
   const username = usernameInput.value;
   const password = passwordInput.value;
+  messageElement.innerHTML = "";
   if (credentialsCheck(username, password)) {
     return;
   }
@@ -40,9 +42,19 @@ loginForm.addEventListener("submit", async function (event) {
       },
       body: JSON.stringify({ username, password }),
     });
-
+    if (response.status === 429) {
+      messageElement.innerHTML =
+        '<span class="error">' +
+        "Previše zahtjeva za prijavu. Pokušaj ponovno za 15 minuta." +
+        "</span>";
+      console.error(
+        "Previše zahtjeva za prijavu. Pokušaj ponovno za 15 minuta."
+      );
+      submitBtn.enable();
+      return;
+    }
     const data = await response.json();
-    const messageElement = document.getElementById("message");
+
     const message = data.message;
     if (response.ok) {
       messageElement.innerText = message;
