@@ -136,10 +136,11 @@ async function showCompetition(userId, index) {
     if (!round.solves || round.solves.length < 5) {
       html += `<form id="add-solve-${i}">
               <label for="solve-${i}">Slaganje:</label>`;
-      html += `<input placeholder="npr. 15467" type="text" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input">`;
+      html += `<input inputmode="numeric" pattern="[0-9 ]*" placeholder="npr. 15467" type="text" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input"/>`;
       html += `<button class="solve-add-btn" type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
       </form>
     `;
+      // Issue: #2 https://github.com/UnknownCoder404/Cubing-competition/issues/2
     }
     // Close .round div
     html += `</div>`;
