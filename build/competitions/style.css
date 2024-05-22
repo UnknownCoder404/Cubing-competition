@@ -51,8 +51,6 @@ body {
 @media screen and (max-width: 500px) {
   .grupe {
     grid-template-columns: 1fr;
-  }
-  .grupe {
     row-gap: 20px;
   }
 }
