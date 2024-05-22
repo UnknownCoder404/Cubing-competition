@@ -1,5 +1,4 @@
 function formatTime(seconds) {
-  console.log("Formatting ", seconds, "s");
   // Convert seconds to milliseconds without rounding
   const ms = seconds * 1000;
 
