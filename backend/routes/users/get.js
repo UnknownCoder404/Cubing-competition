@@ -18,7 +18,7 @@ router.get("/:userId", verifyToken, async (req, res) => {
       });
     }
     // Fetch all users from the database
-    const user = await getUserById(userId).select("username role rounds");
+    const user = (await getUserById(userId)).select("username role rounds");
 
     // Send the response array
     res.status(200).json(user);
