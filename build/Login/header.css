@@ -3,7 +3,7 @@
   padding: 10px 16px;
   min-height: 10vh; /* Minimum height of 10% of the viewport height */
   height: auto; /* Allow the height to adjust to content */
-  width: 100%; /* Full width of the viewport */
+  width: 100vw; /* Full width of the viewport */
   background: rgb(24, 24, 24);
   color: #f1f1f1;
   display: grid;
@@ -72,6 +72,6 @@
 
 @media screen and (max-width: 300px) {
   .account-circle {
-    display:none;
+    display: none;
   }
 }

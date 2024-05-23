@@ -4,6 +4,7 @@ body {
   background-color: rgb(96, 96, 96);
   color: white;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .container {
@@ -17,7 +18,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 100vh;
 }
 #loginForm {
   display: grid;
