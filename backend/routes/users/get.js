@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const { getUserById } = require("../../functions/getUserById");
 const router = express.Router();
 router.get("/:userId", verifyToken, async (req, res) => {
   try {
@@ -17,7 +18,7 @@ router.get("/:userId", verifyToken, async (req, res) => {
       });
     }
     // Fetch all users from the database
-    const user = await User.findById(userId, "username role rounds");
+    const user = await getUserById(userId).select("username role rounds");
 
     // Send the response array
     res.status(200).json(user);

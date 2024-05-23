@@ -1,15 +1,15 @@
 const User = require("../Models/user");
-async function getUsernameById(id) {
+async function getUserById(id) {
   try {
     const user = await User.findOne({
       _id: {
         $eq: id,
       },
-    }).select("+username");
-    return user.username ? user.username : null;
+    });
+    return user ? user : null;
   } catch (err) {
     console.error(err);
     return null;
   }
 }
-module.exports = { getUsernameById };
+module.exports = { getUserById };

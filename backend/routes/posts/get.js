@@ -1,8 +1,8 @@
 const express = require("express");
-const User = require("../../Models/user");
 const Post = require("../../Models/post");
 const cache = require("../../middleware/cache");
 const router = express.Router();
+const { getUsernameById } = require("../../functions/getUsernameById");
 router.get("/", cache(300), async (req, res) => {
   try {
     const posts = await Post.find();
@@ -13,7 +13,7 @@ router.get("/", cache(300), async (req, res) => {
         description: post.description,
         author: {
           id: post.author.id, // Assuming this is the correct field for the author's id
-          username: (await User.findById(post.author.id)).username,
+          username: (await getUsernameById(post.author.username)).username,
         },
         createdAt: post.createdAt,
       }))

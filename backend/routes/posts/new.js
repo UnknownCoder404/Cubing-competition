@@ -10,8 +10,7 @@ router.post("/", verifyToken, async (req, res) => {
   }
   const username = req.user.username;
   const userId = req.userId;
-  const title = req.body.title;
-  const description = req.body.description;
+  const { title, description } = req.body;
 
   try {
     const newPost = await Post.create({

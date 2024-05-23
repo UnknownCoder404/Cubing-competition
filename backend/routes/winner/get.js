@@ -1,5 +1,4 @@
 const express = require("express");
-const User = require("../../Models/user");
 const winner = require("../../Models/winner");
 const cache = require("../../middleware/cache");
 const { getUsernameById } = require("../../functions/getUsernameById");

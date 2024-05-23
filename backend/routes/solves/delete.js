@@ -1,6 +1,6 @@
 const express = require("express");
-const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const { getUserById } = require("../../functions/getUserById");
 const router = express.Router();
 router.delete("/:userId", verifyToken, async (req, res) => {
   const userId = req.params.userId; // userid to delete solves
@@ -17,7 +17,7 @@ router.delete("/:userId", verifyToken, async (req, res) => {
     res.status(400).json({ message: "Slaganje za brisanje treba biti broj." });
   }
 
-  const user = await User.findById(userId);
+  const user = await getUserById(userId);
 
   // Delete the specified solve
   if (user.rounds && user.rounds[roundToDelete - 1]) {
