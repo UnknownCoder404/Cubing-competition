@@ -1,0 +1,33 @@
+/* Style the header */
+.header {
+  padding: 10px 16px;
+  background: rgb(24, 24, 24);
+  color: #f1f1f1;
+}
+.header {
+  display: flex;
+  align-items: center;
+}
+.header h1 {
+  display: inline-block;
+}
+
+/* Page content */
+.content {
+  padding: 16px;
+}
+.logo {
+  width: 20px;
+  margin-right: 20px;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.naslov-container {
+  display: flex;
+}
+.naslov {
+  display: inline-block;
+}

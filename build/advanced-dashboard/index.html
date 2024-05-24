@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Napredna radna ploča</title>
+    <link
+      rel="preload"
+      href="../Styles/font.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="a-dashboard.css" />
+    <link rel="stylesheet" href="loading.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo-container">
+        <a href="../"><img class="logo" src="../favicon.ico" /></a>
+      </div>
+      <h1>Napredna radna ploča</h1>
+    </div>
+    <div class="options">
+      <div class="excel-options-container">
+        <h2>Excel</h2>
+        <button class="passwords">Sve lozinke</button>
+        <button class="results">Rezultati</button>
+      </div>
+      <div class="change-password-container">
+        <div class="change-password-title-container">
+          <h2>Promijeni lozinku</h2>
+        </div>
+        <div class="change-password-form">
+          <div class="change-password-cred">
+            <div class="username-input-container">
+              <input
+                type="text"
+                placeholder="Korisničko ime"
+                class="username"
+              />
+            </div>
+            <div class="password-input-container">
+              <input
+                type="text"
+                placeholder="Nova lozinka"
+                class="new-password"
+              />
+            </div>
+          </div>
+          <button class="change-password-submit-btn">Promijeni lozinku</button>
+          <p class="message"></p>
+        </div>
+      </div>
+    </div>
+    <script src="a-dashboard.js"></script>
+  </body>
+</html>

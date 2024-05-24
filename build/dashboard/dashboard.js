@@ -72,6 +72,9 @@ function logOut(refresh = false) {
     window.location.reload();
   }
 }
+function loggedIn() {
+  return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
+}
 async function setWinner(id) {
   const setWinnerBtn = document.querySelector(`.set-winner-${id}`);
   const previousHtml = setWinnerBtn.innerHTML;
@@ -349,33 +352,7 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
   const error = await response.json();
   alert(error.message);
 }
-function downloadFile(url, fileName) {
-  if (!url || !fileName) return -1;
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = fileName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-  return 1;
-}
-const getPasswordsBtn = document.querySelector(".passwords");
-const getResultsBtn = document.querySelector(".results");
-getResultsBtn.addEventListener("click", getResults);
-getPasswordsBtn.addEventListener("click", getPasswords);
-function getResults() {
-  getResultsBtn.disabled = true;
-  const resultsUrl = `${url}/results`.addToken();
-  downloadFile(resultsUrl, "results"); // You can specify the desired file name
-  getResultsBtn.disabled = false;
-}
 
-function getPasswords() {
-  getResultsBtn.disabled = true;
-  const passwordsUrl = `${url}/passwords`.addToken();
-  downloadFile(passwordsUrl, "passwords"); // You can specify the desired file name
-  getResultsBtn.disabled = false;
-}
 function getAverage(solves) {
   if (solves.length !== 5) {
     return "Need 5 solves";
@@ -491,3 +468,7 @@ async function tokenValid(action = false) {
 // Call the function every 10 seconds to update the time automatically
 setInterval(getTime, 1000 * 10);
 setInterval(() => tokenValid(true), 1000 * 60 * 10); // Every 10 minutes
+const advancedDashboardBtn = document.querySelector(".advanced-dashboard-btn");
+advancedDashboardBtn.addEventListener("click", () => {
+  window.location.href = "../advanced-dashboard";
+});
