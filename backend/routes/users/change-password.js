@@ -12,6 +12,8 @@ router.post("/change-password", verifyToken, async (req, res) => {
     }
     const username = req.body.username; // Username of user to change password
     const newPassword = req.body.newPassword;
+    console.log(`Username: ${username}`);
+    console.log(`New password: ${newPassword}`);
     if (!username || typeof username !== "string") {
       return res.status(400).json({
         message: "Korisničko ime je krivo uneseno ili nedostaje.",
