@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const router = express.Router();
-router.get("/", verifyToken, async (req, res) => {
+router.get("/all", verifyToken, async (req, res) => {
   try {
     // Ensure only admins can access this route
     if (req.userRole !== "admin") {
