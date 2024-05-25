@@ -1,33 +1,44 @@
-// Cache middleware
+const { scheduleJob } = require("node-schedule");
+
 const cache = (duration, options = {}) => {
-  // Consider using a dedicated cache library like express-cache-middleware
-  const cacheStore = options.cacheStore || new Map(); // Use a Map for in-memory cache
+  const cacheStore = options.cacheStore || new Map();
+
+  // Cleanup function to remove expired cache entries
+  const cleanupCache = () => {
+    const now = Date.now();
+    for (const [key, { timestamp }] of cacheStore.entries()) {
+      if (now - timestamp >= duration * 1000) {
+        cacheStore.delete(key);
+      }
+    }
+  };
+
+  // Schedule cleanup job to run every minute
+  scheduleJob("*/1 * * * *", cleanupCache);
 
   return (req, res, next) => {
     const { originalUrl, url } = req;
-    const key = generateCacheKey(originalUrl || url, options.keyPrefix); // Customize key generation
+    const key = generateCacheKey(originalUrl || url, options.keyPrefix);
 
-    const cachedBody = cacheStore.get(key);
-    if (cachedBody) {
-      res.send(cachedBody);
+    const cachedEntry = cacheStore.get(key);
+    if (cachedEntry && Date.now() - cachedEntry.timestamp < duration * 1000) {
+      res.send(cachedEntry.body);
       return;
     }
 
     const originalSend = res.send;
     res.send = (body) => {
-      cacheStore.set(key, body, duration * 1000);
-      res.setHeader("Cache-Control", `public, max-age=${duration}`); // Set cache headers
-      originalSend.call(res, body); // Call original send method
+      cacheStore.set(key, { body, timestamp: Date.now() });
+      res.setHeader("Cache-Control", `public, max-age=${duration}`);
+      originalSend.call(res, body);
     };
 
     next();
   };
 };
 
-// Optional helper function to customize cache key generation
+// Helper function to generate cache key
 function generateCacheKey(url, prefix = "__express__") {
-  // Implement your logic here to potentially exclude parts of the URL
-  // You can include relevant parts like path and specific query string parameters
   return `${prefix}${url}`;
 }
 
