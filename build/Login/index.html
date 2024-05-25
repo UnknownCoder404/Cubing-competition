@@ -15,6 +15,8 @@
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
     <link rel="preload" href="../dashboard/dashboard.js" as="script" />
     <link rel="preload" href="../dashboard/dashboard.css" as="style" />
+    <link rel="preload" href="../Scripts/main.js" as="script" />
+    <link rel="preload" href="../Styles/cards.css" as="style" />
     <link rel="stylesheet" href="header.css" />
   </head>
   <body>
@@ -26,27 +28,27 @@
         </div>
       </div>
     </div>
-      <div class="form-container">
-        <form id="loginForm">
-          <input
-            autocomplete="username"
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Korisničko ime"
-            class="username-input"
-          /><br />
-          <input
-            autocomplete="current-password"
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Lozinka"
-            class="password-input"
-          /><br /><br />
-          <button class="submit-btn" type="submit">Prijava</button>
-        </form>
-      </div>
+    <div class="form-container">
+      <form id="loginForm">
+        <input
+          autocomplete="username"
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Korisničko ime"
+          class="username-input"
+        /><br />
+        <input
+          autocomplete="current-password"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Lozinka"
+          class="password-input"
+        /><br /><br />
+        <button class="submit-btn" type="submit">Prijava</button>
+      </form>
+    </div>
     <div id="message"></div>
     <script src="login.js"></script>
   </body>
