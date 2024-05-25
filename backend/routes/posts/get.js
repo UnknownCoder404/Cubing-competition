@@ -13,7 +13,7 @@ router.get("/", cache(300), async (req, res) => {
         description: post.description,
         author: {
           id: post.author.id, // Assuming this is the correct field for the author's id
-          username: (await getUsernameById(post.author.username)).username,
+          username: await getUsernameById(post.author.username),
         },
         createdAt: post.createdAt,
       }))
