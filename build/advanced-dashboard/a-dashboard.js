@@ -143,9 +143,9 @@ async function tokenValid(action = false) {
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
   if (action && !data.ok) {
     console.log("Odjavljivanje...");
-    //logOut();
+    logOut();
     alert("Prijavi se ponovno");
-    //window.location.href = "../Login";
+    window.location.href = "../Login";
   }
   return data.ok;
 }
