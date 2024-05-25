@@ -460,7 +460,7 @@ async function tokenValid(action = false) {
     console.log("Odjavljivanje...");
     logOut();
     alert("Prijavi se ponovno");
-    window.location.href = "./Login";
+    window.location.href = "../Login";
   }
   return data.ok;
 }
