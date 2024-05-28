@@ -3,6 +3,7 @@ const exceljs = require("exceljs");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const cache = require("../../middleware/cache");
+const hashPassword = require("../../functions/hashPassword");
 const router = express.Router();
 router.get("/", cache(30), verifyToken, async (req, res) => {
   if (req.userRole !== "admin") {
@@ -25,7 +26,12 @@ router.get("/", cache(30), verifyToken, async (req, res) => {
     ];
 
     // Add rows to the sheet
-    users.forEach((user) => {
+    users.forEach(async (user) => {
+      console.log(
+        `Useranme ${user.username} with hashed password ${await hashPassword(
+          user.password
+        )}`
+      );
       sheet.addRow({ username: user.username, password: user.password });
     });
 

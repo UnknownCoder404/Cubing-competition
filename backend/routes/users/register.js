@@ -1,4 +1,5 @@
 const express = require("express");
+const hashPassword = require("../../functions/hashPassword");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const {
@@ -34,7 +35,12 @@ router.post("/", registerLimiter, verifyToken, async (req, res) => {
     checkPasswordSpaces(password, res);
 
     // If all validations pass, proceed with user registration
-    const user = new User({ username, password, role: "user", group });
+    const user = new User({
+      username,
+      password: await hashPassword(password),
+      role: "user",
+      group,
+    });
     await user.save();
 
     res.status(201).json({

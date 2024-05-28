@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const verifyPassword = require("../functions/verifyPassword");
 const solveSchema = new mongoose.Schema({ solves: [Number] });
 // Define a schema for the user model
 const userSchema = new mongoose.Schema({
@@ -12,7 +13,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.comparePassword = async function (password) {
   try {
     // Return a boolean value indicating the match
-    return password === this.password;
+    return verifyPassword(password, this.password);
   } catch (err) {
     // Handle the error
     throw err;
