@@ -29,9 +29,13 @@ router.post("/", loginLimiter, async (req, res) => {
     }
 
     // Generate a JSON web token with the user id as the payload
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({
       message: "Korisnik se uspješno prijavio.",
