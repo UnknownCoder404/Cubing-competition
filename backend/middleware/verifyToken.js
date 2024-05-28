@@ -23,8 +23,6 @@ const verifyToken = async (req, res, next) => {
     // Call the next middleware
     next();
   } catch (err) {
-    // Handle the error
-    console.error(err);
     res
       .status(401)
       .json({ message: "Pogrešan token. Pokušajte se ponovno prijaviti." });
