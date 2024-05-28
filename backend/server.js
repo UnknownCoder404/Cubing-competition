@@ -62,7 +62,6 @@ app.use("/posts/new", require("./routes/posts/new"));
 app.use("/posts", require("./routes/posts/get"));
 // Results in excel
 app.use("/results", require("./routes/excel/results"));
-app.use("/passwords", require("./routes/excel/passwords"));
 // Winner
 app.use("/winner", require("./routes/winner/announce"));
 app.use("/winner", require("./routes/winner/get"));

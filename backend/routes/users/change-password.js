@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const hashPassword = require("../../functions/hashPassword");
 const router = express.Router();
 const {
   checkUsernameAndPassword,
@@ -42,7 +43,7 @@ router.post("/change-password", verifyToken, async (req, res) => {
     checkUsernameAndPassword(user.username, newPassword, res);
     checkUsernameAndPasswordEquality(user.username, password, res);
     checkPasswordSpaces(newPassword, res);
-    user.password = newPassword;
+    user.password = await hashPassword(newPassword);
     await user.save();
     return res.status(200).json({ message: "Lozinka promijenjena." });
   } catch (error) {
