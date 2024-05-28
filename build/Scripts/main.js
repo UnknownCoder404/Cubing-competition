@@ -1,6 +1,4 @@
 const url = "https://cubing-competition.onrender.com";
-const logInElement = document.querySelector(".js-log-in");
-const username = getUsername();
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
@@ -72,13 +70,13 @@ function createNewPostDialog() {
         }.addToken(),
         body: JSON.stringify({ title, description }),
       });
-
+      const data = await response.json();
       if (response.ok) {
-        const newPost = await response.json();
+        const newPost = data;
         console.log("New post created:", newPost);
         dialog.close();
       } else {
-        const errorData = await response.json();
+        const errorData = data;
         console.error("Error creating post:", errorData.message);
         alert("Error creating post: " + errorData.message);
       }
@@ -94,10 +92,6 @@ async function getPosts() {
   const posts = await data.json();
   return posts;
 }
-if (username) {
-  logInElement.innerHTML = username;
-}
-const role = getRole();
 function addDashboardCard() {
   let html = "";
   html += `
@@ -124,11 +118,19 @@ function addCreatePostCard() {
   `;
   cardsDiv.insertAdjacentHTML("beforeend", html);
 }
-if (typeof role === "string" && role.isAdmin()) {
-  addDashboardCard();
-  addCreatePostCard();
+function generateLogOutCard(username = getUsername()) {
+  if (!username) return;
+  let html = "";
+  html += `
+  <div class="card">
+  <div class="container">
+      <h2>Odjavi se</h2>
+      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p>
+      </div> <!-- container class -->
+      </div> <!-- card class -->
+      `;
+  return html;
 }
-
 function logOut(refresh = false) {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
@@ -137,19 +139,7 @@ function logOut(refresh = false) {
     window.location.reload();
   }
 }
-if (username) {
-  let html = "";
-  html += `
-  <div class="card">
-  <div class="container">
-      <h2>Odjavi se</h2>
-      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p></div></div>`;
-  cardsDiv.insertAdjacentHTML("beforeEnd", html);
-  let logOutSpan = document.querySelector(".logout-span");
-  logOutSpan.addEventListener("click", async () => {
-    logOut(true);
-  });
-}
+
 document.querySelector(".share").addEventListener("click", async () => {
   if (navigator.share) {
     await navigator.share({
@@ -196,7 +186,6 @@ async function main() {
     cardsDiv.insertAdjacentHTML("beforeend", html);
   });
 }
-main();
 async function tokenValid(action = false) {
   // action, if true it will logout user if token is not valid
   if (!loggedIn()) return true;
@@ -211,3 +200,23 @@ async function tokenValid(action = false) {
   }
   return data.ok;
 }
+const logInElement = document.querySelector(".js-log-in");
+const username = getUsername();
+const role = getRole();
+if (role && role.isAdmin()) {
+  addDashboardCard();
+  addCreatePostCard();
+}
+if (username) {
+  logInElement.innerHTML = username;
+}
+if (username) {
+  const html = generateLogOutCard(username);
+
+  cardsDiv.insertAdjacentHTML("beforeEnd", html);
+  const logOutSpan = document.querySelector(".logout-span");
+  logOutSpan.addEventListener("click", async () => {
+    logOut(true);
+  });
+}
+main();

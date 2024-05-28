@@ -65,9 +65,11 @@
   text-decoration: underline;
   color: white;
 }
-
+.account-circle {
+  cursor: pointer;
+}
 @media screen and (max-width: 300px) {
   .account-circle {
-    display:none;
+    display: none;
   }
 }
