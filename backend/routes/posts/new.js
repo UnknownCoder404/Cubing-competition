@@ -1,5 +1,6 @@
 const express = require("express");
 const Post = require("../../Models/post");
+const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const router = express.Router();
 router.post("/", verifyToken, async (req, res) => {
@@ -8,8 +9,9 @@ router.post("/", verifyToken, async (req, res) => {
       .status(400)
       .json({ message: "Samo administratori smiju objavljivati." });
   }
-  const username = req.user.username;
   const userId = req.userId;
+  const user = User.findById(userId);
+  const username = user.username;
   const { title, description } = req.body;
 
   try {
