@@ -12,8 +12,7 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   background-color: rgb(63, 63, 63);
-  transition: background-color 1s ease;
-  transition-delay: 0.2s;
+  transition: background-color 1s ease-in;
 }
 
 .user:hover {
