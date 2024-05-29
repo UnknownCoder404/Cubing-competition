@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const compression = require("compression");
 const generalLimiter = require("./rateLimiter/general");
 console.log(`Running ${__filename}`);
 // Load the environment variables from the .env file
@@ -33,6 +34,20 @@ const corsOptions = {
 app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(generalLimiter);
+const compressionOptions = {
+  level: 8,
+  threshold: 100 * 1024, // Ignore smaller than 100KB
+  filter: (req, res) => {
+    if (req.headers["x-no-compression"]) {
+      // don't compress responses with this request header
+      return false;
+    }
+
+    // fallback to standard filter function
+    return compression.filter(req, res);
+  },
+};
+app.use(compression(compressionOptions));
 // Connect to the MongoDB database using mongoose
 console.log("Trying to connect to mongoDB...");
 mongoose
