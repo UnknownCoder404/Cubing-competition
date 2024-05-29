@@ -41,7 +41,7 @@ router.post("/change-password", verifyToken, async (req, res) => {
     }
     checkPasswordLength(newPassword, res);
     checkUsernameAndPassword(user.username, newPassword, res);
-    checkUsernameAndPasswordEquality(user.username, password, res);
+    checkUsernameAndPasswordEquality(user.username, newPassword, res);
     checkPasswordSpaces(newPassword, res);
     user.password = await hashPassword(newPassword);
     await user.save();
