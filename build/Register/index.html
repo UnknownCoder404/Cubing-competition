@@ -11,35 +11,65 @@
       as="style"
       onload="this.onload=null;this.rel='stylesheet'"
     />
+    <link rel="stylesheet" href="loading.css" />
     <noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="preload" href="../dashboard/dashboard.js" as="script" />
+    <link rel="preload" href="../dashboard/dashboard.css" as="style" />
+    <link rel="preload" href="../Scripts/main.js" as="script" />
+    <link rel="preload" href="../Styles/cards.css" as="style" />
+    <link rel="stylesheet" href="header.css" />
   </head>
   <body>
-    <h1>Registracija korisnika</h1>
-    <form id="registerForm">
-      <label for="username">Korisničko ime:</label><br />
-      <input type="text" id="username" name="username" /><br />
-      <label for="password">Šifra:</label><br />
-      <input type="password" id="password" name="password" /><br /><br />
-      <div class="group-container">
-        <label>
-          <input
-            checked
-            class="group-1"
-            type="radio"
-            name="group"
-            value="group1"
-          />
-          Grupa 1
-        </label>
-        <label>
-          <input class="group-2" type="radio" name="group" value="group2" />
-          Grupa 2
-        </label>
+    <div class="header">
+      <div class="interaction-container">
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+          <h1>Registracija korisnika</h1>
+        </div>
       </div>
-
-      <button class="submit-btn" type="submit">Registriraj</button>
-    </form>
+    </div>
+    <div class="form-container">
+      <form id="registerForm">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Korisničko ime"
+          class="username-input"
+        /><br />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Lozinka"
+          class="password-input"
+        /><br /><br />
+        <div class="groups-container">
+          <div class="group-container">
+            <label for="group-1">Grupa 1</label>
+            <input
+              checked
+              type="radio"
+              id="group-1"
+              name="group"
+              class="group-1 radio-input"
+            />
+          </div>
+          <div class="group-container">
+            <label for="group-2">Grupa 2</label>
+            <input
+              type="radio"
+              id="group-2"
+              name="group"
+              class="group-2 radio-input"
+            />
+          </div>
+        </div>
+        <br />
+        <button class="submit-btn" type="submit">Registriraj</button>
+      </form>
+    </div>
     <div id="message"></div>
     <script src="register.js"></script>
   </body>
