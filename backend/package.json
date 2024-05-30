@@ -6,7 +6,6 @@
     "bun": "npm install -g bun",
     "i": "bun install",
     "start": "bun run backup.js && bun run server.js ",
-    "s": "bun run server.js"
   },
   "keywords": [],
   "author": "",
