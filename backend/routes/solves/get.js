@@ -3,7 +3,7 @@ const User = require("../../Models/user");
 const cache = require("../../middleware/cache");
 const router = express.Router();
 // Route handler for getting live solves
-router.get("/", cache(300), async (req, res) => {
+router.get("/", cache(5), async (req, res) => {
   try {
     const usersWithSolves = await User.find({
       rounds: {
@@ -13,13 +13,15 @@ router.get("/", cache(300), async (req, res) => {
         },
       },
     }).select("username rounds group -_id");
-    res.json({
-      solves: usersWithSolves,
-      lastUpdated: new Intl.DateTimeFormat("en-US", {
-        minute: "2-digit",
-        second: "2-digit",
-      }).format(new Date()),
-    });
+    res
+      .json({
+        solves: usersWithSolves,
+        lastUpdated: new Intl.DateTimeFormat("en-US", {
+          minute: "2-digit",
+          second: "2-digit",
+        }).format(new Date()),
+      })
+      .status(200);
   } catch (err) {
     res.status(500).json({ message: "Error retrieving solves" });
   }
