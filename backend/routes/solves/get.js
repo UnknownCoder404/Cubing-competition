@@ -13,15 +13,13 @@ router.get("/", cache(5), async (req, res) => {
         },
       },
     }).select("username rounds group -_id");
-    res
-      .json({
-        solves: usersWithSolves,
-        lastUpdated: new Intl.DateTimeFormat("en-US", {
-          minute: "2-digit",
-          second: "2-digit",
-        }).format(new Date()),
-      })
-      .status(200);
+    res.status(200).json({
+      solves: usersWithSolves,
+      lastUpdated: new Intl.DateTimeFormat("en-US", {
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(new Date()),
+    });
   } catch (err) {
     res.status(500).json({ message: "Error retrieving solves" });
   }
