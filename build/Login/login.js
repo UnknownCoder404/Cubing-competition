@@ -1,15 +1,5 @@
-const url = "https://cubing-competition.onrender.com";
+import { url, loadingHTML } from "../Scripts/variables.js";
 const submitBtn = document.querySelector(".submit-btn");
-const loadingHTML = `<div id="circularG">
-<div id="circularG_1" class="circularG"></div>
-<div id="circularG_2" class="circularG"></div>
-<div id="circularG_3" class="circularG"></div>
-<div id="circularG_4" class="circularG"></div>
-<div id="circularG_5" class="circularG"></div>
-<div id="circularG_6" class="circularG"></div>
-<div id="circularG_7" class="circularG"></div>
-<div id="circularG_8" class="circularG"></div>
-</div>`;
 Element.prototype.disable = function () {
   this.disabled = true;
 };

@@ -1,44 +1,15 @@
-const url = "https://cubing-competition.onrender.com";
+import { url, loadingHTML } from "../Scripts/variables.js";
+import { getToken } from "../Scripts/credentials.js";
 const group1Checkbox = document.querySelector(".group-1");
 const submitBtn = document.querySelector(".submit-btn");
 const messageElement = document.getElementById("message");
 const usernameElement = document.getElementById("username");
 const passwordElement = document.getElementById("password");
-const loadingHTML = `<div id="circularG">
-<div id="circularG_1" class="circularG"></div>
-<div id="circularG_2" class="circularG"></div>
-<div id="circularG_3" class="circularG"></div>
-<div id="circularG_4" class="circularG"></div>
-<div id="circularG_5" class="circularG"></div>
-<div id="circularG_6" class="circularG"></div>
-<div id="circularG_7" class="circularG"></div>
-<div id="circularG_8" class="circularG"></div>
-</div>`;
 Object.prototype.addToken = function (token = getToken()) {
   let object = this;
   object.Authorization = token;
   return object;
 };
-function getUsername() {
-  const username = localStorage.getItem("username");
-  if (!username) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return username;
-}
-function getToken() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return token;
-}
 function clearInput(input) {
   input.value = "";
 }

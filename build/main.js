@@ -1,4 +1,5 @@
-const url = "https://cubing-competition.onrender.com";
+import { url } from "./Scripts/variables.js";
+import { tokenValid } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
@@ -185,20 +186,6 @@ async function main() {
     const html = createPostHtml(post);
     cardsDiv.insertAdjacentHTML("beforeend", html);
   });
-}
-async function tokenValid(action = false) {
-  // action, if true it will logout user if token is not valid
-  if (!loggedIn()) return true;
-  console.log("Provjera vrijednosti tokena...");
-  const data = await fetch(`${url}/token`.addToken());
-  console.log(data.ok ? "Token is valid." : "Token is invalid.");
-  if (action && !data.ok) {
-    console.log("Odjavljivanje...");
-    logOut();
-    alert("Prijavi se ponovno");
-    window.location.href = "./Login";
-  }
-  return data.ok;
 }
 const logInElement = document.querySelector(".js-log-in");
 const username = getUsername();

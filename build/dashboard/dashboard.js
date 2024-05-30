@@ -1,15 +1,16 @@
+import {
+  formatTimeToString,
+  formatTime,
+  getAverage,
+} from "../Scripts/solveTime.js";
+import {
+  getRole,
+  getId,
+  getToken,
+  tokenValid,
+} from "../Scripts/credentials.js";
+import { url, loadingHTML } from "../Scripts/variables.js";
 const usersDiv = document.querySelector(".users");
-const url = "https://cubing-competition.onrender.com";
-const loadingHTML = `<div id="circularG">
-<div id="circularG_1" class="circularG"></div>
-<div id="circularG_2" class="circularG"></div>
-<div id="circularG_3" class="circularG"></div>
-<div id="circularG_4" class="circularG"></div>
-<div id="circularG_5" class="circularG"></div>
-<div id="circularG_6" class="circularG"></div>
-<div id="circularG_7" class="circularG"></div>
-<div id="circularG_8" class="circularG"></div>
-</div>`;
 String.prototype.addToken = function (token = getToken()) {
   return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
 };
@@ -24,58 +25,10 @@ String.prototype.isUser = function () {
 String.prototype.isAdmin = function () {
   return this.toUpperCase() === "ADMIN";
 };
-function getUsername() {
-  const username = localStorage.getItem("username");
-  if (!username) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return username;
-}
-function getRole() {
-  const role = localStorage.getItem("role");
-  if (!role) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return role;
-}
-function getId() {
-  const id = localStorage.getItem("id");
-  if (!id) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return id;
-}
-function getToken() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    logOut();
-    alert("Prijavi se ponovno.");
-    location.href = "../Login/";
-    return null;
-  }
-  return token;
-}
-function logOut(refresh = false) {
-  localStorage.removeItem("token");
-  localStorage.removeItem("username");
-  localStorage.removeItem("role");
-  if (refresh) {
-    window.location.reload();
-  }
-}
 function loggedIn() {
   return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
 }
-async function setWinner(id) {
+window.setWinner = async function (id) {
   const setWinnerBtn = document.querySelector(`.set-winner-${id}`);
   const previousHtml = setWinnerBtn.innerHTML;
   setWinnerBtn.disabled = true;
@@ -93,8 +46,8 @@ async function setWinner(id) {
   setWinnerBtn.disabled = false;
   setWinnerBtn.innerHTML = previousHtml;
   alert(response.message);
-}
-async function showCompetition(userId, index) {
+};
+window.showCompetition = async function (userId, index) {
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
   const showCompBtn = userDiv.querySelector(".showComp-btn");
@@ -163,8 +116,9 @@ async function showCompetition(userId, index) {
       }
     });
   });
-}
-async function addSolve(userId, roundIndex, index) {
+}; // Make showCompetition() global by using window.showCompetition = ...
+
+window.addSolve = async function (userId, roundIndex, index) {
   const solveInput = document.getElementById(`solve-${roundIndex}-${index}`);
   let solveValue = solveInput.value;
 
@@ -189,8 +143,7 @@ async function addSolve(userId, roundIndex, index) {
     alert("Uneseno više od 5 slaganja, samo prvih 5 će biti poslano.");
   }
 
-  // Formatira svako slaganje pomoću funkcije formatTimeString
-  solves = solves.map((solve) => formatTimeString(solve));
+  solves = solves.map((solve) => formatTimeToString(solve));
   if (solves.length === 0) {
     alert("Mora biti barem 1 slaganje.");
     return;
@@ -225,9 +178,9 @@ async function addSolve(userId, roundIndex, index) {
   }
 
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
-}
+};
 
-async function getUsers() {
+window.getUsers = async function () {
   const body = {
     method: "GET",
     headers: {}.addToken(),
@@ -240,9 +193,9 @@ async function getUsers() {
     console.error(error);
     alert("Greška prilikom povezivanja.");
   }
-}
+};
 
-async function deleteUser(id) {
+window.deleteUser = async function (id) {
   if (id === getId()) {
     alert("Nedopušteno brisanje vlastitog računa.");
     return;
@@ -264,9 +217,9 @@ async function deleteUser(id) {
     console.error(error);
     alert(error);
   }
-}
+};
 
-async function assignAdmin(id, username) {
+window.assignAdmin = async function (id, username) {
   const body = {
     method: "POST",
     headers: {}.addToken(),
@@ -285,9 +238,9 @@ async function assignAdmin(id, username) {
     console.error(error);
     alert(error);
   }
-}
+};
 
-function displayUsers(users) {
+window.displayUsers = function (users) {
   let html = "";
   usersDiv.innerHTML = "";
   users.forEach((user, index) => {
@@ -312,26 +265,9 @@ function displayUsers(users) {
     html += `</div>`; // end user div
   });
   usersDiv.innerHTML = html;
-}
-function getTime() {
-  // Get the current date and time in GMT+1
-  const now = new Date();
-  const cetTime = new Date(now.getTime());
+};
 
-  // Extract hours and minutes
-  const hours = cetTime.getHours().toString().padStart(2, "0"); // Pad hours with leading zero
-  const minutes = cetTime.getMinutes().toString().padStart(2, "0"); // Pad minutes with leading zero
-  //const seconds = cetTime.getSeconds().toString().padStart(2, "0"); // Pad minutes with leading zero
-
-  // Format the time string (24-hour format)
-  const formattedTime = `${hours}:${minutes}`;
-
-  // Update the content of the HTML element with the formatted time string
-  // You will need to replace this with your specific method to update the HTML element
-  document.getElementById("currentTime").innerText = formattedTime;
-}
-
-async function deleteSolve(userId, roundIndex, solveIndex, index) {
+window.deleteSolve = async function (userId, roundIndex, solveIndex, index) {
   const roundNumber = roundIndex + 1;
   const solveNumber = solveIndex + 1;
   // Call the backend to delete the solve
@@ -351,90 +287,24 @@ async function deleteSolve(userId, roundIndex, solveIndex, index) {
   // Handle errors
   const error = await response.json();
   alert(error.message);
-}
+};
 
-function getAverage(solves) {
-  if (solves.length !== 5) {
-    return "Need 5 solves";
-  }
+function getTime() {
+  // Get the current date and time in GMT+1
+  const now = new Date();
+  const cetTime = new Date(now.getTime());
 
-  // Create a copy of the solves array
-  let sortedSolves = solves.slice();
+  // Extract hours and minutes
+  const hours = cetTime.getHours().toString().padStart(2, "0"); // Pad hours with leading zero
+  const minutes = cetTime.getMinutes().toString().padStart(2, "0"); // Pad minutes with leading zero
+  //const seconds = cetTime.getSeconds().toString().padStart(2, "0"); // Pad minutes with leading zero
 
-  sortedSolves.sort((a, b) => {
-    if (a === 0) return 1; // Place 0 at the last element
-    if (b === 0) return -1; // Place 0 at the last element
-    return a - b; // Regular sorting for other numbers
-  });
-  // Remove the smallest and largest elements
-  let trimmedSolves = sortedSolves.slice(1, sortedSolves.length - 1);
+  // Format the time string (24-hour format)
+  const formattedTime = `${hours}:${minutes}`;
 
-  // Calculate average
-  let average =
-    trimmedSolves.reduce((acc, val) => acc + val, 0) / trimmedSolves.length;
-
-  // Check if trimmedSolves contains 0
-  if (trimmedSolves.includes(0)) {
-    return "DNF";
-  }
-
-  // Return average rounded to 2 decimal places
-  return formatTime(average);
-}
-function formatTime(seconds) {
-  // Convert seconds to milliseconds without rounding
-  const ms = seconds * 1000;
-
-  // Calculate minutes, remaining seconds, and milliseconds
-  const minutes = Math.floor(ms / 60000);
-  const remainingSeconds = Math.floor((ms % 60000) / 1000);
-  const milliseconds = ms % 1000; // Corrected line
-
-  // Initialize an array to hold the time parts
-  let timeParts = [];
-
-  // If there are minutes, add them to the time parts
-  if (minutes > 0) {
-    timeParts.push(`${minutes}:`);
-  }
-
-  // Add seconds and milliseconds to the time parts
-  timeParts.push(`${remainingSeconds.toString().padStart(2, "0")}`);
-  timeParts.push(`.${milliseconds.toString().padStart(3, "0").slice(0, 2)}`);
-  const formattedTime = timeParts.join("");
-  // Return the formatted time string
-  return formattedTime;
-}
-
-function formatTimeString(str) {
-  // Check if the string is already in the format of a decimal number
-  if (str.includes(".")) {
-    return parseFloat(str);
-  }
-
-  // Handle formatting based on the length of the string
-  switch (str.length) {
-    case 1:
-      return parseFloat(`0.0${str}`);
-    case 2:
-      return parseFloat(`0.${str}`);
-    case 3:
-      return parseFloat(`${str.charAt(0)}.${str.substring(1)}`);
-    case 4:
-      return parseFloat(`${str.substring(0, 2)}.${str.substring(2)}`);
-    case 5:
-      return (
-        60 * parseInt(str.charAt(0)) +
-        parseFloat(`${str.substring(1, 3)}.${str.substring(3)}`)
-      );
-    case 6:
-      return (
-        60 * parseInt(str.substring(0, 2)) +
-        parseFloat(`${str.substring(2, 4)}.${str.substring(4)}`)
-      );
-    default:
-      return null; // or any other default value for invalid input
-  }
+  // Update the content of the HTML element with the formatted time string
+  // You will need to replace this with your specific method to update the HTML element
+  document.getElementById("currentTime").innerText = formattedTime;
 }
 
 async function main() {
@@ -450,23 +320,9 @@ async function main() {
 }
 getTime();
 main();
-async function tokenValid(action = false) {
-  // action, if true it will logout user if token is not valid
-  if (!loggedIn()) return true;
-  console.log("Provjera vrijednosti tokena...");
-  const data = await fetch(`${url}/token`.addToken());
-  console.log(data.ok ? "Token is valid." : "Token is invalid.");
-  if (action && !data.ok) {
-    console.log("Odjavljivanje...");
-    logOut();
-    alert("Prijavi se ponovno");
-    window.location.href = "../Login";
-  }
-  return data.ok;
-}
 
-// Call the function every 10 seconds to update the time automatically
-setInterval(getTime, 1000 * 10);
+// Call the function every second to update the time automatically
+setInterval(getTime, 1000 * 1);
 setInterval(() => tokenValid(true), 1000 * 60 * 10); // Every 10 minutes
 const advancedDashboardBtn = document.querySelector(".advanced-dashboard-btn");
 advancedDashboardBtn.addEventListener("click", () => {
