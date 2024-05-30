@@ -1,30 +1,10 @@
 function getAverage(solves) {
-  if (solves.length !== 5) {
-    return "Need 5 solves";
-  }
-
-  // Create a copy of the solves array
-  let sortedSolves = solves.slice();
-
-  sortedSolves.sort((a, b) => {
-    if (a === 0) return 1; // Place 0 at the last element
-    if (b === 0) return -1; // Place 0 at the last element
-    return a - b; // Regular sorting for other numbers
-  });
-  // Remove the smallest and largest elements
-  let trimmedSolves = sortedSolves.slice(1, sortedSolves.length - 1);
-
-  // Calculate average
-  let average =
-    trimmedSolves.reduce((acc, val) => acc + val, 0) / trimmedSolves.length;
-
-  // Check if trimmedSolves contains 0
-  if (trimmedSolves.includes(0)) {
-    return "DNF";
-  }
-
-  // Return average rounded to 2 decimal places
-  return formatTime(average);
+  const noFormatAverage = getAverageNoFormat(solves);
+  return noFormatAverage
+    ? formatTime(noFormatAverage)
+    : noFormatAverage === -1
+    ? "Potrebno 5 slaganja"
+    : "DNF";
 }
 function formatTime(seconds) {
   // Convert seconds to milliseconds without rounding
