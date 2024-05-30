@@ -27,6 +27,7 @@ router.get("/all", verifyToken, async (req, res) => {
     res.status(200).json(usersInfo);
   } catch (error) {
     // Handle errors
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 });

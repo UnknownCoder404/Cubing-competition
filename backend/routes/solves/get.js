@@ -21,6 +21,7 @@ router.get("/", cache(5), async (req, res) => {
       }).format(new Date()),
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error retrieving solves" });
   }
 });

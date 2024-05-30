@@ -56,7 +56,9 @@ router.post("/", registerLimiter, verifyToken, async (req, res) => {
       // 11000 duplicate error (mongoose)
       res.status(409).json({ message: "Korisničko ime već postoji." });
     } else {
-      res.status(500).json({ message: err.message });
+      // Log the error for internal debugging, but don't expose details to the client
+      console.error(err);
+      res.status(500).json({ message: "Došlo je do pogreške kod servera." });
     }
   }
 });

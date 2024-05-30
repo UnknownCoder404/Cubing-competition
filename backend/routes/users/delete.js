@@ -23,6 +23,7 @@ router.delete("/:userId", verifyToken, async (req, res) => {
     return res.status(200).json({ message: "Korisnik je uspješno izbrisan." });
   } catch (error) {
     // Handle errors
+    console.error(error);
     return res.status(500).json({ message: error.message });
   }
 });
