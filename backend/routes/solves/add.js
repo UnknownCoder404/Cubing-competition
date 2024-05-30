@@ -40,13 +40,13 @@ router.post("/:solverId", verifyToken, async (req, res) => {
       return res
         .status(200)
         .json({ message: `Slaganje dodano korisniku ${solver.username}.` });
-    } else {
-      throw new Error("Nije uspjelo dodavanje slaganja.");
     }
+    throw new Error("Nije uspjelo dodavanje slaganja.");
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Neuspjelo dodavanje slaganja. Greška u serveru." });
+    return res
+      .status(500)
+      .json({ message: "Neuspjelo dodavanje slaganja. Greška u serveru." });
   }
- 
 });
 module.exports = router;
