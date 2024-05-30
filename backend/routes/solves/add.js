@@ -41,9 +41,7 @@ router.post("/:solverId", verifyToken, async (req, res) => {
         .status(200)
         .json({ message: `Slaganje dodano korisniku ${solver.username}.` });
     } else {
-      return res.status(400).json({
-        message: `Nije uspjelo dodavanje slaganja korisniku ${solver.username}. Kontaktirajte programere za pomoć.`,
-      });
+      throw new Error("Nije uspjelo dodavanje slaganja.");
     }
   } catch (err) {
     console.error(err);
