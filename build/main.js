@@ -1,5 +1,5 @@
 import { url } from "./Scripts/variables.js";
-import { tokenValid } from "./Scripts/credentials.js";
+import { tokenValid, loggedIn } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
@@ -180,7 +180,9 @@ function createPostHtml(post) {
   return html;
 }
 async function main() {
-  tokenValid(true);
+  if (!tokenValid()) {
+    logOut(true);
+  }
   const posts = await getPosts();
   posts.forEach((post) => {
     const html = createPostHtml(post);

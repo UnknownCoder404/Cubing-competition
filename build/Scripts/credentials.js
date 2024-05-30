@@ -1,4 +1,7 @@
 import { url } from "./variables.js";
+String.prototype.addToken = function (token = getToken()) {
+  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
+};
 function getUsername(action = false) {
   const username = localStorage.getItem("username");
   if (action && !username) {
