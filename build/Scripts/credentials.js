@@ -64,4 +64,7 @@ async function tokenValid(action = false) {
   }
   return data.ok;
 }
-export { getUsername, getRole, getId, getToken, logOut, tokenValid };
+function loggedIn() {
+  return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
+}
+export { getUsername, getRole, getId, getToken, logOut, tokenValid, loggedIn };

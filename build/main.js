@@ -1,5 +1,10 @@
 import { url } from "./Scripts/variables.js";
-import { tokenValid, loggedIn } from "./Scripts/credentials.js";
+import {
+  tokenValid,
+  getToken,
+  getUsername,
+  getRole,
+} from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
@@ -15,25 +20,6 @@ Object.prototype.addToken = function (token = getToken()) {
   object.Authorization = token;
   return object;
 };
-function loggedIn() {
-  return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
-}
-function getUsername() {
-  const username = localStorage.getItem("username");
-  return username;
-}
-function getRole() {
-  const role = localStorage.getItem("role");
-  return role;
-}
-function getId() {
-  const id = localStorage.getItem("id");
-  return id;
-}
-function getToken() {
-  const token = localStorage.getItem("token");
-  return token;
-}
 function createNewPostDialog() {
   const dialog = document.createElement("dialog");
   dialog.innerHTML = `
