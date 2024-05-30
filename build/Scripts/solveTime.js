@@ -1,6 +1,6 @@
 function getAverage(solves) {
   const noFormatAverage = getAverageNoFormat(solves);
-  return noFormatAverage
+  return typeof noFormatAverage === "string"
     ? formatTime(noFormatAverage)
     : noFormatAverage === -1
     ? "Potrebno 5 slaganja"
