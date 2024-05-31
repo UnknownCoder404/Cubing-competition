@@ -4,8 +4,10 @@ import {
   getToken,
   getUsername,
   getRole,
+  logOut,
 } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
+window.logOut = logOut;
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
 };
@@ -117,14 +119,6 @@ function generateLogOutCard(username = getUsername()) {
       </div> <!-- card class -->
       `;
   return html;
-}
-function logOut(refresh = false) {
-  localStorage.removeItem("token");
-  localStorage.removeItem("username");
-  localStorage.removeItem("role");
-  if (refresh) {
-    window.location.reload();
-  }
 }
 
 document.querySelector(".share").addEventListener("click", async () => {
