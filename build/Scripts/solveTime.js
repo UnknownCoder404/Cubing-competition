@@ -32,7 +32,7 @@ function formatTime(seconds) {
 function formatInputToSeconds(str) {
   // Check if the string is already in the format of a decimal number
   if (str.includes(".")) {
-    return parseFloat(str);
+    return parseFloat(parseFloat(str).toFixed(2));
   }
 
   // Handle formatting based on the length of the string
