@@ -1,5 +1,5 @@
 import {
-  formatTimeToString,
+  formatInputToSeconds,
   formatTime,
   getAverage,
 } from "../Scripts/solveTime.js";
@@ -123,7 +123,7 @@ window.addSolve = async function (userId, roundIndex, index) {
   let solveValue = solveInput.value;
 
   // Provjerava odgovara li unos regularnom izrazu za brojeve odvojene razmacima
-  if (!solveValue.match(/^\d+(?: \d+)*$/)) {
+  if (!solveValue.match(/^\d+(?:[ .]\d+)*$/)) {
     console.error(
       "Pokušali ste dodati slaganja, ali unos ne odgovara regularnom izrazu."
     );
@@ -143,7 +143,7 @@ window.addSolve = async function (userId, roundIndex, index) {
     alert("Uneseno više od 5 slaganja, samo prvih 5 će biti poslano.");
   }
 
-  solves = solves.map((solve) => formatTimeToString(solve));
+  solves = solves.map((solve) => formatInputToSeconds(solve));
   if (solves.length === 0) {
     alert("Mora biti barem 1 slaganje.");
     return;

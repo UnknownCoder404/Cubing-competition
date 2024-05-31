@@ -29,7 +29,7 @@ function formatTime(seconds) {
   // Return the formatted time string
   return formattedTime;
 }
-function formatTimeToString(str) {
+function formatInputToSeconds(str) {
   // Check if the string is already in the format of a decimal number
   if (str.includes(".")) {
     return parseFloat(str);
@@ -87,4 +87,4 @@ function getAverageNoFormat(solves) {
   // Return average rounded to 2 decimal places
   return average.toFixed(2);
 }
-export { formatTimeToString, formatTime, getAverage, getAverageNoFormat };
+export { formatInputToSeconds, formatTime, getAverage, getAverageNoFormat };
