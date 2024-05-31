@@ -7,7 +7,6 @@ import {
   logOut,
 } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
-window.logOut = logOut;
 String.prototype.isUser = function () {
   return this.toUpperCase() === "USER";
 };
@@ -187,5 +186,15 @@ if (username) {
   logOutSpan.addEventListener("click", async () => {
     logOut(true);
   });
+}
+const accountCircle = document.querySelector(".account-circle");
+
+if (username) {
+  accountCircle.addEventListener("click", async () => {
+    logOut(true);
+  });
+  const root = document.querySelector(":root");
+  root.style.setProperty("--logged-in", "pointer");
+  console.log(root.style.getPropertyValue("--logged-in"));
 }
 main();

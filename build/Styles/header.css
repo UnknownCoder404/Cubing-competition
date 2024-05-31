@@ -1,3 +1,6 @@
+:root {
+  --logged-in: auto;
+}
 /* Style the header */
 .header {
   padding: 10px 16px;
@@ -66,7 +69,7 @@
   color: white;
 }
 .account-circle {
-  cursor: pointer;
+  cursor: var(--logged-in);
 }
 @media screen and (max-width: 300px) {
   .account-circle {
