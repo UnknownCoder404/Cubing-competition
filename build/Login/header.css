@@ -26,13 +26,11 @@
   display: inline-block;
 }
 /* The sticky class is added to the header with JS when it reaches its scroll position */
+/* Add some top padding to the page content to prevent sudden quick movement of the page */
 .sticky {
   position: fixed;
   top: 0;
   width: 100%;
-}
-/* Add some top padding to the page content to prevent sudden quick movement */
-.sticky {
   padding-top: 102px;
 }
 .logo {
