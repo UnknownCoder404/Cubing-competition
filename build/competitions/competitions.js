@@ -54,9 +54,16 @@ async function getSolves() {
   return { solves: solvesData, lastUpdated: competitions.lastUpdated };
 }
 async function getWinner() {
-  const data = await fetch(`${url}/winner/get`);
-  const response = await data.json();
-  return response;
+  try {
+    const data = await fetch(`${url}/winner/get`);
+    const response = await data.json();
+    return response;
+  } catch (error) {
+    const errorMessage =
+      "Greška prilikom dohvaćanja pobjedniaka. Pokušajte ponovno.";
+    alert(errorMessage);
+    throw new Error(error);
+  }
 }
 function sortGroups(groups) {
   // winners is an array of 0,1 or 2 objects, where object.group is 1 or 2.
@@ -83,69 +90,103 @@ function sortGroups(groups) {
   return winners;
 }
 async function displayCompetition(data) {
+  // Extract last updated time
   const lastUpdated = data.lastUpdated;
-  data = data.solves;
-  let html = "";
+
+  // Focus on the solves data
+  const solves = data.solves;
+
+  // Update the "last-updated" element
   document.querySelector(
     ".last-updated"
   ).innerHTML = `Rezultati: ${lastUpdated}`;
+
+  // Get and sort winners (assuming getWinner is asynchronous)
   const winners = sortGroups(await getWinner());
-  data.forEach((group, index) => {
-    const winnerUsername = winners[index].username;
+
+  // Build the competition HTML
+  let html = "";
+  solves.forEach((group, index) => {
     const groupNumber = index + 1;
+    const winnerUsername = winners[index]?.username; // Use optional chaining for winner
+
+    // Group container
     html += `<div class="grupa-${groupNumber}">`;
+
+    // Group title based on grade range
     html += groupNumber === 1 ? `<h3>Razredi 1-4</h3>` : `<h3>Razredi 5-8</h3>`;
+
+    // Loop through 3 rounds in the group
     for (let i = 0; i < 3; i++) {
-      const round = group[i] || [];
+      const round = group[i] || []; // Handle empty rounds with empty array
       const roundNumber = i + 1;
+
+      // Round container with title, toggle button, and content
       html += `<div class="runda" id="runda${roundNumber}">`;
-      html += `<div class="title">            
-      <h3>Runda ${roundNumber}</h3>
-      <img src="../Images/hide.svg" class="showhide">
-    </div>`;
-      html += `<div class="content">`;
-      round.sort((a, b) => {
-        const averageA = getAverageNoFormat(a.solves);
-        const averageB = getAverageNoFormat(b.solves);
+      html += `
+        <div class="title">
+          <h3>Runda ${roundNumber}</h3>
+          <img src="../Images/hide.svg" class="showhide">
+        </div>
+        <div class="content">`;
 
-        if (averageA === 0 && averageB === 0) return 0; // If both averages are 0, maintain order
-        if (averageA === 0) return 1; // If only averageA is 0, put a later
-        if (averageB === 0) return -1; // If only averageB is 0, put b later
-        if (averageA === -1 && averageB === -1) return 0; // If both averages are -1, maintain order
-        if (averageA === -1) return 1; // If only averageA is -1, put a earlier
-        if (averageB === -1) return -1; // If only averageB is -1, put b earlier
+      // Sort participants within the round based on average solve time
+      round.sort((participantA, participantB) => {
+        const averageA = getAverageNoFormat(participantA.solves);
+        const averageB = getAverageNoFormat(participantB.solves);
 
-        // Regular sorting for other numbers
+        // Handle special cases for missing times (0) and DNFs (-1)
+        if (averageA === 0 && averageB === 0) return 0;
+        if (averageA === 0) return 1;
+        if (averageB === 0) return -1;
+        if (averageA === -1 && averageB === -1) return 0;
+        if (averageA === -1) return 1;
+        if (averageB === -1) return -1;
+
+        // Regular sorting for other cases
         return averageA - averageB;
       });
 
-      round.forEach((SOLVE, index) => {
-        const solve = SOLVE.solve;
-        const solves = SOLVE.solves;
-        if (!solves || solves.length === 0) return;
+      // Loop through participants in the sorted round
+      round.forEach((participant, solveNumber) => {
+        const solve = participant.solve;
+        const solves = participant.solves;
+        const name = participant.name;
         const average = getAverage(solves);
-        const name = SOLVE.name;
-        const solveNumber = index + 1;
-        html += `<div class="solve"> 
-        <p  class="solves">    
-        <span class="bold">${solveNumber}. ${name} </span>
-        <span class="${
-          average === "DNF" ? "red" : "average"
-        }">(Prosjek: ${average})</span>
-        <span class="solve-times">${solve}</span> 
-        </p>
-      </div>`;
+
+        // Skip participants without solves
+        if (!solves || solves.length === 0) return;
+
+        // Participant details with solve number, name, average, and solve times
+        html += `
+          <div class="solve">
+            <p class="solves">
+              <span class="bold">${solveNumber + 1}. ${name} </span>
+              <span class="${
+                average === "DNF" ? "red" : "average"
+              }">(Prosjek: ${average})</span>
+              <span class="solve-times">${solve}</span>
+            </p>
+          </div>`;
       });
-      html += `</div>`; // Zatvori content
-      html += `</div>`; // Zatvori rundu
+
+      // Close round content and container
+      html += `</div>`;
+      html += `</div>`;
     }
+
+    // Display winner information (if available)
     html += winnerUsername
       ? `<p>Pobjednik je ${winnerUsername}.</p>`
       : `<p>Nema upisanog pobjednika.</p>`;
-    html += `</div>`; // Close group-# div
+
+    // Close group container
+    html += `</div>`;
   });
+
   return html;
 }
+
 async function main() {
   document.querySelector(".grupe").innerHTML = await displayCompetition(
     await getSolves()
