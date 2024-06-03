@@ -106,6 +106,7 @@
             // Only allow a line break every 5 moves
             result += scramble.slice(i, i + 5).join("&nbsp;") + " ";
           }
+          document.querySelector(".scramble-display").scramble = "";
           document.querySelector(".scramble-display").scramble = result.replace(
             /&nbsp;/g,
             " "
