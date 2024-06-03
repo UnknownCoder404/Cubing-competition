@@ -153,7 +153,7 @@ function createPostHtml(post) {
     <p class="post-description">
       ${description}
     </p>
-    Objavio <span class="post-author">"${authorUsername}"</span>
+    Objavio <span class="post-author">${authorUsername}</span>
   </div>
 </div>`;
   return html;
