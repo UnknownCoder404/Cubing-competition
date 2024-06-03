@@ -21,7 +21,7 @@ Object.prototype.addToken = function (token = getToken()) {
   object.Authorization = token;
   return object;
 };
-function createNewPostDialog() {
+window.createNewPostDialog = function () {
   const dialog = document.createElement("dialog");
   dialog.innerHTML = `
     <form id="postForm">
@@ -73,7 +73,7 @@ function createNewPostDialog() {
       alert("Failed to create post. Please try again later.");
     }
   });
-}
+};
 async function getPosts() {
   // Returns json of posts
   const data = await fetch(`${url}/posts`);
