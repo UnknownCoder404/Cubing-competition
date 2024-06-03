@@ -12,11 +12,6 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   background-color: rgb(63, 63, 63);
-  transition: background-color 1s ease-in;
-}
-
-.user:hover {
-  background-color: rgb(40, 40, 40);
 }
 
 .username-div {
