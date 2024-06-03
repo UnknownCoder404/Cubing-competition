@@ -1,5 +1,6 @@
 /* Style the header */
 .header {
+  width: 100%;
   padding: 10px 16px;
   background: rgb(24, 24, 24);
   color: #f1f1f1;
