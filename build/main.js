@@ -5,6 +5,7 @@ import {
   getUsername,
   getRole,
   logOut,
+  loggedIn,
 } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
 String.prototype.isUser = function () {
@@ -158,10 +159,14 @@ function createPostHtml(post) {
 </div>`;
   return html;
 }
-async function main() {
-  if (!tokenValid()) {
-    logOut(true);
+async function checkIfLoggedInAndTokenValid() {
+  if (loggedIn() && !(await tokenValid())) {
+    logOut();
+    window.location.href = "./Login";
   }
+}
+async function main() {
+  checkIfLoggedInAndTokenValid();
   const posts = await getPosts();
   posts.forEach((post) => {
     const html = createPostHtml(post);
