@@ -1,7 +1,4 @@
 import { url } from "./variables.js";
-String.prototype.addToken = function (token = getToken()) {
-  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
-};
 function getUsername(action = false) {
   const username = localStorage.getItem("username");
   if (action && !username) {
@@ -53,7 +50,7 @@ function logOut(refresh = false) {
 async function tokenValid(action = false) {
   // action, if true it will logout user if token is not valid
   console.log("Checking token validity...");
-  const tokenValidUrl = `${url}/token`.addToken();
+  const tokenValidUrl = addToken(`${url}/token`);
   const data = await fetch(tokenValidUrl);
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
   if (action && !data.ok) {
