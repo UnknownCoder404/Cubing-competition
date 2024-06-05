@@ -52,7 +52,7 @@ function logOut(refresh = false) {
 }
 async function tokenValid(action = false) {
   // action, if true it will logout user if token is not valid
-  console.log("Provjera vrijednosti tokena...");
+  console.log("Checking token validity...");
   const tokenValidUrl = `${url}/token`.addToken();
   const data = await fetch(tokenValidUrl);
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
@@ -67,4 +67,34 @@ async function tokenValid(action = false) {
 function loggedIn() {
   return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
 }
-export { getUsername, getRole, getId, getToken, logOut, tokenValid, loggedIn };
+function isUser(role) {
+  return role.toUpperCase() === "USER";
+}
+function isAdmin(role) {
+  return role.toUpperCase() === "ADMIN";
+}
+function addToken(data = undefined, token = getToken()) {
+  if (typeof data === "string") {
+    return `${data}${data.includes("?") ? "&" : "?"}token=${token}`;
+  }
+  if (typeof data === "object") {
+    data.Authorization = token;
+    return data;
+  }
+  if (!data) {
+    return getToken();
+  }
+  return null;
+}
+export {
+  getUsername,
+  getRole,
+  getId,
+  getToken,
+  logOut,
+  tokenValid,
+  loggedIn,
+  isUser,
+  isAdmin,
+  addToken,
+};

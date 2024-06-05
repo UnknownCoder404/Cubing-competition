@@ -8,23 +8,11 @@ import {
   getId,
   getToken,
   tokenValid,
+  isUser,
+  addToken,
 } from "../Scripts/credentials.js";
 import { url, loadingHTML } from "../Scripts/variables.js";
 const usersDiv = document.querySelector(".users");
-String.prototype.addToken = function (token = getToken()) {
-  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
-};
-Object.prototype.addToken = function (token = getToken()) {
-  let object = this;
-  object.Authorization = token;
-  return object;
-};
-String.prototype.isUser = function () {
-  return this.toUpperCase() === "USER";
-};
-String.prototype.isAdmin = function () {
-  return this.toUpperCase() === "ADMIN";
-};
 function loggedIn() {
   return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
 }
@@ -38,9 +26,9 @@ window.setWinner = async function (id) {
     body: JSON.stringify({
       id: id,
     }),
-    headers: {
+    headers: addToken({
       "Content-Type": "application/json",
-    }.addToken(),
+    }),
   });
   const response = await data.json();
   setWinnerBtn.disabled = false;
@@ -58,7 +46,7 @@ window.showCompetition = async function (userId, index) {
 
   let html = "";
   const user = await fetch(`${url}/users/${userId}`, {
-    headers: {}.addToken(),
+    headers: addToken({}),
   }).then((response) => response.json());
   showCompBtn.disabled = false;
   // Check if user data exists
@@ -157,9 +145,9 @@ window.addSolve = async function (userId, roundIndex, index) {
   // Šalje podatke na server
   const response = await fetch(`${url}/solves/add/${userId}`, {
     method: "POST",
-    headers: {
+    headers: addToken({
       "Content-Type": "application/json",
-    }.addToken(),
+    }),
     body: JSON.stringify(solveData),
   });
 
@@ -183,7 +171,7 @@ window.addSolve = async function (userId, roundIndex, index) {
 window.getUsers = async function () {
   const body = {
     method: "GET",
-    headers: {}.addToken(),
+    headers: addToken({}),
   };
   try {
     const data = await fetch(`${url}/users/all`, body);
@@ -203,7 +191,7 @@ window.deleteUser = async function (id) {
   try {
     const body = {
       method: "DELETE",
-      headers: {}.addToken(),
+      headers: addToken({}),
     };
     const data = await fetch(`${url}/users/${id}`, body);
     const result = await data.json();
@@ -222,7 +210,7 @@ window.deleteUser = async function (id) {
 window.assignAdmin = async function (id, username) {
   const body = {
     method: "POST",
-    headers: {}.addToken(),
+    headers: addToken({}),
   };
   try {
     const data = await fetch(`${url}/admin/assign/${id}`, body);
@@ -273,9 +261,9 @@ window.deleteSolve = async function (userId, roundIndex, solveIndex, index) {
   // Call the backend to delete the solve
   const response = await fetch(`${url}/solves/delete/${userId}`, {
     method: "DELETE",
-    headers: {
+    headers: addToken({
       "Content-Type": "application/json",
-    }.addToken(),
+    }),
     body: JSON.stringify({ round: roundNumber, solve: solveNumber }),
   });
 
@@ -309,7 +297,7 @@ function getTime() {
 
 async function main() {
   tokenValid(true);
-  if (getRole().isUser()) {
+  if (isUser(getRole())) {
     alert("Admins only!");
     location.href = "../";
   }

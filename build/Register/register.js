@@ -1,15 +1,10 @@
 import { url, loadingHTML } from "../Scripts/variables.js";
-import { getToken } from "../Scripts/credentials.js";
+import { getToken, addToken } from "../Scripts/credentials.js";
 const group1Checkbox = document.querySelector(".group-1");
 const submitBtn = document.querySelector(".submit-btn");
 const messageElement = document.getElementById("message");
 const usernameElement = document.getElementById("username");
 const passwordElement = document.getElementById("password");
-Object.prototype.addToken = function (token = getToken()) {
-  let object = this;
-  object.Authorization = token;
-  return object;
-};
 function clearInput(input) {
   input.value = "";
 }
@@ -49,9 +44,9 @@ document
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
-        headers: {
+        headers: addToken({
           "Content-Type": "application/json",
-        }.addToken(),
+        }),
         body: JSON.stringify({ username, password, group }),
       });
       submitBtn.disabled = false; // Re-enable the button

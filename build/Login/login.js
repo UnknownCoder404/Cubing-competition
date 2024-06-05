@@ -1,13 +1,11 @@
 import { url, loadingHTML } from "../Scripts/variables.js";
+import { isAdmin } from "../Scripts/credentials.js";
 const submitBtn = document.querySelector(".submit-btn");
 Element.prototype.disable = function () {
   this.disabled = true;
 };
 Element.prototype.enable = function () {
   this.disabled = false;
-};
-String.prototype.isAdmin = function () {
-  return this.toUpperCase() === "ADMIN";
 };
 const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", async function (event) {
@@ -59,7 +57,7 @@ loginForm.addEventListener("submit", async function (event) {
       localStorage.setItem("username", username);
       localStorage.setItem("role", role);
       // Redirect to a dashboard or another page
-      window.location.href = role.isAdmin() ? "../dashboard/" : "../";
+      window.location.href = isAdmin(role) ? "../dashboard/" : "../";
     }
   } catch (error) {
     console.error("Error:", error);

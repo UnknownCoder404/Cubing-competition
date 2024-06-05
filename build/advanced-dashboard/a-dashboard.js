@@ -1,20 +1,5 @@
-import { getToken, tokenValid } from "../Scripts/credentials.js";
+import { tokenValid, addToken } from "../Scripts/credentials.js";
 import { url, loadingHTML } from "../Scripts/variables.js";
-String.prototype.addToken = function (token = getToken()) {
-  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
-};
-
-Object.prototype.addToken = function (token = getToken()) {
-  let object = this;
-  object.Authorization = token;
-  return object;
-};
-String.prototype.isUser = function () {
-  return this.toUpperCase() === "USER";
-};
-String.prototype.isAdmin = function () {
-  return this.toUpperCase() === "ADMIN";
-};
 function downloadFile(url, fileName) {
   if (!url || !fileName) return -1;
   const anchor = document.createElement("a");
@@ -30,7 +15,7 @@ const getResultsBtn = document.querySelector(".results");
 getResultsBtn.addEventListener("click", getResults);
 function getResults() {
   getResultsBtn.disabled = true;
-  const resultsUrl = `${url}/results`.addToken();
+  const resultsUrl = addToken(`${url}/results`);
   downloadFile(resultsUrl, "results"); // You can specify the desired file name
   getResultsBtn.disabled = false;
 }
@@ -43,7 +28,7 @@ async function changePassword(username, newPassword) {
   const request = {
     method: "POST",
     body: JSON.stringify(body),
-    headers: { "Content-Type": "application/json" }.addToken(),
+    headers: addToken({ "Content-Type": "application/json" }),
   };
   const data = await fetch(`${url}/users/change-password`, request);
   const response = await data.json();
@@ -65,7 +50,6 @@ changePasswordSubmitBtn.addEventListener("click", async () => {
   const changePasswordOutput = await changePassword(username, password);
   changePasswordSubmitBtn.innerHTML = prevHtml;
   changePasswordSubmitBtn.disabled = false;
-  document.querySelector(".message").innerHTML = changePasswordOutput.message;
-  alert(changePasswordOutput.message);
+  document.querySelector(".message").innerText = changePasswordOutput.message;
 });
 tokenValid(true);
