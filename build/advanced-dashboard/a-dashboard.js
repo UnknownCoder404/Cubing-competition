@@ -25,10 +25,9 @@ function downloadFile(url, fileName) {
   document.body.removeChild(anchor);
   return 1;
 }
-const getPasswordsBtn = document.querySelector(".passwords");
+
 const getResultsBtn = document.querySelector(".results");
 getResultsBtn.addEventListener("click", getResults);
-getPasswordsBtn.addEventListener("click", getPasswords);
 function getResults() {
   getResultsBtn.disabled = true;
   const resultsUrl = `${url}/results`.addToken();
@@ -36,12 +35,6 @@ function getResults() {
   getResultsBtn.disabled = false;
 }
 
-function getPasswords() {
-  getResultsBtn.disabled = true;
-  const passwordsUrl = `${url}/passwords`.addToken();
-  downloadFile(passwordsUrl, "passwords"); // You can specify the desired file name
-  getResultsBtn.disabled = false;
-}
 async function changePassword(username, newPassword) {
   const body = {
     username,
