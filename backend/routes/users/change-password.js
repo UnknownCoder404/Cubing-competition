@@ -18,30 +18,15 @@ router.post("/change-password", verifyToken, async (req, res) => {
       });
     }
     const { username, newPassword } = req.body;
-    if (!username || typeof username !== "string") {
-      return res.status(400).json({
-        message: "Korisničko ime je krivo uneseno ili nedostaje.",
-      });
-    }
-    if (!newPassword || typeof newPassword !== "string") {
-      return res.status(400).json({
-        message: "Nova lozinka je krivo unesena ili nedostaje.",
-      });
-    }
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({
         message: `Korisnik sa imenom ${username} ne postoji.`,
       });
     }
-    if (user.password === newPassword) {
-      return res
-        .status(400)
-        .json({ message: "Lozinka je ista kao i nova lozinka." });
-    }
-    checkPasswordLength(newPassword, res);
     checkUsernameAndPassword(user.username, newPassword, res);
     checkUsernameAndPasswordEquality(user.username, newPassword, res);
+    checkPasswordLength(newPassword, res);
     checkPasswordSpaces(newPassword, res);
     user.password = await hashPassword(newPassword);
     await user.save();
