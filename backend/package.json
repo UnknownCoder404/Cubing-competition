@@ -1,6 +1,6 @@
 {
   "name": "cube-competition",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "main": "server.js",
   "scripts": {
     "bun": "npm install -g bun",
