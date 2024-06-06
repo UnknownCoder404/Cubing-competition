@@ -3,22 +3,17 @@ const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const hashPassword = require("../../functions/hashPassword");
 const router = express.Router();
+const isAdmin = require("../../utils/helpers/isAdmin");
 const {
   checkUsernameAndPassword,
   checkPasswordLength,
   checkUsernameAndPasswordEquality,
   checkPasswordSpaces,
 } = require("../../functions/registerValidations");
-router.post("/change-password", verifyToken, async (req, res) => {
+router.post("/change-password", verifyToken, isAdmin, async (req, res) => {
   try {
-    // Ensure only admins can access this route
-    if (req.userRole !== "admin") {
-      return res.status(401).json({
-        message: "Samo administratori mogu mijenjati lozinke korisnika.",
-      });
-    }
     const { username, newPassword } = req.body;
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: { $eq: username } });
     if (!user) {
       return res.status(400).json({
         message: `Korisnik sa imenom ${username} ne postoji.`,
