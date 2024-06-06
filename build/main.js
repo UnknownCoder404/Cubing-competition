@@ -123,7 +123,7 @@ document.querySelector(".share").addEventListener("click", async () => {
       
       Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com
       `,
-      url: "https://bit.ly/CroComp",
+      url: "https://t.ly/CroComp",
     });
     console.log("Successfully shared");
   } else {
