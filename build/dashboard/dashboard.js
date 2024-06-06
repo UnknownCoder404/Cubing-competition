@@ -217,7 +217,9 @@ window.assignAdmin = async function (id, username) {
     const result = await data.json();
 
     if (data.ok) {
-      alert(`Korisnik "${username}" je administrator.`);
+      alert(
+        data.message ? data.message : `Korisnik "${username}" je administrator.`
+      );
       main();
       return;
     }
