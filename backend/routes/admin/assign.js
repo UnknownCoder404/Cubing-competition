@@ -1,15 +1,10 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.post("/:userId", verifyToken, async (req, res) => {
+router.post("/:userId", verifyToken, isAdmin, async (req, res) => {
   try {
-    if (req.userRole !== "admin") {
-      res.status(403).json({
-        message: "Samo administratori mogu dodijeliti administratore.",
-      });
-      return;
-    }
     const userId = req.params.userId;
     const user = await User.findOne({ _id: { $eq: userId } });
     if (!user) {
