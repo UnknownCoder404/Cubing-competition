@@ -2,6 +2,7 @@ const express = require("express");
 const hashPassword = require("../../functions/hashPassword");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const {
   checkUsernameAndPassword,
   checkUsernameLength,
@@ -13,19 +14,9 @@ const {
 const registerLimiter = require("../../rateLimiter/register");
 const router = express.Router();
 // Define a route for user registration
-router.post("/", registerLimiter, verifyToken, async (req, res) => {
+router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
   try {
     const { username, password, group } = req.body;
-    const USER = await User.findById(req.userId);
-    const userRole = USER.role;
-
-    // Validate user role
-    if (userRole !== "admin") {
-      return res.status(403).json({
-        message: "Neovlašteno: samo administratori mogu registrirati korisnike",
-      });
-    }
-
     // Call validation functions
     checkUsernameAndPassword(username, password, res);
     checkUsernameLength(username, res);

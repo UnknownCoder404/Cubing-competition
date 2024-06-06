@@ -1,16 +1,10 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.delete("/:userId", verifyToken, async (req, res) => {
+router.delete("/:userId", verifyToken, isAdmin, async (req, res) => {
   try {
-    // Ensure only admins can access this route
-    if (req.userRole !== "admin") {
-      return res
-        .status(401)
-        .json({ message: "Samo administratori mogu brisati korisnike." });
-    }
-
     const userId = req.params.userId; // Id of user to delete
 
     // Delete user with this id.

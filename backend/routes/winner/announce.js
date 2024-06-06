@@ -2,8 +2,9 @@ const express = require("express");
 const User = require("../../Models/user");
 const winner = require("../../Models/winner");
 const verifyToken = require("../../middleware/verifyToken");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.post("/announce", verifyToken, async (req, res) => {
+router.post("/announce", verifyToken, isAdmin, async (req, res) => {
   try {
     const id = req.body.id;
     if (!id) {

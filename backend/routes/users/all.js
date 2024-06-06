@@ -1,16 +1,10 @@
 const express = require("express");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.get("/all", verifyToken, async (req, res) => {
+router.get("/all", verifyToken, isAdmin, async (req, res) => {
   try {
-    // Ensure only admins can access this route
-    if (req.userRole !== "admin") {
-      return res.status(401).json({
-        message: "Samo administratori mogu dobiti informacije o korisnicima.",
-      });
-    }
-
     // Fetch all users from the database
     const users = await User.find({}, "username role rounds group");
 
