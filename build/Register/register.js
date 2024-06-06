@@ -1,5 +1,11 @@
 import { url, loadingHTML } from "../Scripts/variables.js";
-import { getToken, addToken } from "../Scripts/credentials.js";
+import {
+  getRole,
+  isUser,
+  getToken,
+  addToken,
+  tokenValid,
+} from "../Scripts/credentials.js";
 const group1Checkbox = document.querySelector(".group-1");
 const submitBtn = document.querySelector(".submit-btn");
 const messageElement = document.getElementById("message");
@@ -40,7 +46,7 @@ document
 
     submitBtn.innerHTML = loadingHTML;
 
-    getToken(); // Make sure that token exists, if not bring to login page
+    getToken(true); // Make sure that token exists, if not bring to login page
     try {
       const response = await fetch(`${url}/register`, {
         method: "POST",
@@ -90,4 +96,8 @@ function credentialsCheck(username, password, group) {
     return true;
   }
   return false;
+}
+tokenValid(true);
+if (isUser(getRole(true))) {
+  window.location.href = "../";
 }
