@@ -17,8 +17,22 @@ router.post("/:userId", verifyToken, async (req, res) => {
       return;
     }
     if (user.role === "admin") {
-      res.status(409).json({ message: "Korisnik je već administrator." });
-      return;
+      // If user is already admin, remove admin
+      const users = await User.find({}, "role");
+      let adminsCount = 0;
+      users.forEach((user) => {
+        adminsCount += user.role === "admin" ? 1 : 0;
+      });
+      if (adminsCount <= 1) {
+        return res
+          .status(400)
+          .json({ message: "Uvijek mora postojati barem 1 administrator." });
+      }
+      user.role = "user";
+      await user.save();
+      return res.status(200).json({
+        message: `Uloga administratora ${user.username} uspješno je odbačena.`,
+      });
     }
     user.role = "admin";
     await user.save();
