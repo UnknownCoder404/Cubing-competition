@@ -214,16 +214,12 @@ window.assignAdmin = async function (id, username) {
   };
   try {
     const data = await fetch(`${url}/admin/assign/${id}`, body);
-    const result = await data.json();
-
+    const response = await data.json();
+    alert(response.message);
     if (data.ok) {
-      alert(
-        data.message ? data.message : `Korisnik "${username}" je administrator.`
-      );
       main();
       return;
     }
-    alert(result.message);
   } catch (error) {
     console.error(error);
     alert(error);
