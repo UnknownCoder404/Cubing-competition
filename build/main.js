@@ -1,27 +1,14 @@
 import { url } from "./Scripts/variables.js";
 import {
   tokenValid,
-  getToken,
+  isAdmin,
   getUsername,
   getRole,
   logOut,
   loggedIn,
+  addToken,
 } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
-String.prototype.isUser = function () {
-  return this.toUpperCase() === "USER";
-};
-String.prototype.isAdmin = function () {
-  return this.toUpperCase() === "ADMIN";
-};
-String.prototype.addToken = function (token = getToken()) {
-  return `${this}${this.includes("?") ? "&" : "?"}token=${token}`;
-};
-Object.prototype.addToken = function (token = getToken()) {
-  let object = this;
-  object.Authorization = token;
-  return object;
-};
 window.createNewPostDialog = function () {
   const dialog = document.createElement("dialog");
   dialog.innerHTML = `
@@ -54,9 +41,9 @@ window.createNewPostDialog = function () {
     try {
       const response = await fetch(`${url}/posts/new`, {
         method: "POST",
-        headers: {
+        headers: addToken({
           "Content-Type": "application/json",
-        }.addToken(),
+        }),
         body: JSON.stringify({ title, description }),
       });
       const data = await response.json();
@@ -176,7 +163,7 @@ async function main() {
 const logInElement = document.querySelector(".js-log-in");
 const username = getUsername();
 const role = getRole();
-if (role && role.isAdmin()) {
+if (role && isAdmin(role)) {
   addDashboardCard();
   addCreatePostCard();
 }
