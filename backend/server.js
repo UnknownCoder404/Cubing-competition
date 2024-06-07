@@ -73,8 +73,9 @@ app.use("/users", require("./routes/users/get"));
 app.use("/users", require("./routes/users/delete"));
 app.use("/users", require("./routes/users/change-password"));
 // Posts
-app.use("/posts/new", require("./routes/posts/new"));
+app.use("/posts", require("./routes/posts/new"));
 app.use("/posts", require("./routes/posts/get"));
+app.use("/posts", require("./routes/posts/delete"));
 // Results in excel
 app.use("/results", require("./routes/excel/results"));
 // Winner
