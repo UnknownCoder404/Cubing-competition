@@ -16,6 +16,7 @@ router.get("/", cache(5), async (req, res) => {
           username: await getUsernameById(post.author.id),
         },
         createdAt: post.createdAt,
+        id: post._id,
       }))
     );
     res.status(200).json(response); // Sending the constructed response
