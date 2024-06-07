@@ -7,6 +7,7 @@ const findUser = require("../../utils/helpers/findUser");
 const router = express.Router();
 router.post("/", verifyToken, isAdmin, findUser, async (req, res) => {
   const user = req.user;
+  const userId = req.userId;
   const username = user.username;
   const { title, description } = req.body;
 
