@@ -1,6 +1,5 @@
 const express = require("express");
 const Post = require("../../Models/post");
-const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const isAdmin = require("../../utils/helpers/isAdmin");
 const findUser = require("../../utils/helpers/findUser");
