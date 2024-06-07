@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Post = require("../../Models/post");
 const verifyToken = require("../../middleware/verifyToken");
 const isAdmin = require("../../utils/helpers/isAdmin");
@@ -8,6 +9,9 @@ router.delete("/delete", verifyToken, isAdmin, async (req, res) => {
     const { id } = req.body;
     if (!id) {
       return res.status(400).json({ message: "Nije naveden ID objave." });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID objave nije ispravan." });
     }
     const post = await Post.findByIdAndDelete(id);
     if (!post) {
