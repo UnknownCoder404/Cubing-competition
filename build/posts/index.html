@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Objavi</title>
+    <link
+      rel="preload"
+      href="../Styles/font.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../Styles/loading.css" />
+    <link rel="stylesheet" href="posts.css" />
+    <link rel="stylesheet" href="header.css" />
+    <!-- Main page -->
+    <link rel="preload" href="../main.js" as="script" />
+    <link rel="preload" href="../index.html" as="fetch" />
+    <link rel="preload" href="../Styles/cards.css" as="style" />
+    <link rel="preload" href="../Styles/header.css" as="style" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="interaction-container">
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+          <h1>Objavi</h1>
+        </div>
+      </div>
+    </div>
+    <div class="form">
+      <div>
+        <input class="title infoinputs" type="text" placeholder="Naslov" />
+      </div>
+      <div>
+        <textarea
+          placeholder="Opis..."
+          class="description infoinputs"
+        ></textarea>
+      </div>
+      <div><button class="post-btn">Objavi</button></div>
+    </div>
+    <script type="module" src="posts.js"></script>
+  </body>
+</html>

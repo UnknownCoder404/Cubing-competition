@@ -1,0 +1,65 @@
+/* Style the header */
+.header {
+  padding: 10px 0;
+  min-height: 10vh; /* Minimum height of 10% of the viewport height */
+  height: auto; /* Allow the height to adjust to content */
+  width: 100%; /* Full width of the viewport */
+  background: rgb(24, 24, 24);
+  color: #f1f1f1;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.header h1 {
+  margin: 0;
+}
+.interaction-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.time-container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+.interaction-container h1 {
+  display: inline-block;
+}
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+/* Add some top padding to the page content to prevent sudden quick movement of the page */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding-top: 102px;
+}
+.logo {
+  width: 20px;
+  margin-right: 20px;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.naslov-container {
+  display: flex;
+}
+.naslov {
+  display: inline-block;
+}
+.account-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.log-in {
+  display: inline-block;
+}
+
+.log-in a {
+  text-decoration: underline;
+  color: white;
+}

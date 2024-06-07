@@ -9,59 +9,6 @@ import {
   addToken,
 } from "./Scripts/credentials.js";
 const cardsDiv = document.querySelector(".cards");
-window.createNewPostDialog = function () {
-  const dialog = document.createElement("dialog");
-  dialog.innerHTML = `
-    <form id="postForm">
-      <label for="title">Title:</label><br>
-      <input type="text" id="title" name="title" required><br>
-      <label for="description">Description:</label><br>
-      <textarea id="description" name="description" required></textarea><br><br>
-      <button type="submit">Submit</button>
-    </form>
-  `;
-
-  dialog.addEventListener("close", () => {
-    dialog.remove();
-  });
-
-  document.body.appendChild(dialog);
-  dialog.showModal();
-
-  const postForm = document.getElementById("postForm");
-  postForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const titleElement = document.getElementById("title");
-    const descriptionElement = document.getElementById("description");
-
-    const title = titleElement.value;
-    const description = descriptionElement.value;
-
-    try {
-      const response = await fetch(`${url}/posts/new`, {
-        method: "POST",
-        headers: addToken({
-          "Content-Type": "application/json",
-        }),
-        body: JSON.stringify({ title, description }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        const newPost = data;
-        console.log("New post created:", newPost);
-        dialog.close();
-      } else {
-        const errorData = data;
-        console.error("Error creating post:", errorData.message);
-        alert("Error creating post: " + errorData.message);
-      }
-    } catch (error) {
-      console.error("Failed to create post:", error);
-      alert("Failed to create post. Please try again later.");
-    }
-  });
-};
 async function getPosts() {
   // Returns json of posts
   const data = await fetch(`${url}/posts`);
@@ -87,7 +34,7 @@ function addCreatePostCard() {
     <h2>Objava</h2>
     <p>
       Ti si admin! Oni mogu objaviti bilo što!
-      Klikni <span onclick="createNewPostDialog()" class="post">ovdje</span> da objaviš nešto.
+      Klikni <a href="./posts">ovdje</a> da objaviš nešto.
     </p>
   </div>
 </div>
