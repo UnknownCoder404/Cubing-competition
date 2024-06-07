@@ -16,7 +16,7 @@ router.delete("/delete", verifyToken, isAdmin, async (req, res) => {
     return res.status(200).json({ message: "Objava izbrisana." });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Neuspjelo izbrisanje objave." });
+    return res.status(500).json({ message: "Neuspjelo brisanje objave." });
   }
 });
 module.exports = router;
