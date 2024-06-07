@@ -13,8 +13,8 @@ const cache = (duration, options = {}) => {
     }
   };
 
-  // Schedule cleanup job to run every minute
-  scheduleJob("*/1 * * * *", cleanupCache);
+  // Schedule cleanup job to run every second
+  scheduleJob("/1 * * * * *", cleanupCache);
 
   return (req, res, next) => {
     const { originalUrl, url } = req;
