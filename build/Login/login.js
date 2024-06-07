@@ -10,7 +10,7 @@ Element.prototype.enable = function () {
 const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
-  const messageElement = document.getElementById("message");
+  const messageElement = document.querySelector(".message");
   const usernameInput = document.querySelector(".username-input");
   const passwordInput = document.querySelector(".password-input");
   const username = usernameInput.value;
