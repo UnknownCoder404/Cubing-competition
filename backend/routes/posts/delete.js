@@ -4,9 +4,9 @@ const Post = require("../../Models/post");
 const verifyToken = require("../../middleware/verifyToken");
 const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.delete("/delete", verifyToken, isAdmin, async (req, res) => {
+router.delete("/delete/:id", verifyToken, isAdmin, async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Nije naveden ID objave." });
     }
