@@ -140,6 +140,38 @@ async function loadPosts() {
     );
   });
 }
+
+async function editPost(
+  id = undefined,
+  newTitle = undefined,
+  newDescription = undefined
+) {
+  if (
+    !id ||
+    !newTitle ||
+    !newDescription ||
+    typeof id !== "string" ||
+    typeof newTitle !== "string" ||
+    typeof newDescription !== "string"
+  ) {
+    throw new Error("Unesi novi naslov i novi opis objave te ID.");
+  }
+  try {
+    const response = await fetch(`${url}/posts/edit/${id}`, {
+      method: "PUT",
+      headers: addToken({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ title: newTitle, description: newDescription }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      const newPost = data;
+      console.log("New post created:", newPost);
+    }
+  } catch (error) {}
+}
+
 async function main() {
   if (!loggedIn()) {
     window.location.href = "../Login";
