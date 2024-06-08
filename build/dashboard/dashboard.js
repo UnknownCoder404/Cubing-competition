@@ -13,97 +13,111 @@ import {
 } from "../Scripts/credentials.js";
 import { url, loadingHTML } from "../Scripts/variables.js";
 const usersDiv = document.querySelector(".users");
-function loggedIn() {
-  return Boolean(getToken()) && Boolean(getRole()) && Boolean(getId());
-}
-window.setWinner = async function (id) {
-  const setWinnerBtn = document.querySelector(`.set-winner-${id}`);
-  const previousHtml = setWinnerBtn.innerHTML;
-  setWinnerBtn.disabled = true;
-  setWinnerBtn.innerHTML = loadingHTML;
-  const data = await fetch(`${url}/winner/announce`, {
-    method: "POST",
-    body: JSON.stringify({
-      id: id,
-    }),
-    headers: addToken({
-      "Content-Type": "application/json",
-    }),
-  });
-  const response = await data.json();
-  setWinnerBtn.disabled = false;
-  setWinnerBtn.innerHTML = previousHtml;
-  alert(response.message);
+window.setWinner = async function (winnerId) {
+  const winnerButton = document.querySelector(`.set-winner-${winnerId}`);
+  const originalHTML = winnerButton.innerHTML;
+
+  try {
+    toggleButtonState(winnerButton, true, loadingHTML);
+    const response = await announceWinner(winnerId);
+    alert(response.message);
+  } catch (error) {
+    console.error("Error announcing the winner:", error);
+    alert("Nije uspjelo postavljanje pobjednika. Molim te pokušaj ponovno.");
+  } finally {
+    toggleButtonState(winnerButton, false, originalHTML);
+  }
 };
+function toggleButtonState(button, isDisabled, htmlContent) {
+  button.disabled = isDisabled;
+  button.innerHTML = htmlContent;
+}
+async function announceWinner(winnerId) {
+  const response = await fetch(`${url}/winner/announce`, {
+    method: "POST",
+    body: JSON.stringify({ id: winnerId }),
+    headers: addToken({ "Content-Type": "application/json" }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok.");
+  }
+
+  return response.json();
+}
+
 window.showCompetition = async function (userId, index) {
+  enableAllSolveButtons();
   const allUserDiv = document.querySelectorAll(".user");
   const userDiv = allUserDiv[index];
   const showCompBtn = userDiv.querySelector(".showComp-btn");
-  // Make showCompBtn innerHtml's to variable 'loadingHTML' and revert changes back
   const prevHTML = showCompBtn.innerHTML;
   showCompBtn.disabled = true;
   showCompBtn.innerHTML = loadingHTML;
 
-  let html = "";
-  const user = await fetch(`${url}/users/${userId}`, {
-    headers: addToken({}),
-  }).then((response) => response.json());
-  showCompBtn.disabled = false;
-  // Check if user data exists
-  if (!user) {
-    html = `<p>User not found.</p>`;
+  try {
+    const user = await fetch(`${url}/users/${userId}`, {
+      headers: addToken({}),
+    }).then((response) => response.json());
+
+    if (!user) {
+      userDiv.querySelector(".comp").innerHTML = `<p>User not found.</p>`;
+      return;
+    }
+
+    let html = "";
+    for (let i = 0; i < 3; i++) {
+      const round = user.rounds[i] || [];
+      html += `<div class="round">
+                <h3>Runda ${i + 1}</h3>`;
+
+      if (round.solves && round.solves.length > 0) {
+        html += `<p>Ao5: ${getAverage(round.solves)}</p>
+                 <ul>`;
+        round.solves.forEach((solve, j) => {
+          const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
+          html += `<li>${j + 1}: ${time}
+                   <button type="button" onclick="deleteSolve('${userId}', ${i}, ${j}, ${index})">Izbriši</button></li>`;
+        });
+        html += `</ul>`;
+      } else {
+        html += `<p>Nema slaganja za ovu rundu.</p>`;
+      }
+
+      if (!round.solves || round.solves.length < 5) {
+        html += `<form id="add-solve-${i}">
+                  <label for="solve-${i}">Slaganje:</label>
+                  <input inputmode="numeric" pattern="[0-9 ]*" placeholder="npr. 15467" type="text" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input"/>
+                  <button class="solve-add-btn" type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
+                 </form>`;
+      }
+
+      html += `</div>`;
+    }
+
     userDiv.querySelector(".comp").innerHTML = html;
-    showCompBtn.innerHTML = prevHTML;
-    return;
-  }
-  // Loop through rounds
-  for (let i = 0; i < 3; i++) {
-    const round = user.rounds[i] || [];
-    html += `<div class="round">`;
-    html += `<h3>Runda ${i + 1}</h3>`;
-    // Check if solves exist for the round
-    if (round.solves && round.solves.length > 0) {
-      html += `<p>Ao5: ${getAverage(round.solves)}</p>`;
-      html += `<ul>`;
-      for (let j = 0; j < round.solves.length; j++) {
-        const time =
-          round.solves[j] === 0 ? "DNF/DNS" : formatTime(round.solves[j]); // if 0, display DNF/DNS
-        html += `<li>Slaganje ${j + 1}: ${time}</li>`;
-        html += `<button type="button" onclick="deleteSolve('${userId}', ${i}, ${j}, ${index})">Izbriši</button></li>`;
-      }
-      html += `</ul>`;
-    } else {
-      html += `<p>Nema slaganja za ovu rundu.</p>`;
-    }
 
-    // Add form to add solves (assuming you have elements with these IDs)
-    if (!round.solves || round.solves.length < 5) {
-      html += `<form id="add-solve-${i}">
-              <label for="solve-${i}">Slaganje:</label>`;
-      html += `<input inputmode="numeric" pattern="[0-9 ]*" placeholder="npr. 15467" type="text" id="solve-${i}-${index}" name="solve" data-id="${userId}" data-i="${i}" data-index="${index}" class="solve-input"/>`;
-      html += `<button class="solve-add-btn" type="button" onclick="addSolve('${userId}', ${i}, ${index})">Dodaj</button>
-      </form>
-    `;
-      // Issue: #2 https://github.com/UnknownCoder404/Cubing-competition/issues/2
-    }
-    // Close .round div
-    html += `</div>`;
-  }
-
-  userDiv.querySelector(".comp").innerHTML = html;
-  showCompBtn.innerHTML = prevHTML;
-  const solveTimeInputs = document.querySelectorAll(".solve-input");
-  solveTimeInputs.forEach((input) => {
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const userId = input.dataset.id;
-        const i = +input.dataset.i;
-        const index = +input.dataset.index;
-        addSolve(userId, i, index);
-      }
+    const solveTimeInputs = userDiv.querySelectorAll(".solve-input");
+    solveTimeInputs.forEach((input) => {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const userId = input.dataset.id;
+          const i = +input.dataset.i;
+          const index = +input.dataset.index;
+          addSolve(userId, i, index);
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    userDiv.querySelector(
+      ".comp"
+    ).innerHTML = `<p>Error loading competition data.</p>`;
+  } finally {
+    showCompBtn.disabled = false;
+    showCompBtn.innerHTML = prevHTML;
+  }
 }; // Make showCompetition() global by using window.showCompetition = ...
 
 window.addSolve = async function (userId, roundIndex, index) {
@@ -257,6 +271,7 @@ window.deleteSolve = async function (userId, roundIndex, solveIndex, index) {
   const roundNumber = roundIndex + 1;
   const solveNumber = solveIndex + 1;
   // Call the backend to delete the solve
+  disableAllSolveButtons();
   const response = await fetch(`${url}/solves/delete/${userId}`, {
     method: "DELETE",
     headers: addToken({
@@ -273,8 +288,20 @@ window.deleteSolve = async function (userId, roundIndex, solveIndex, index) {
   // Handle errors
   const error = await response.json();
   alert(error.message);
+  enableAllSolveButtons();
 };
-
+function disableAllSolveButtons() {
+  const solveButtons = document.querySelectorAll(".solve-add-btn");
+  solveButtons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+function enableAllSolveButtons() {
+  const solveButtons = document.querySelectorAll(".solve-add-btn");
+  solveButtons.forEach((button) => {
+    button.disabled = false;
+  });
+}
 function getTime() {
   // Get the current date and time in GMT+1
   const now = new Date();
