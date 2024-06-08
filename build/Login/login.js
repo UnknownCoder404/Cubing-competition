@@ -1,5 +1,5 @@
 import { url, loadingHTML } from "../Scripts/variables.js";
-import { isAdmin } from "../Scripts/credentials.js";
+import { isAdmin, loggedIn } from "../Scripts/credentials.js";
 const submitBtn = document.querySelector(".submit-btn");
 Element.prototype.disable = function () {
   this.disabled = true;
@@ -71,4 +71,7 @@ function credentialsCheck(username, password) {
     return true;
   }
   return false;
+}
+if (loggedIn()) {
+  window.location.href = "../";
 }
