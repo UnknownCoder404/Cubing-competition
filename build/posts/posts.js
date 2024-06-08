@@ -61,6 +61,7 @@ async function createPost(title = undefined, description = undefined) {
     alert("Failed to create post. Please try again later.");
   }
   removeLoadingAnimatioToPostBtn();
+  main();
 }
 function createPostHtml(post) {
   const { title, description, id } = post;
