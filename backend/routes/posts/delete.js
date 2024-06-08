@@ -6,7 +6,7 @@ const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
 router.delete("/delete/:id", verifyToken, isAdmin, async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     if (!id) {
       return res.status(400).json({ message: "Nije naveden ID objave." });
     }
