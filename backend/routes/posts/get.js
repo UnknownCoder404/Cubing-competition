@@ -3,7 +3,7 @@ const Post = require("../../Models/post");
 const cache = require("../../middleware/cache");
 const router = express.Router();
 const { getUsernameById } = require("../../functions/getUsernameById");
-router.get("/", cache(5), async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
     // Construct response object with usernames
