@@ -171,7 +171,27 @@ async function editPost(
     }
   } catch (error) {}
 }
-
+function bolded(text) {
+  return `<span class="bolded">${text}</span>`;
+}
+function italicized(text) {
+  return `<span class="italicized">${text}</span>`;
+}
+function underlined(text) {
+  return `<span class="underlined">${text}</span>`;
+}
+function hyperlink(text, url) {
+  return `<a href="${url}" target="_blank">${text}</a>`;
+}
+function emailTo(text, email) {
+  return `<a href="mailto:${email}">${text}</a>`;
+}
+function header(text, level) {
+  if (level < 1 || level > 6) {
+    throw new Error("Invalid header level.");
+  }
+  return `<h${level}>${text}</h${level}>`;
+}
 async function main() {
   if (!loggedIn()) {
     window.location.href = "../Login";
