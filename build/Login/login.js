@@ -11,7 +11,6 @@ loginForm.addEventListener("submit", async (event) => {
 
   if (credentialsCheck(username, password)) return;
 
-  const submitBtn = document.querySelector(".submit-button");
   submitBtn.innerHTML = loadingHTML;
   submitBtn.disabled = true;
 
