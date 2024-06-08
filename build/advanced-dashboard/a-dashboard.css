@@ -14,7 +14,7 @@ body {
 }
 .options {
   padding: 20px;
-  background-color: rgb(101, 101, 101);
+  background: var(--background);
   color: white;
   height: 90vh;
   display: grid;
