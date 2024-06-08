@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html lang="hr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Natjecanja</title>
-  <link
-  rel="preload"
-  href="../Styles/font.css"
-  as="style"
-  onload="this.onload=null;this.rel='stylesheet'"
-/>
-<noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
-<link rel="stylesheet" href="style.css">
-<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="header.css">
-<link rel="preload" href="../Images/hide.svg" as="image">
-<link rel="preload" href="../Images/show.svg" as="image">
-</head>
-<body>
-  <div class="header">
-    <div class="interaction-container">
-      <div class="logo-container">
-        <a href="../"><img class="logo" src="../favicon.ico" /></a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Natjecanja</title>
+    <link
+      rel="preload"
+      href="../Styles/font.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="../Styles/font.css" /></noscript>
+    <link rel="stylesheet" href="../Styles/variables.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="header.css" />
+    <link rel="preload" href="../Images/hide.svg" as="image" />
+    <link rel="preload" href="../Images/show.svg" as="image" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="interaction-container">
+        <div class="logo-container">
+          <a href="../"><img class="logo" src="../favicon.ico" /></a>
+        </div>
+        <h1>Natjecanja i rezultati</h1>
       </div>
-      <h1>Natjecanja i rezultati</h1>
+      <div class="time-container">
+        <span class="currentTime" id="currentTime"></span>
+      </div>
     </div>
-    <div class="time-container">
-      <span class="currentTime" id="currentTime"></span>
-    </div>
-  </div>
-  <p class="last-updated"></p>
-  <div class="competition">
-    <div class="comp-date"><p class="comp-date-p">03.05.2024.</p></div>
-    <div class="comp-location"><p class="comp-location-p">Dvorana, OŠ Pavleka Miškina</p></div>
+    <p class="last-updated"></p>
+    <div class="competition">
+      <div class="comp-date">
+        <p class="comp-date-p">03.05.2024.</p>
+      </div>
+      <div class="comp-location">
+        <p class="comp-location-p">Dvorana, OŠ Pavleka Miškina</p>
+      </div>
 
-    <div class="grupe">
-</div>
-  <script type="module" src="competitions.js"></script>
-</body>
+      <div class="grupe"></div>
+    </div>
+    <script type="module" src="competitions.js"></script>
+  </body>
 </html>
