@@ -1,7 +1,7 @@
 /* Style the header */
 .header {
   width: 100%;
-  padding: 10px 16px;
+  padding: 0;
   background: rgb(24, 24, 24);
   color: #f1f1f1;
   display: grid;
@@ -10,6 +10,7 @@
 .interaction-container {
   display: flex;
   align-items: center;
+  padding: 10px;
 }
 .time-container {
   display: flex;

@@ -1,8 +1,15 @@
 :root {
   --exponential: cubic-bezier(1, 0, 0, 1);
+  --background: linear-gradient(
+    135deg,
+    rgb(96, 96, 96),
+    #43384b,
+    rgb(50, 43, 49),
+    rgb(96, 96, 96)
+  );
 }
 body {
-  background-color: rgb(65, 65, 65);
+  background: var(--background);
   box-shadow: 2px 2px 5px rgba(255, 255, 255, 1); /* 10px to the right, 10px down, and 5px blur */
 }
 .options {

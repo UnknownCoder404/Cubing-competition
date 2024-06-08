@@ -1,18 +1,18 @@
 :root {
   --exponential: cubic-bezier(1, 0, 0, 1);
-  --background-color: rgb(96, 96, 96);
+  --background: linear-gradient(
+    135deg,
+    rgb(96, 96, 96),
+    #43384b,
+    rgb(50, 43, 49),
+    rgb(96, 96, 96)
+  );
   --text-color: white;
   --post-background-color: rgb(74, 74, 74);
 }
 body {
   /*background-color: var(--background-color);*/
-  background: linear-gradient(
-    135deg,
-    rgb(96, 96, 96),
-    #302736,
-    rgb(50, 43, 49),
-    rgb(96, 96, 96)
-  );
+  background: var(--background);
   color: var(--text-color);
 }
 .form {
