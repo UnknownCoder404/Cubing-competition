@@ -1,70 +1,69 @@
 import { url, loadingHTML } from "../Scripts/variables.js";
 import { isAdmin, loggedIn } from "../Scripts/credentials.js";
 const submitBtn = document.querySelector(".submit-btn");
-Element.prototype.disable = function () {
-  this.disabled = true;
-};
-Element.prototype.enable = function () {
-  this.disabled = false;
-};
 const loginForm = document.getElementById("loginForm");
-loginForm.addEventListener("submit", async function (event) {
+loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const messageElement = document.querySelector(".message");
-  const usernameInput = document.querySelector(".username-input");
-  const passwordInput = document.querySelector(".password-input");
-  const username = usernameInput.value;
-  const password = passwordInput.value;
+  const username = document.querySelector(".username-input").value;
+  const password = document.querySelector(".password-input").value;
   messageElement.innerHTML = "";
-  if (credentialsCheck(username, password)) {
-    return;
-  }
+
+  if (credentialsCheck(username, password)) return;
+
+  const submitBtn = document.querySelector(".submit-button");
   submitBtn.innerHTML = loadingHTML;
-  submitBtn.disable();
+  submitBtn.disabled = true;
 
   try {
     const response = await fetch(`${url}/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
+
+    const data = await response.json();
+    const message = data.message;
+
     if (response.status === 429) {
-      messageElement.innerHTML =
-        '<span class="error">' +
-        "Previše zahtjeva za prijavu. Pokušaj ponovno za 15 minuta." +
-        "</span>";
-      console.error(
+      displayError(
+        messageElement,
         "Previše zahtjeva za prijavu. Pokušaj ponovno za 15 minuta."
       );
-      submitBtn.enable();
       return;
     }
-    const data = await response.json();
 
-    const message = data.message;
     if (response.ok) {
       messageElement.innerText = message;
+      saveUserInfo(data.info);
+      window.location.href = isAdmin(data.info.role) ? "../dashboard/" : "../";
     } else {
-      messageElement.innerHTML = `<span class="error">${message}</span>`;
-    }
-    if (response.ok) {
-      // Save token to local storage or session storage
-      const { token, id, username, role } = data.info;
-      localStorage.setItem("token", token);
-      localStorage.setItem("id", id);
-      localStorage.setItem("username", username);
-      localStorage.setItem("role", role);
-      // Redirect to a dashboard or another page
-      window.location.href = isAdmin(role) ? "../dashboard/" : "../";
+      displayError(messageElement, message);
     }
   } catch (error) {
     console.error("Error:", error);
+  } finally {
+    resetSubmitButton(submitBtn);
   }
-  submitBtn.innerHTML = "Prijava";
-  submitBtn.enable();
 });
+
+function displayError(element, message) {
+  element.innerHTML = `<span class="error">${message}</span>`;
+  console.error(message);
+}
+
+function saveUserInfo({ token, id, username, role }) {
+  localStorage.setItem("token", token);
+  localStorage.setItem("id", id);
+  localStorage.setItem("username", username);
+  localStorage.setItem("role", role);
+}
+
+function resetSubmitButton(button) {
+  button.disabled = false;
+  button.innerHTML = "Prijava";
+}
+
 function credentialsCheck(username, password) {
   if (!username || !password) {
     alert("Korisničko ime i lozinka su obavezni.");
