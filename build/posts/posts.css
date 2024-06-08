@@ -2,6 +2,8 @@
   --exponential: cubic-bezier(1, 0, 0, 1);
   --background-color: rgb(96, 96, 96);
   --text-color: white;
+  --posts-background-color: rgb(65, 65, 65);
+  --post-background-color: rgb(74, 74, 74);
 }
 body {
   background-color: var(--background-color);
@@ -59,4 +61,24 @@ body {
 }
 .post-btn:focus {
   outline: none;
+}
+.posts {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: var(--posts-background-color);
+  row-gap: 20px;
+  padding: 5px;
+}
+.post {
+  padding: 10px;
+  background-color: var(--post-background-color);
+  border-radius: 5px;
+}
+.post-title,
+.post-author-p {
+  margin: 0;
+  padding: 0;
+}
+.post-author {
+  font-weight: 700;
 }

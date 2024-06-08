@@ -62,7 +62,83 @@ async function createPost(title = undefined, description = undefined) {
   }
   removeLoadingAnimatioToPostBtn();
 }
-
+function createPostHtml(post) {
+  const { title, description, id } = post;
+  const authorUsername = post.author.username;
+  const html = `<div class="post">
+  <div> 
+    <h2 class="post-title">${title}</h2>
+  </div>
+    <div>
+      <p class="post-description">
+      ${description}
+      </p>
+    </div>
+    <div> 
+      <p class="post-author-p">
+        Objavio <span class="post-author">${authorUsername}
+        </span>
+      </p>
+    </div>
+    <div class="post-btns-container">
+      <button data-id="${id}"
+      class="delete-post-btn">
+        <img src="../Images/delete.svg"/>
+      </button>
+    </div>
+</div>`;
+  return html;
+}
+async function getPosts() {
+  try {
+    // Returns json of posts
+    const data = await fetch(`${url}/posts`);
+    const posts = await data.json();
+    return posts;
+  } catch (error) {
+    throw new Error("Failed to get posts. Please try again later.");
+  }
+}
+async function deletePost(id) {
+  const response = await fetch(`${url}/posts/delete/${id}`, {
+    method: "DELETE",
+    headers: addToken({
+      "Content-Type": "application/json",
+    }),
+  });
+  if (response.ok) {
+    alert("Uspješno izbrisana objava.");
+  } else {
+    throw new Error("Failed to delete post.");
+  }
+}
+function attachDeleteEvent(deleteBtn) {
+  deleteBtn.addEventListener("click", async () => {
+    const prevHTML = deleteBtn.innerHTML;
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = loadingHTML;
+    const id = deleteBtn.dataset.id;
+    try {
+      await deletePost(id);
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = prevHTML;
+    main();
+  });
+}
+async function loadPosts() {
+  const posts = await getPosts();
+  document.querySelector(".posts").innerHTML = "";
+  posts.forEach((post) => {
+    const html = createPostHtml(post);
+    document.querySelector(".posts").insertAdjacentHTML("beforeend", html);
+    attachDeleteEvent(
+      document.querySelector(`.delete-post-btn[data-id="${post.id}"]`)
+    );
+  });
+}
 async function main() {
   if (!loggedIn()) {
     window.location.href = "../Login";
@@ -71,5 +147,6 @@ async function main() {
   if (isUser(getRole(true))) {
     window.location.href = "../";
   }
+  loadPosts();
 }
 main();
