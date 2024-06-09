@@ -24,45 +24,53 @@ function addLoadingAnimationToPostBtn() {
   postButton.disabled = true;
   postButton.innerHTML = loadingHTML;
 }
-function removeLoadingAnimatioToPostBtn() {
+function removeLoadingAnimationToPostBtn() {
   postButton.disabled = false;
   postButton.innerHTML = postButtonPrevHTML;
 }
-async function createPost(title = undefined, description = undefined) {
-  if (
-    !title ||
-    !description ||
-    typeof title !== "string" ||
-    typeof description !== "string"
-  ) {
+async function createPost(title, description) {
+  // Validate input
+  if (!title || !description) {
     alert("Unesi i naslov i opis objave.");
     return;
   }
+  if (typeof title !== "string" || typeof description !== "string") {
+    alert("Title and description must be strings.");
+    return;
+  }
+
+  // Add loading animation
+  addLoadingAnimationToPostBtn();
+
   try {
-    addLoadingAnimationToPostBtn();
+    // Attempt to create a new post
     const response = await fetch(`${url}/posts/new`, {
       method: "POST",
-      headers: addToken({
-        "Content-Type": "application/json",
-      }),
+      headers: addToken({ "Content-Type": "application/json" }),
       body: JSON.stringify({ title, description }),
     });
     const data = await response.json();
+
+    // Handle response
     if (response.ok) {
-      const newPost = data;
-      console.log("New post created:", newPost);
+      console.log("New post created:", data);
     } else {
-      const errorData = data;
-      console.error("Error creating post:", errorData.message);
-      alert("Error creating post: " + errorData.message);
+      console.error("Error creating post:", data.message);
+      alert("Error creating post: " + data.message);
     }
   } catch (error) {
+    // Handle errors
     console.error("Failed to create post:", error);
     alert("Failed to create post. Please try again later.");
+  } finally {
+    // Reset form and remove loading animation
+    descriptionInput.value = "";
+    titleInput.value = "";
+    removeLoadingAnimationToPostBtn();
+    main();
   }
-  removeLoadingAnimatioToPostBtn();
-  main();
 }
+
 function createPostHtml(post) {
   const { title, description, id } = post;
   const authorUsername = post.author.username;
@@ -140,7 +148,6 @@ async function loadPosts() {
     );
   });
 }
-
 async function editPost(
   id = undefined,
   newTitle = undefined,
