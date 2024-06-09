@@ -176,7 +176,10 @@ async function editPost(
       const newPost = data;
       console.log("New post created:", newPost);
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error editing post:\n", error);
+    alert("Greška u uređivanju objave. Molimo pokušajte ponovno.");
+  }
 }
 function bolded(text) {
   return `<span class="bolded">${text}</span>`;
