@@ -41,6 +41,7 @@ body {
 }
 .showhide {
   margin-left: 10px;
+  cursor: pointer;
 }
 .bold {
   font-weight: 700;
