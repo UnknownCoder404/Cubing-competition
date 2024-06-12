@@ -44,6 +44,20 @@
       <div><button class="post-btn">Objavi</button></div>
     </div>
     <div class="posts"></div>
+    <dialog class="edit-post-dialog">
+      <form method="dialog">
+        <input type="text" placeholder="Naslov" class="title" name="title" />
+        <br /><br />
+        <textarea
+          placeholder="Opis..."
+          type="text"
+          class="description"
+          name="description"
+        ></textarea>
+        <br /><br />
+        <button type="submit">Uredi objavu</button>
+      </form>
+    </dialog>
     <script type="module" src="posts.js"></script>
   </body>
 </html>

@@ -80,3 +80,14 @@ body {
 .post-author {
   font-weight: 700;
 }
+.delete-post-btn {
+  background-color: white;
+  box-shadow: 1px 2px 1px rgba(255, 255, 255, 0.5); /* horizontal offset, vertical offset, blur radius, color */
+  border-radius: 2px;
+  border: none;
+  transition: border-radius 0.3s var(--exponential);
+}
+.delete-post-btn:hover {
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.886);
+}

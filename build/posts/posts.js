@@ -10,7 +10,9 @@ const postButton = document.querySelector(".post-btn");
 const postButtonPrevHTML = postButton.innerHTML;
 const titleInput = document.querySelector(".title");
 const descriptionInput = document.querySelector(".description");
-
+const editPostDialog = document.querySelector(".edit-post-dialog");
+const editPostTitleInput = editPostDialog.querySelector(".title");
+const editPostDescriptionInput = editPostDialog.querySelector(".description");
 postButton.addEventListener("click", () => {
   const title = titleInput.value;
   const description = descriptionInput.value;
@@ -94,6 +96,7 @@ function createPostHtml(post) {
       class="delete-post-btn">
         <img src="../Images/delete.svg"/>
       </button>
+      <button class="edit-post-btn" data-id="${id}"><img src="../Images/edit.svg"/></button>
     </div>
 </div>`;
   return html;
@@ -137,6 +140,35 @@ function attachDeleteEvent(deleteBtn) {
     main();
   });
 }
+function attachEditEvent(editBtn) {
+  editBtn.addEventListener("click", async () => {
+    const prevHTML = editBtn.innerHTML;
+    editBtn.disabled = true;
+    editBtn.innerHTML = loadingHTML;
+    const id = editBtn.dataset.id;
+    try {
+      await openEditPostDialog(id);
+    } catch (error) {
+      console.error("Failed to open edit post dialog:", error);
+    }
+    editBtn.disabled = false;
+    editBtn.innerHTML = prevHTML;
+  });
+}
+async function getPost(id) {
+  try {
+    const posts = await getPosts();
+    const post = posts.find((post) => post.id === id);
+    if (!post) {
+      throw new Error("Objava s tim ID-om ne postoji.");
+    }
+    return post;
+  } catch (error) {
+    console.error("Failed to get post:", error);
+    alert("Greška u dohvaćanju objave. Molimo pokušajte ponovno.");
+  }
+  return undefined;
+}
 async function loadPosts() {
   const posts = await getPosts();
   document.querySelector(".posts").innerHTML = "";
@@ -146,6 +178,50 @@ async function loadPosts() {
     attachDeleteEvent(
       document.querySelector(`.delete-post-btn[data-id="${post.id}"]`)
     );
+    attachEditEvent(
+      document.querySelector(`.edit-post-btn[data-id="${post.id}"]`)
+    );
+  });
+}
+function clearEditPostDialogInputs() {
+  editPostTitleInput.value = "";
+  editPostDescriptionInput.value = "";
+}
+async function openEditPostDialog(id = undefined) {
+  if (!id) {
+    throw new Error("Unesi ID objave.");
+  }
+  clearEditPostDialogInputs();
+  editPostDialog.showModal();
+  const post = await getPost(id);
+  if (!post) {
+    throw new Error("Objava s tim ID-om ne postoji.");
+  }
+  editPostTitleInput.value = post.title;
+  editPostDescriptionInput.value = post.description;
+  editPostDialog.addEventListener("submit", async () => {
+    const title = editPostTitleInput.value;
+    const description = editPostDescriptionInput.value;
+    if (!title || !description) {
+      alert("Unesi i novi naslov i novi opis objave.");
+      editPostDialog.close();
+      return;
+    }
+    if (!title || !description) {
+      alert("Unesi i novi naslov i novi opis objave.");
+      editPostDialog.close();
+      return;
+    }
+    try {
+      await editPost(id, title, description);
+    } catch (error) {
+      console.error("Error editing post:", error);
+      alert("Greška u uređivanju objave. Molimo pokušajte ponovno.");
+    } finally {
+      clearEditPostDialogInputs();
+      main();
+      editPostDialog.close();
+    }
   });
 }
 async function editPost(
@@ -174,7 +250,7 @@ async function editPost(
     const data = await response.json();
     if (response.ok) {
       const newPost = data;
-      console.log("New post created:", newPost);
+      console.log("New post edited:", newPost);
     }
   } catch (error) {
     console.error("Error editing post:\n", error);
