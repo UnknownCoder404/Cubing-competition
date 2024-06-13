@@ -22,6 +22,8 @@ a:visited {
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1vw;
+  padding-top: 10px;
 }
 
 .card {
@@ -42,7 +44,7 @@ a:visited {
 .container {
   padding: 2px 16px;
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 420px) {
   .cards {
     display: grid;
     grid-template-columns: 1fr;
