@@ -22,7 +22,7 @@ a:visited {
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1vw;
+  gap: 10px;
   padding-top: 10px;
 }
 
