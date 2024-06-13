@@ -15,10 +15,11 @@ router.get("/", cache(5), async (req, res) => {
     }).select("username rounds group -_id");
     res.status(200).json({
       solves: usersWithSolves,
-      lastUpdated: new Intl.DateTimeFormat("en-US", {
+      lastUpdated: new Intl.DateTimeFormat("fr-FR", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
+        timeZone: "Europe/Zagreb",
       }).format(new Date()),
     });
   } catch (err) {
