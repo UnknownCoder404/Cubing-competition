@@ -53,11 +53,32 @@
   justify-content: center;
   align-items: center;
 }
-.naslov-container {
+.title-container {
   display: flex;
 }
-.naslov {
+.title {
   display: inline-block;
+  font-size: 32px; /* Default for h1 */
+}
+@media screen and (max-width: 276px) {
+  .title {
+    font-size: 30px;
+  }
+}
+@media screen and (max-width: 260px) {
+  .title {
+    font-size: 28px;
+  }
+}
+@media screen and (max-width: 233px) {
+  .title {
+    font-size: 26px;
+  }
+}
+@media screen and (max-width: 222px) {
+  .title {
+    font-size: 24px;
+  }
 }
 .account-container {
   display: flex;
@@ -68,6 +89,7 @@
 
 .log-in {
   display: inline-block;
+  margin: 5px;
 }
 
 .log-in a {
@@ -77,8 +99,13 @@
 .account-circle {
   cursor: var(--logged-in);
 }
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 230px) {
   .account-circle {
     display: none;
+  }
+}
+@media screen and (max-width: 250px) {
+  .header {
+    padding: 10px;
   }
 }
