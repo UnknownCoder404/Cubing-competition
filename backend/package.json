@@ -5,7 +5,7 @@
   "scripts": {
     "bun": "npm install -g bun",
     "i": "bun install",
-    "start": "bun run backup.js && bun run server.js "
+    "start": "bun run precheck.js && bun run backup.js && bun run server.js "
   },
   "keywords": [],
   "author": "",
