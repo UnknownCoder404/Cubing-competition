@@ -1,0 +1,12 @@
+body {
+  background: var(--background);
+  color: white;
+}
+a {
+  color: rgb(0, 102, 204); /* Default color for unvisited links */
+}
+
+/* Visited link styles */
+a:visited {
+  color: rgb(190, 188, 188); /* Color for visited links */
+}

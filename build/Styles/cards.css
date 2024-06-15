@@ -1,24 +1,3 @@
-:root {
-  --background: linear-gradient(
-    135deg,
-    rgb(96, 96, 96),
-    #43384b,
-    rgb(50, 43, 49),
-    rgb(96, 96, 96)
-  );
-}
-body {
-  background: var(--background);
-  color: white;
-}
-a {
-  color: rgb(0, 102, 204); /* Default color for unvisited links */
-}
-
-/* Visited link styles */
-a:visited {
-  color: rgb(190, 188, 188); /* Color for visited links */
-}
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
