@@ -59,7 +59,11 @@ describe("test suite: formatTime", () => {
   });
 });
 describe("test suite: formatInputToSeconds", () => {
-  it("Formats 2 number", () => {
+  it("Formats 1 number", () => {
+    const time = formatInputToSeconds("6");
+    expect(time).toBe(0.06);
+  });
+  it("Formats 2 numbers", () => {
     const time = formatInputToSeconds("64");
     expect(time).toBe(0.64);
   });
