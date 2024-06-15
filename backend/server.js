@@ -56,7 +56,7 @@ mongoose
   .catch((err) => console.error("Failed to connect to MongoDB: \n" + err));
 // Redirect
 app.get("/", (req, res) => {
-  return res.redirect("https://bit.ly/CroComp");
+  return res.redirect(308, "https://cutt.ly/CroComp");
 });
 // register and login
 app.use("/register", require("./routes/users/register"));
