@@ -3,10 +3,10 @@ body {
   color: white;
 }
 a {
-  color: rgb(0, 102, 204); /* Default color for unvisited links */
+  color: var(--anchor-unvisited-color);
 }
 
 /* Visited link styles */
 a:visited {
-  color: rgb(190, 188, 188); /* Color for visited links */
+  color: var(--anchor-visited-color);
 }

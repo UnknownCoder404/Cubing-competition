@@ -279,6 +279,7 @@ function boldSelectedTextFromInput(input = undefined) {
   const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
 
   // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
 function italizeSelectedTextFromInput(input = undefined) {
@@ -295,6 +296,7 @@ function italizeSelectedTextFromInput(input = undefined) {
   const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
 
   // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
 function underlineSelectedTextFromInput(input = undefined) {
@@ -311,6 +313,7 @@ function underlineSelectedTextFromInput(input = undefined) {
   const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
 
   // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
 function hyperlinkSelectedTextFromInput(
@@ -328,9 +331,10 @@ function hyperlinkSelectedTextFromInput(
   input.value = newInputValue;
 
   // Calculate the difference in length
-  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+  const lengthDifference = newInputValue.length - oldInputValue.length - 4; // 4 is the length of </a>
 
   // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
 function emailToSelectedTextFromInput(input = undefined, email = undefined) {
@@ -344,9 +348,9 @@ function emailToSelectedTextFromInput(input = undefined, email = undefined) {
   input.value = newInputValue;
 
   // Calculate the difference in length
-  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+  const lengthDifference = newInputValue.length - oldInputValue.length - 4; // 4 is the length of </a>
 
-  // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
 function headerSelectedTextFromInput(input = undefined, level = 1) {
@@ -360,12 +364,45 @@ function headerSelectedTextFromInput(input = undefined, level = 1) {
   input.value = newInputValue;
 
   // Calculate the difference in length
-  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+  const lengthDifference = newInputValue.length - oldInputValue.length - 5; // 5 is the length of </h1>, </h2>, etc.
 
   // Adjust the selection range
+  input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
+function addEventListenersToStyleTextButtons() {
+  const descriptionInput = document.querySelector(".description");
+  const boldButton = document.querySelector(".bold-btn");
+  boldButton.addEventListener("click", () => {
+    boldSelectedTextFromInput(descriptionInput);
+  });
+  const italicButton = document.querySelector(".italic-btn");
+  italicButton.addEventListener("click", () => {
+    italizeSelectedTextFromInput(descriptionInput);
+  });
+  const underlineButton = document.querySelector(".underline-btn");
+  underlineButton.addEventListener("click", () => {
+    underlineSelectedTextFromInput(descriptionInput);
+  });
+  const hyperlinkButton = document.querySelector(".hyperlink-btn");
+  hyperlinkButton.addEventListener("click", () => {
+    hyperlinkSelectedTextFromInput(descriptionInput);
+  });
+  const emailButton = document.querySelector(".mail-btn");
+  emailButton.addEventListener("click", () => {
+    emailToSelectedTextFromInput(descriptionInput);
+  });
+  // Add event listeners to all header buttons
+  for (let i = 2; i <= 6; i++) {
+    const headerButton = document.querySelector(`.header${i}`);
+    headerButton.addEventListener("click", () => {
+      headerSelectedTextFromInput(descriptionInput, i);
+    });
+  }
+}
+
 async function main() {
+  addEventListenersToStyleTextButtons();
   if (!loggedIn()) {
     window.location.href = "../Login";
   }

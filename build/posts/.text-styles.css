@@ -1,0 +1,16 @@
+.bolded {
+  font-weight: 700;
+}
+.italicized {
+  font-style: italic;
+}
+.underlined {
+  text-decoration: underline;
+}
+a {
+  color: var(--anchor-unvisited-color);
+  text-decoration: underline;
+}
+a:visited {
+  color: var(--anchor-visited-color);
+}
