@@ -49,10 +49,8 @@ function italicized(text) {
 function underlined(text) {
   return `<span class="underlined">${text}</span>`;
 }
-function hyperlink(text, url = undefined, newTab = true) {
-  return `<a href="${url ? url : "URL"}" ${
-    newTab ? 'target="_blank"' : ""
-  }>${text}</a>`;
+function hyperlink(text, url = "URL", newTab = true) {
+  return `<a href="${url}" ${newTab ? 'target="_blank"' : ""}>${text}</a>`;
 }
 function emailTo(text, email) {
   return `<a href="mailto:${email}">${text}</a>`;

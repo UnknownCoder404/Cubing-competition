@@ -265,6 +265,106 @@ async function editPost(
     alert("Greška u uređivanju objave. Molimo pokušajte ponovno.");
   }
 }
+function boldSelectedTextFromInput(input = undefined) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = boldText(oldInputValue, start, end);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
+function italizeSelectedTextFromInput(input = undefined) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = italicText(oldInputValue, start, end);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
+function underlineSelectedTextFromInput(input = undefined) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = underlineText(oldInputValue, start, end);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
+function hyperlinkSelectedTextFromInput(
+  input = undefined,
+  url = undefined,
+  newTab = true
+) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = hyperlinkText(oldInputValue, start, end, url, newTab);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
+function emailToSelectedTextFromInput(input = undefined, email = undefined) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = emailToText(oldInputValue, start, end, email);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
+function headerSelectedTextFromInput(input = undefined, level = 1) {
+  if (!input) {
+    throw new Error("Param input missing.");
+  }
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const oldInputValue = input.value;
+  const newInputValue = headerText(oldInputValue, start, end, level);
+  input.value = newInputValue;
+
+  // Calculate the difference in length
+  const lengthDifference = newInputValue.length - oldInputValue.length - 7; // 7 is the length of </span>
+
+  // Adjust the selection range
+  input.setSelectionRange(start + lengthDifference, end + lengthDifference);
+}
 async function main() {
   if (!loggedIn()) {
     window.location.href = "../Login";
@@ -276,9 +376,3 @@ async function main() {
   loadPosts();
 }
 main();
-console.log(boldText("Hello", 0, 5));
-console.log(italicText("Hello", 0, 5));
-console.log(underlineText("Hello", 0, 5));
-console.log(hyperlinkText("Hello", 0, 5, "https://google.com"));
-console.log(emailToText("Hello", 0, 5, "test@test.com"));
-console.log(headerText("Hello", 0, 5, 1));
