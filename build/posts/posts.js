@@ -337,7 +337,7 @@ function hyperlinkSelectedTextFromInput(
   input.focus();
   input.setSelectionRange(start + lengthDifference, end + lengthDifference);
 }
-function emailToSelectedTextFromInput(input = undefined, email = undefined) {
+function emailToSelectedTextFromInput(input = undefined, email = "email") {
   if (!input) {
     throw new Error("Param input missing.");
   }
