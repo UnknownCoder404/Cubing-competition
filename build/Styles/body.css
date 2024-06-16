@@ -2,11 +2,3 @@ body {
   background: var(--background);
   color: white;
 }
-a {
-  color: var(--anchor-unvisited-color);
-}
-
-/* Visited link styles */
-a:visited {
-  color: var(--anchor-visited-color);
-}
