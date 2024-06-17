@@ -82,13 +82,21 @@ document.querySelector(".share").addEventListener("click", async () => {
 function createPostHtml(post) {
   const { title, description } = post;
   const authorUsername = post.author.username;
-  const html = `<div class="card">
-  <div class="container">
-    <h2 class="post-title">${title}</h2>
-    <p class="post-description">
-      ${description}
-    </p>
-    Objavio <span class="post-author">${authorUsername}</span>
+  const html = `
+<div class="card">
+  <div class="card-inside-container">
+    <div class="post-title-container">
+      <h2 class="post-title">${title}</h2>
+    </div>
+    <div class="post-description-container">
+      <p class="post-description">
+        ${description}
+      </p>
+    </div>
+    <div class="post-author-container">
+      <p class="post-author-p">Objavio <span class="post-author">${authorUsername}</span>
+      </p>
+    </div>
   </div>
 </div>`;
   return html;

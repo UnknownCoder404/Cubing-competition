@@ -4,7 +4,12 @@
   gap: 10px;
   padding-top: 10px;
 }
-
+@media screen and (max-width: 420px) {
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
 .card {
   background-color: rgb(74, 74, 74);
   padding-top: 5px;
@@ -20,14 +25,12 @@
   background-color: rgb(50, 50, 50);
 }
 
-.container {
-  padding: 2px 16px;
+.card-inside-container {
+  padding: 3px 10px;
+  height: 100%;
 }
-@media screen and (max-width: 420px) {
-  .cards {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
+.post-title {
+  margin: 0;
 }
 .logout-span,
 .share {
