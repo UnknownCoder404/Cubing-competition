@@ -30,21 +30,19 @@
   </head>
   <body>
     <div class="header">
-      <div class="interaction-container">
-        <div class="logo-container">
-          <a href="../"><img class="logo" src="../favicon.ico" /></a>
-        </div>
-        <h1>Svi korisnici</h1>
-        <img class="admin-panel" src="../Images/admin_panel.svg" />
-        <div class="register-btn-div">
-          <a href="../Register/"><button class="register-btn">+</button></a>
-        </div>
+      <div class="logo-container">
+        <a href="../"> <img class="logo" src="../favicon.ico" /></a>
       </div>
-      <div class="time-container">
-        <span class="currentTime" id="currentTime"></span>
+      <div class="title-container">
+        <h1 class="title">Upravljačka ploča</h1>
       </div>
     </div>
-    <button class="advanced-dashboard-btn">Napredna radna ploča</button>
+    <a href="../Register/"
+      ><button class="register-btn">Registriraj korisnika</button></a
+    >
+    <a href="../advanced-dashboard/">
+      <button class="advanced-dashboard-btn">Napredna radna ploča</button></a
+    >
     <div class="users"></div>
     <script type="module" src="dashboard.js"></script>
   </body>

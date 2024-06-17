@@ -46,7 +46,7 @@ button:hover {
 }
 
 .register-btn {
-  margin-left: 30px;
+  width: 100%;
   padding: 5px 15px;
   background-color: rgb(39, 219, 39); /* Green button */
   transition: background-color 1s;
