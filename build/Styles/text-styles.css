@@ -1,12 +1,13 @@
-.bolded {
+.posts .bolded {
   font-weight: 700;
 }
-.italicized {
+.posts .italicized {
   font-style: italic;
 }
-.underlined {
+.posts .underlined {
   text-decoration: underline;
 }
+/* Select all anchors */
 a {
   color: var(--anchor-unvisited-color);
   text-decoration: underline;
