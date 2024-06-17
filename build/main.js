@@ -66,7 +66,7 @@ document.querySelector(".share").addEventListener("click", async () => {
       
       Smiju se natjecati samo OSNOVNOŠKOLCI.
       
-      Natjecateljsko ograničenje je 50, ako ga se pređe bit ćete stavljeni na listu čekanja.
+      Natjecateljsko ograničenje je 50, ako ga se prijeđe bit ćete stavljeni na listu čekanja.
       
       Želite li se prijaviti (ime, prezime, škola, razred ) ili imate pitanja pošaljite na cro.cube.club@gmail.com
       `,
