@@ -36,11 +36,6 @@
   align-items: center;
   margin-right: 20px;
 }
-@media screen and (max-width: 350px) {
-  .logo-container {
-    margin-right: 5px;
-  }
-}
 .logo-container > a {
   /* One layer deep anchor */
   display: flex;
@@ -58,12 +53,7 @@
   font-size: 32px; /* Default for h1 */
   margin: 0;
 }
-@media screen and (max-width: 300px) {
-  .title {
-    font-size: 30px;
-  }
-}
-@media screen and (max-width: 286px) {
+@media screen and (max-width: 240px) {
   .header {
     display: grid;
     grid-template-columns: 1fr;
@@ -71,18 +61,10 @@
   .title-container {
     justify-content: center;
   }
-}
-@media screen and (max-width: 260px) {
-  .title {
-    font-size: 29px;
+  .logo-container {
+    margin: 0;
   }
 }
-@media screen and (max-width: 237px) {
-  .title {
-    font-size: 27px;
-  }
-}
-
 @media screen and (max-width: 250px) {
   .header {
     padding: 10px;
