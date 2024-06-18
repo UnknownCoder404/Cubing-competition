@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CroCubeComp je natjecanje u Rubikovoj kocki koje se nalazi u  Hrvatskoj. Brzi u slaganju? Prijavite se!"
+    />
     <title>CroCubeComp - Početna</title>
     <link
       rel="preload"
@@ -17,18 +21,13 @@
     <link rel="stylesheet" href="Styles/cards.css" />
     <link rel="stylesheet" href="./Styles/text-styles.css" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="preload" href="./Login/login.js" as="script" />
-    <link rel="preload" href="./Login/login.css" as="style" />
-    <link rel="preload" href="./rules/rules.css" as="style" />
-    <link rel="preload" href="./rules/header.css" as="style" />
-    <link rel="preload" href="./competitions/competitions.js" as="script" />
-    <link rel="preload" href="./Scramble/scramble-display.js" as="script" />
+    <!-- Remove preloads for speed -->
   </head>
   <body>
     <div class="header">
       <div class="interaction-container">
         <div class="logo-container">
-          <img class="logo" src="favicon.ico" />
+          <img alt="logo" class="logo" src="favicon.ico" />
         </div>
         <div class="title-container">
           <h1 class="title">Cro Cube Comp</h1>
@@ -36,7 +35,11 @@
       </div>
       <div class="account-container">
         <h2 class="log-in js-log-in"><a href="Login/">Prijava</a></h2>
-        <img class="account-circle" src="Images/account_circle.svg" />
+        <img
+          alt="account circle"
+          class="account-circle"
+          src="Images/account_circle.svg"
+        />
       </div>
     </div>
     <div class="cards posts">
@@ -47,7 +50,8 @@
           </div>
           <div class="post-description-container">
             <p>
-              Listu natjecanja i rezultate možete pronaći <a href="./competitions">ovdje</a>
+              Listu natjecanja i rezultate možete pronaći
+              <a href="./competitions">ovdje</a>
             </p>
           </div>
         </div>
@@ -87,7 +91,11 @@
             <p class="post-description">
               Pozovi svoje prijatelje: <span class="share">ovdje</span>
             </p>
-            <img class="qrcode" src="Images/qrcode_to_website.webp" />
+            <img
+              alt="QR code to website"
+              class="qrcode"
+              src="Images/qrcode_to_website_200x200.webp"
+            />
           </div>
         </div>
       </div>
