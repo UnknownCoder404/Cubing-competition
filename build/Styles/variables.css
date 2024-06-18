@@ -9,4 +9,5 @@
   --exponential: cubic-bezier(1, 0, 0, 1);
   --anchor-unvisited-color: rgb(0, 102, 204);
   --anchor-visited-color: rgb(190, 188, 188);
+  --header-background-color: rgb(24, 24, 24);
 }

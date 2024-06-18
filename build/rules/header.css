@@ -1,72 +1,61 @@
-/* Style the header */
-.header {
-  padding: 10px 16px;
-  background: rgb(24, 24, 24);
-  color: #f1f1f1;
+.header-container {
+  width: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: center;
+  align-items: center;
+}
+.header {
+  width: 95vw;
+  background: var(--header-background-color);
+  display: flex;
+  justify-content: center;
   align-items: center;
   border-radius: 30px;
+  padding: 5px;
+}
+@media screen and (max-width: 430px) {
+  .header {
+    justify-content: start;
+  }
 }
 @media screen and (max-width: 350px) {
   .header {
     border-radius: 20px;
   }
 }
-/* Page content */
-.content {
-  padding: 16px;
+.logo-title-container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
-/* The sticky class is added to the header with JS when it reaches its scroll position */
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-/* Add some top padding to the page content to prevent sudden quick movement */
-.sticky + .content {
-  padding-top: 102px;
-}
-.logo {
-  width: 20px;
-}
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20px;
-}
-.logo-container > a {
-  /* One layer deep anchor */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.title-container {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  width: 100%;
-}
-.title {
-  display: inline-block;
-  font-size: 32px; /* Default for h1 */
-  margin: 0;
-}
-@media screen and (max-width: 240px) {
+@media screen and (max-width: 300px) {
   .header {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .title-container {
     justify-content: center;
   }
-  .logo-container {
-    margin: 0;
+  .logo-title-container {
+    grid-template-columns: 1fr;
   }
 }
-@media screen and (max-width: 250px) {
-  .header {
-    padding: 10px;
-  }
+.logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-anchor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  width: 24px;
+}
+.title-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title {
+  margin: 0;
 }
