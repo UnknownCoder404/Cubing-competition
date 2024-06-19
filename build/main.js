@@ -15,7 +15,10 @@ async function getPosts() {
   const posts = await data.json();
   return posts;
 }
-function createCard(title, description) {
+function createCard(title=undefined, description=undefined, authorUsername=undefined) {
+  if (!title || !description) {
+    throw new Error("Title and description are required.");
+  }
   return `
   <div class="card">
         <div class="card-inside-container">
@@ -27,6 +30,10 @@ function createCard(title, description) {
               ${description}
             </p>
           </div>
+          ${authorUsername ? `<div class="post-author-container">
+        <p class="post-author-p">Objavio <span class="post-author">${authorUsername}</span>
+        </p>
+      </div>` : ""}
         </div>
       </div>
   `;
@@ -82,23 +89,7 @@ document.querySelector(".share").addEventListener("click", async () => {
 function createPostHtml(post) {
   const { title, description } = post;
   const authorUsername = post.author.username;
-  const html = `
-<div class="card">
-  <div class="card-inside-container">
-    <div class="post-title-container">
-      <h2 class="post-title">${title}</h2>
-    </div>
-    <div class="post-description-container">
-      <p class="post-description">
-        ${description}
-      </p>
-    </div>
-    <div class="post-author-container">
-      <p class="post-author-p">Objavio <span class="post-author">${authorUsername}</span>
-      </p>
-    </div>
-  </div>
-</div>`;
+  const html = createCard(title, `<p class="post-description">${description}</p>`, authorUsername)
   return html;
 }
 async function checkIfLoggedInAndTokenValid() {
