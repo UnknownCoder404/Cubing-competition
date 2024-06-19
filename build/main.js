@@ -15,43 +15,43 @@ async function getPosts() {
   const posts = await data.json();
   return posts;
 }
+function createCard(title, description) {
+  return `
+  <div class="card">
+        <div class="card-inside-container">
+          <div class="post-title-container">
+            <h2 class="post-title">${title}</h2>
+          </div>
+          <div class="post-description-container">
+            <p>
+              ${description}
+            </p>
+          </div>
+        </div>
+      </div>
+  `;
+}
 function addDashboardCard() {
   let html = "";
-  html += `
-  <div class="card">
-   <div class="container">
-      <h2>Radna ploča</h2>
-      <p>Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p>
-</div>
-</div>
-  `;
+  html += createCard(
+    "Radna ploča",
+    `<p> Ti si admin. Oni imaju pristup <a href="./dashboard">radnoj ploči!</a></p>`
+  );
   cardsDiv.insertAdjacentHTML("beforeEnd", html);
 }
 function addCreatePostCard() {
-  const html = `
-  <div class="card">
-  <div class="container">
-    <h2>Objava</h2>
-    <p>
+  const html = createCard(
+    "Objava",
+    `<p>
       Ti si admin! Oni mogu objaviti bilo što!
       Klikni <a href="./posts">ovdje</a> da objaviš nešto.
-    </p>
-  </div>
-</div>
-  `;
+    </p>`
+  );
   cardsDiv.insertAdjacentHTML("beforeend", html);
 }
 function generateLogOutCard(username = getUsername()) {
   if (!username) return;
-  let html = "";
-  html += `
-  <div class="card">
-  <div class="container">
-      <h2>Odjavi se</h2>
-      <p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p>
-      </div> <!-- container class -->
-      </div> <!-- card class -->
-      `;
+  let html = createCard("Odjavi se", `<p>Ako se želiš odjaviti iz korisničkog računa "${username}" klikni <span class="logout-span">ovdje</span>.</p>`);
   return html;
 }
 
