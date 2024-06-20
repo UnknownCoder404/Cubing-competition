@@ -21,7 +21,7 @@ body {
   grid-template-columns: 1fr 1fr;
   color: white;
 }
-.title {
+.comp-title {
   display: flex;
   align-items: center;
 }
