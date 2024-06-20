@@ -143,7 +143,7 @@ function buildParticipantHTML(participant, solveNumber) {
 function buildRoundHTML(round, roundNumber) {
   let roundHTML = `
     <div class="runda" id="runda${roundNumber}">
-      <div class="title">
+      <div class="comp-title">
         <h3>Runda ${roundNumber}</h3>
         <img src="../Images/hide.svg" class="showhide">
       </div>
