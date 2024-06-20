@@ -9,7 +9,7 @@
   width: 95vw;
   background: var(--header-background-color);
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   border-radius: 30px;
   padding: 5px;
