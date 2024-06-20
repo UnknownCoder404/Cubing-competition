@@ -1,22 +1,19 @@
-:root {
-  --background: linear-gradient(
-    135deg,
-    rgb(96, 96, 96),
-    #43384b,
-    rgb(50, 43, 49),
-    rgb(96, 96, 96)
-  );
-}
 body {
   background: var(--background);
   color: white;
   padding: 0;
-  height: 100%;
+  height: 100vh;
   overflow-y: auto;
 }
 .status-iframe {
+  display: block;
   width: 100%;
   height: 80vh;
+}
+@media screen and (max-width: 350px) {
+  .status-iframe {
+    display: none;
+  }
 }
 a {
   color: rgb(0, 102, 204); /* Default color for unvisited links */
