@@ -1,4 +1,5 @@
 body {
   background: var(--background);
   color: white;
+  height: 100vh;
 }
