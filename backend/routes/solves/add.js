@@ -3,20 +3,15 @@ const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const addSolves = require("../../functions/addSolves");
 const { getUserById } = require("../../functions/getUserById");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
-router.post("/:solverId", verifyToken, async (req, res) => {
+router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
   try {
     const solverId = req.params.solverId;
     const solver = await getUserById(solverId);
     const judgeId = req.userId;
-    const judgeRole = req.userRole;
     const solves = req.body.solves;
     const round = req.body.round - 1; // indexing starts at 0
-    if (judgeRole !== "admin") {
-      return res
-        .status(403)
-        .json({ message: "Samo administratori mogu dodavati slaganja." });
-    }
     if (!solver) {
       return res.status(400).json({
         message: `Natjecatelj ne postoji. Kontaktirajte programere za pomoć. (Naveli ste: ${solverId})`,
@@ -41,7 +36,7 @@ router.post("/:solverId", verifyToken, async (req, res) => {
         .status(200)
         .json({ message: `Slaganje dodano korisniku ${solver.username}.` });
     }
-    throw new Error("Nije uspjelo dodavanje slaganja.");
+    throw new Error(`Nije uspjelo dodavanje slaganja. Kod greške: ${response}`);
   } catch (err) {
     console.error(err);
     return res

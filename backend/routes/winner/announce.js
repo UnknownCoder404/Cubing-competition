@@ -18,12 +18,12 @@ router.post("/announce", verifyToken, isAdmin, async (req, res) => {
     // Provjerite postoji li već pobjednik za grupu
     let existingWinner = await winner.findOne({ group });
     if (existingWinner && existingWinner.id === id) {
-      // Koristite _id za brisanje dokumenta pobjednika
+      // If winner exists in the same group, and the existing winner has the same id, then delete the existing winner
       await winner.findByIdAndDelete(existingWinner._id);
       return res.status(200).json({ message: "Pobjednik uspješno izbrisan." });
     }
     if (existingWinner) {
-      // Ako već postoji pobjednik, ažurirajte ID pobjednika
+      // If winner exists in the same group, but the existing winner has a different id, then update the existing winner
       existingWinner.id = id;
       await existingWinner.save();
       return res
@@ -31,9 +31,8 @@ router.post("/announce", verifyToken, isAdmin, async (req, res) => {
         .json({ message: "Pobjednik uspješno promijenjen." });
     }
 
-    // Stvorite novog pobjednika
+    // No winner exists in the same group, create a new winner
     const newWinner = new winner({ group, id });
-    // Spremite pobjednika u bazu podataka
     await newWinner.save();
     res.status(201).json({ message: "Pobjednik uspješno objavljen." });
   } catch (err) {

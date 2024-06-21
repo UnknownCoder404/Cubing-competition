@@ -22,7 +22,7 @@ router.get("/all", verifyToken, isAdmin, async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Greška u serveru." });
   }
 });
 module.exports = router;
