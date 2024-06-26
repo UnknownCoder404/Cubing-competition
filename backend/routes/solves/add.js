@@ -23,7 +23,7 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
     if (!competitionId) {
       return res.status(400).json({ message: "Nema ID natjecanja." });
     }
-    const competition = await Competition.findById(competitionId);
+    const competition = await Competition.findOne({ _id: competitionId });
     if (!competition) {
       return res
         .status(400)
