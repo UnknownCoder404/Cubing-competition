@@ -306,7 +306,7 @@ function enableAllSolveButtons() {
 async function main() {
   tokenValid(true);
   if (isUser(getRole())) {
-    alert("Admins only!");
+    alert("Samo administratori");
     location.href = "../";
   }
   getToken();
