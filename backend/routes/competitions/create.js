@@ -5,7 +5,6 @@ const isAdmin = require("../../utils/helpers/isAdmin");
 const verifyToken = require("../../middleware/verifyToken");
 router.post("/create", verifyToken, isAdmin, async (req, res) => {
   const { events, name, date } = req.body;
-  console.log(events, name, date);
   if (!events || !name || !date) {
     return res
       .status(400)
