@@ -98,27 +98,3 @@ mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
-import addSolves from "./functions/addSolves";
-import User from "./Models/user";
-import hashPassword from "./functions/hashPassword";
-import Competition from "./Models/competitions";
-// If all validations pass, proceed with user registration
-await User.findOneAndDelete({ username: "test" });
-const user = new User({
-  username: "test",
-  password: await hashPassword("test"),
-  role: "user",
-  group: 1,
-});
-await user.save();
-console.log(
-  await addSolves(
-    user,
-    {
-      event: "3x3",
-      solves: [1, 2, 3],
-    },
-    1,
-    await Competition.findById("6679d3d2bcbdca5be6fc2a48")
-  )
-);
