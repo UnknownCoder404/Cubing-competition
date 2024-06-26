@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const User = require("../../Models/user");
 const Competition = require("../../Models/competitions");
 const verifyToken = require("../../middleware/verifyToken");
@@ -23,7 +24,12 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
     if (!competitionId) {
       return res.status(400).json({ message: "Nema ID natjecanja." });
     }
-    const competition = await Competition.findOne({ _id: competitionId });
+    // Validate competitionId
+    if (!mongoose.Types.ObjectId.isValid(competitionId)) {
+      return res.status(400).json({ message: "ID natjecanja nije ispravan." });
+    }
+
+    const competition = await Competition.findById(competitionId);
     if (!competition) {
       return res
         .status(400)
