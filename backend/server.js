@@ -89,7 +89,7 @@ app.use("/token", require("./routes/token/validate"));
 app.use("/health-check", require("./routes/health_check/health_check"));
 // Competitions
 app.use("/competitions", require("./routes/competitions/create"));
-
+app.use("/competitions", require("./routes/competitions/get"));
 app.use("/backup", require("./routes/backup/get"));
 // Start the server on the specified port
 const PORT = process.env.PORT || 3000;
