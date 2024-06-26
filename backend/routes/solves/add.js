@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../../Models/user");
+const Competition = require("../../Models/competitions");
 const verifyToken = require("../../middleware/verifyToken");
 const addSolves = require("../../functions/addSolves");
 const { getUserById } = require("../../functions/getUserById");
@@ -10,8 +11,7 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
     const solverId = req.params.solverId;
     const solver = await getUserById(solverId);
     const judgeId = req.userId;
-    const solves = req.body.solves;
-    const round = req.body.round - 1; // indexing starts at 0
+    const { solves, round, competitionId } = req.body;
     if (!solver) {
       return res.status(400).json({
         message: `Natjecatelj ne postoji. Kontaktirajte programere za pomoć. (Naveli ste: ${solverId})`,
@@ -19,6 +19,15 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
     }
     if (!solves) {
       return res.status(400).json({ message: "Nema ponuđenih slaganja." });
+    }
+    if (!competitionId) {
+      return res.status(400).json({ message: "Nema ID natjecanja." });
+    }
+    const competition = await Competition.findById(competitionId);
+    if (!competition) {
+      return res
+        .status(400)
+        .json({ message: `Natjecanje ne postoji. (Id: ${competitionId})` });
     }
     for (let i = 0; i < solves.length; i++) {
       if (solves !== 0 && !solves[i]) {
@@ -30,7 +39,7 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
           .json({ message: `Slaganje #${i + 1} je negativno.` });
       }
     }
-    const response = await addSolves(solver, solves, round);
+    const response = await addSolves(solver, solves, round, competition);
     if (response > 0) {
       return res
         .status(200)

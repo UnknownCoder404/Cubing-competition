@@ -1,42 +1,54 @@
-async function addSolves(solver, solves, round) {
-  // Input validation
-  if (!solver || !solves || typeof round !== "number") {
-    return -1;
-  }
-
-  // Ensure rounds array exists
-  if (!solver.rounds) {
-    solver.rounds = [];
-  }
-
-  // Check if the round needs to be created
-  if (round >= solver.rounds.length) {
-    // Create new rounds to fill the gap
-    solver.rounds.length = round + 1;
-    // Initialize the new round with an empty solves array
-    solver.rounds[round] = { solves: [] };
-  }
-
+async function addSolves(solver, solves, round, competition) {
   try {
-    // Update the solves array for the specified round
-    if (!solver.rounds[round]) {
-      solver.rounds[round] = { solves: [] };
+    // Input validation
+    if (!solver || !solves || typeof round !== "number" || !competition) {
+      return -1;
     }
-    if (!solver.rounds[round].solves) {
-      solver.rounds[round].solves = [];
+
+    const competitionId = competition._id;
+    const competitionName = competition.name;
+
+    if (!competitionName) {
+      return -1;
     }
-    solver.rounds[round].solves.push(...solves);
-    if (solver.rounds[round].solves.length > 5) {
-      solver.rounds[round].solves = solver.rounds[round].solves.slice(0, 5);
+
+    if (!solver.competitions) {
+      solver.competitions = [];
+    }
+
+    let solversCompetition = solver.competitions.find((competition) => {
+      competition.competitionId === competitionId;
+    });
+    if (!solversCompetition) {
+      solver.competitions.push({
+        competitionId,
+        solves: [],
+      });
+      solversCompetition = solver.competitions[0];
+      console.log(solversCompetition);
+    }
+    // Fill everything up to the round with null
+    for (let i = 0; i < round - 1; i++) {
+      if (!solversCompetition.solves[i]) {
+        solversCompetition.solves.push(null);
+      }
+    }
+    // Add solves
+    solversCompetition.solves = solves;
+
+    // Limit solves to 5
+    if (solversCompetition.solves.length > 5) {
+      solversCompetition.solves = solversCompetition.solves.slice(0, 5);
     }
     // Save the updated user data
     await solver.save();
 
     // Success response
     return 1;
-  } catch (err) {
-    console.error("Pogreška dodavanja slaganja:\n", err);
-    return -1;
+  } catch (error) {
+    console.error("Error adding solves:\n", error);
+    return -2;
   }
 }
+
 module.exports = addSolves;
