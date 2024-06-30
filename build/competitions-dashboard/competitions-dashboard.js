@@ -1,6 +1,8 @@
 import { url } from "../Scripts/variables.js";
 import { addToken } from "../Scripts/credentials.js";
+const createCompBtn = document.querySelector(".create-comp-btn");
 const createCompDateInput = document.querySelector(".comp-date");
+const createCompNameInput = document.querySelector(".create-comp-name");
 function getEvents(competition) {
   return competition.events;
 }
@@ -36,9 +38,12 @@ async function logCompetitions() {
     document
       .querySelector(".competitions")
       .insertAdjacentHTML("beforeend", competitionHtml);
-    const editButton = document.querySelector(`.competition-${competition._id}-edit-button`);
-    const deleteButton = document.querySelector(`.competition-${competition._id}-delete-button`);
-    
+    const editButton = document.querySelector(
+      `.competition-${competition._id}-edit-button`
+    );
+    const deleteButton = document.querySelector(
+      `.competition-${competition._id}-delete-button`
+    );
   });
   console.log(competitions);
 }
@@ -63,7 +68,21 @@ async function createCompetition(name, date, events) {
 }
 async function main() {
   await logCompetitions();
-  // await createCompetition("Test",new Date(createCompDateInput.value).toISOString(),[]);
 }
+createCompBtn.addEventListener("click", () => {
+  const name = createCompNameInput.value;
+  const date = new Date(createCompDateInput.value).toISOString();
+  const event = {
+    name: "3x3",
+    rounds: 3,
+  };
+
+  if (name && date) {
+    createCompetition(name, date, [event]);
+  } else {
+    console.error("Name and date are required.");
+    alert("Ime i datum natjecanja su obavezni.");
+  }
+});
+
 main();
-console.log(new Date(createCompDateInput.value));
