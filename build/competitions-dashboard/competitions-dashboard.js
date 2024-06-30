@@ -1,5 +1,10 @@
 import { url } from "../Scripts/variables.js";
-import { addToken } from "../Scripts/credentials.js";
+import {
+  addToken,
+  tokenValid,
+  isAdmin,
+  getRole,
+} from "../Scripts/credentials.js";
 const createCompBtn = document.querySelector(".create-comp-btn");
 const createCompDateInput = document.querySelector(".comp-date");
 const createCompNameInput = document.querySelector(".create-comp-name");
@@ -67,6 +72,10 @@ async function createCompetition(name, date, events) {
   return data;
 }
 async function main() {
+  if (!isAdmin(getRole())) {
+    window.location.href = "../";
+  }
+  tokenValid(true);
   await logCompetitions();
 }
 createCompBtn.addEventListener("click", () => {
