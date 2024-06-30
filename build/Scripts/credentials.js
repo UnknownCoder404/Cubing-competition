@@ -54,7 +54,7 @@ async function tokenValid(action = false) {
   const data = await fetch(tokenValidUrl);
   console.log(data.ok ? "Token is valid." : "Token is invalid.");
   if (action && !data.ok) {
-    console.log("Odjavljivanje...");
+    console.log("Logging out...");
     logOut();
     window.location.href = "../Login";
   }
