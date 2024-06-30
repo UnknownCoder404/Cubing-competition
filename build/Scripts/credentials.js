@@ -56,7 +56,6 @@ async function tokenValid(action = false) {
   if (action && !data.ok) {
     console.log("Odjavljivanje...");
     logOut();
-    alert("Prijavi se ponovno");
     window.location.href = "../Login";
   }
   return data.ok;
