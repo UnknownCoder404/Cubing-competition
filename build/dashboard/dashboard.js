@@ -45,7 +45,31 @@ async function announceWinner(winnerId) {
 
   return response.json();
 }
-
+function createCompetitionHtml(competition) {
+  let html = "";
+  competition.solves.forEach((solves, index) => {
+    // solves is an object which follows this structure:
+    /*
+  {
+    _id: "6681a0d0effeb1adfadfd",
+    event: "3x3",
+    solves: [3, 1, 5],
+  },
+    */
+    const eventName = solves.event;
+    html += `<div class="event ">
+                <h3>${eventName}</h3>`;
+    html += `<ul class="solves">`;
+    solves.solves.forEach((solve, j) => {
+      const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
+      html += `<li>${j + 1}: ${time}
+                   </li>`;
+    });
+    html += `</ul>`; // close .solves
+    html += `</div>`; // close .event
+  });
+  return html;
+}
 window.showCompetition = async function (userId, index) {
   enableAllSolveButtons();
   const allUserDiv = document.querySelectorAll(".user");
@@ -64,8 +88,22 @@ window.showCompetition = async function (userId, index) {
       userDiv.querySelector(".comp").innerHTML = `<p>User not found.</p>`;
       return;
     }
-
-    let html = "";
+    if (!user.competitions || user.competitions.length === 0) {
+      userDiv.querySelector(
+        ".comp"
+      ).innerHTML = `<p>Korisnik nema unesenih slaganja.</p>`;
+      return;
+    }
+    userDiv.querySelector(".comp").innerHTML = "";
+    user.competitions.forEach((competition, index) => {
+      console.log(competition);
+      const competitionHtml = createCompetitionHtml(competition);
+      console.log(competitionHtml);
+      userDiv
+        .querySelector(".comp")
+        .insertAdjacentHTML("beforeend", competitionHtml);
+    });
+    return;
     for (let i = 0; i < 3; i++) {
       const round = user.rounds[i] || [];
       html += `<div class="round">
@@ -120,40 +158,20 @@ window.showCompetition = async function (userId, index) {
   }
 }; // Make showCompetition() global by using window.showCompetition = ...
 
-window.addSolve = async function (userId, roundIndex, index) {
-  const solveInput = document.getElementById(`solve-${roundIndex}-${index}`);
-  let solveValue = solveInput.value;
-
-  // Provjerava odgovara li unos regularnom izrazu za brojeve odvojene razmacima
-  if (!solveValue.match(/^\d+(?:[ .]\d+)*$/)) {
-    console.error(
-      "Pokušali ste dodati slaganja, ali unos ne odgovara regularnom izrazu."
-    );
-    alert("Samo brojevi i razmaci. Ne koristi dva razmaka jedan pored drugog.");
-    return;
-  }
-
-  // Razdvaja unesene vrijednosti i filtrira prazne stringove
-  let solves = solveValue.split(" ").filter(Boolean);
-
-  // Uklanja null, NaN i brojeve dulje od 6 znamenki
-  solves = solves.filter((solve) => solve && solve.length <= 6);
-
-  // Ograničava na maksimalno 5 slaganja
-  if (solves.length > 5) {
-    solves = solves.slice(0, 5);
-    alert("Uneseno više od 5 slaganja, samo prvih 5 će biti poslano.");
-  }
-
-  solves = solves.map((solve) => formatInputToSeconds(solve));
-  if (solves.length === 0) {
-    alert("Mora biti barem 1 slaganje.");
-    return;
-  }
+window.addSolve = async function (
+  userId,
+  roundIndex,
+  userIndex,
+  competitionId = "6681a3717073260f1dbd0a25"
+) {
   const roundNumber = roundIndex + 1;
   const solveData = {
     round: roundNumber,
-    solves,
+    solves: {
+      event: "3x3",
+      solves: [3, 1, 5, 0, 4],
+    },
+    competitionId,
   };
 
   // Šalje podatke na server
@@ -169,19 +187,20 @@ window.addSolve = async function (userId, roundIndex, index) {
 
   // Ažurira prikaz natjecanja nakon uspješnog dodavanja
   if (response.ok) {
-    showCompetition(userId, index);
-    return;
+    showCompetition(userId, userIndex);
+    return response.status;
   }
 
   // Prikazuje poruku o grešci ako postoji
   if (data.message) {
     alert(data.message);
-    return;
+    return response.status;
   }
 
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
+  return response.status;
 };
-
+console.log(addSolve("6681a0d0effeb153aadd2a8d", 0, 0));
 window.getUsers = async function () {
   const body = {
     method: "GET",

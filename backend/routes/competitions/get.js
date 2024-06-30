@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/get", async (req, res) => {
   try {
-    const competitions = await Competition.find({}).select("-_id");
+    const competitions = await Competition.find({});
     return res.status(200).json(competitions);
   } catch (error) {
     return res

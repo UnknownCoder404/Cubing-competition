@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 const verifyPassword = require("../functions/verifyPassword");
+
+const allowedEvents = ["3x3", "3x3oh", "4x4", "2x2"];
+
+
+// competitionId is the Id of the competition that the user participated in
 const competitionSchema = new mongoose.Schema({
   competitionId: { type: mongoose.Schema.Types.ObjectId, required: true },
   solves: [
     {
-      event: { type: String, required: true },
+      event: { type: String, required: true, enum: allowedEvents },
       solves: [{ type: Number, required: true }],
     },
   ],

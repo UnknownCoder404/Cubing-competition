@@ -16,9 +16,17 @@ async function addSolves(solver, solves, round, competition) {
       solver.competitions = [];
     }
 
-    let solversCompetition = solver.competitions.find((competition) => {
-      competition.competitionId === competitionId;
-    });
+    const solversCompetitionIndex = solver.competitions
+      .map((competition) => {
+        return competition.competitionId;
+      })
+      .findIndex((userCompId) => {
+        userCompId.equals(competitionId);
+      });
+    let solversCompetition =
+      solversCompetitionIndex >= 0
+        ? solver.competitions[solversCompetitionIndex]
+        : null;
     if (!solversCompetition) {
       solver.competitions.push({
         competitionId,
@@ -30,7 +38,7 @@ async function addSolves(solver, solves, round, competition) {
     // Fill everything up to the round with null
     for (let i = 0; i < round - 1; i++) {
       if (!solversCompetition.solves[i]) {
-        solversCompetition.solves.push(null);
+        solversCompetition.solves[i] = null;
       }
     }
     // Add solves

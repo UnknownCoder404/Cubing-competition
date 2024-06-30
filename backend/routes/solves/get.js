@@ -5,26 +5,25 @@ const router = express.Router();
 // Route handler for getting live solves
 router.get("/", cache(5), async (req, res) => {
   try {
-    const usersWithSolves = await User.find({
-      rounds: {
-        $elemMatch: {
-          index: { $eq: req.query.index },
-          solves: { $exists: true, $not: { $size: 0 } },
-        },
-      },
-    }).select("username rounds group -_id");
-    res.status(200).json({
-      solves: usersWithSolves,
-      lastUpdated: new Intl.DateTimeFormat("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "Europe/Zagreb",
-      }).format(new Date()),
+    const lastUpdated = new Intl.DateTimeFormat("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "Europe/Zagreb",
+    }).format(new Date());
+    const users = await User.find({}, "");
+    users.filter((user) => {
+      return user.competitions.length > 0;
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error retrieving solves" });
+    return res.status(200).json({
+      lastUpdated,
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Greška prilikom dohvaćanja slaganja.",
+    });
   }
 });
 module.exports = router;
