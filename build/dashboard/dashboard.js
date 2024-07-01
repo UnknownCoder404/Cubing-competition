@@ -59,13 +59,21 @@ function createCompetitionHtml(competition) {
     const eventName = event.event;
     html += `<div class="event ">
                 <h3>${eventName}</h3>`;
-    html += `<ul class="solves">`;
-    solves.solves.forEach((solve, j) => {
-      const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
-      html += `<li>${j + 1}: ${time}
-                   </li>`;
+
+    event.rounds.forEach((solves, j) => {
+      const roundNumber = j + 1;
+      html += `<div class="round">`;
+      html += `<h4>Runda ${roundNumber}</h4>`;
+      html += `<ul class="solves">`;
+      solves.forEach((solve, solveIndex) => {
+        const solveNumber = solveIndex + 1;
+        const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
+        html += `<li class="solve-li solve-li-${solveNumber}">${solveNumber}: ${time}</li>`;
+      });
+      html += `</ul>`; // close .solves
+      html += `</div>`; // close .round
     });
-    html += `</ul>`; // close .solves
+
     html += `</div>`; // close .event
   });
   return html;
@@ -201,7 +209,9 @@ window.addSolve = async function (
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
   return response.status;
 };
+
 //console.log(addSolve("6681a0d0effeb153aadd2a8d", 0, 0, [3, 1, 5]));
+
 window.getUsers = async function () {
   const body = {
     method: "GET",
