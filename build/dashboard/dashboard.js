@@ -45,7 +45,57 @@ async function announceWinner(winnerId) {
 
   return response.json();
 }
+async function getCompetitionNameById(id) {
+  try {
+    const allCompetitionsResponse = await fetch(`${url}/competitions/get`);
+    const allCompetitions = await allCompetitionsResponse.json();
+    const competition = allCompetitions.find(
+      (competition) => competition.id === id
+    );
+    return competition.name;
+  } catch (error) {
+    console.error("Error fetching competition data:", error);
+    return null;
+  }
+}
+async function createCompetitionHtml(competition) {
+  const competitionName = await getCompetitionNameById(competition.id);
+  let html = "";
+  html += `<div class="competition">`;
+  html += `<h2>${competitionName ? competitionName : "Greška u nazivu"}</h2>`;
+  competition.events.forEach((event, index) => {
+    // solves is an object which follows this structure:
+    /*
+  {
+    _id: "6681a0d0effeb1adfadfd",
+    event: "3x3",
+    solves: [3, 1, 5],
+  },
+    */
+    const eventName = event.event;
+    html += `<div class="event ">
+                <h3>${eventName}</h3>`;
 
+    event.rounds.forEach((solves, j) => {
+      const roundNumber = j + 1;
+      html += `<div class="round">`;
+      html += `<h4>Runda ${roundNumber}</h4>`;
+      html += `<ul class="solves">`;
+      solves = solves ? solves : [];
+      solves.forEach((solve, solveIndex) => {
+        const solveNumber = solveIndex + 1;
+        const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
+        html += `<li class="solve-li solve-li-${solveNumber}">${solveNumber}: ${time}</li>`;
+      });
+      html += `</ul>`; // close .solves
+      html += `</div>`; // close .round
+    });
+
+    html += `</div>`; // close .event
+  });
+  html += `</div>`; // close .competition
+  return html;
+}
 window.showCompetition = async function (userId, index) {
   enableAllSolveButtons();
   const allUserDiv = document.querySelectorAll(".user");
@@ -61,11 +111,26 @@ window.showCompetition = async function (userId, index) {
     }).then((response) => response.json());
 
     if (!user) {
-      userDiv.querySelector(".comp").innerHTML = `<p>User not found.</p>`;
+      userDiv.querySelector(
+        ".comp"
+      ).innerHTML = `<p>Korisnik nije pronađen.</p>`;
       return;
     }
+    if (!user.competitions || user.competitions.length === 0) {
+      userDiv.querySelector(
+        ".comp"
+      ).innerHTML = `<p>Korisnik nema unesenih slaganja.</p>`;
+      return;
+    }
+    userDiv.querySelector(".comp").innerHTML = "";
+    user.competitions.forEach(async (competition, index) => {
+      const competitionHtml = await createCompetitionHtml(competition);
 
-    let html = "";
+      userDiv
+        .querySelector(".comp")
+        .insertAdjacentHTML("beforeend", competitionHtml);
+    });
+    return;
     for (let i = 0; i < 3; i++) {
       const round = user.rounds[i] || [];
       html += `<div class="round">
@@ -120,40 +185,22 @@ window.showCompetition = async function (userId, index) {
   }
 }; // Make showCompetition() global by using window.showCompetition = ...
 
-window.addSolve = async function (userId, roundIndex, index) {
-  const solveInput = document.getElementById(`solve-${roundIndex}-${index}`);
-  let solveValue = solveInput.value;
-
-  // Provjerava odgovara li unos regularnom izrazu za brojeve odvojene razmacima
-  if (!solveValue.match(/^\d+(?:[ .]\d+)*$/)) {
-    console.error(
-      "Pokušali ste dodati slaganja, ali unos ne odgovara regularnom izrazu."
-    );
-    alert("Samo brojevi i razmaci. Ne koristi dva razmaka jedan pored drugog.");
-    return;
-  }
-
-  // Razdvaja unesene vrijednosti i filtrira prazne stringove
-  let solves = solveValue.split(" ").filter(Boolean);
-
-  // Uklanja null, NaN i brojeve dulje od 6 znamenki
-  solves = solves.filter((solve) => solve && solve.length <= 6);
-
-  // Ograničava na maksimalno 5 slaganja
-  if (solves.length > 5) {
-    solves = solves.slice(0, 5);
-    alert("Uneseno više od 5 slaganja, samo prvih 5 će biti poslano.");
-  }
-
-  solves = solves.map((solve) => formatInputToSeconds(solve));
-  if (solves.length === 0) {
-    alert("Mora biti barem 1 slaganje.");
-    return;
-  }
+window.addSolve = async function (
+  userId,
+  roundIndex,
+  userIndex,
+  solves,
+  event = "3x3",
+  competitionId = "6681a3717073260f1dbd0a25"
+) {
   const roundNumber = roundIndex + 1;
   const solveData = {
     round: roundNumber,
-    solves,
+    solves: {
+      event: event,
+      rounds: solves,
+    },
+    competitionId,
   };
 
   // Šalje podatke na server
@@ -169,18 +216,20 @@ window.addSolve = async function (userId, roundIndex, index) {
 
   // Ažurira prikaz natjecanja nakon uspješnog dodavanja
   if (response.ok) {
-    showCompetition(userId, index);
-    return;
+    showCompetition(userId, userIndex);
+    return response.status;
   }
 
   // Prikazuje poruku o grešci ako postoji
   if (data.message) {
     alert(data.message);
-    return;
+    return response.status;
   }
 
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
+  return response.status;
 };
+console.log(addSolve("6681a0d0effeb153aadd2a8d", 1, 0, [3, 6.8, 5], "4x4"));
 
 window.getUsers = async function () {
   const body = {
@@ -306,7 +355,7 @@ function enableAllSolveButtons() {
 async function main() {
   tokenValid(true);
   if (isUser(getRole())) {
-    alert("Admins only!");
+    alert("Samo administratori");
     location.href = "../";
   }
   getToken();

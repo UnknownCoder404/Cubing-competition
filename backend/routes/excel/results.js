@@ -3,14 +3,10 @@ const exceljs = require("exceljs");
 const User = require("../../Models/user");
 const verifyToken = require("../../middleware/verifyToken");
 const cache = require("../../middleware/cache");
+const isAdmin = require("../../utils/helpers/isAdmin");
 const formatTime = require("../../functions/formatTime");
 const router = express.Router();
-router.get("/", cache(30), verifyToken, async (req, res) => {
-  if (req.userRole !== "admin") {
-    return res.status(400).json({
-      message: "Samo administratori smiju dobiti rezultate u excel formatu.",
-    });
-  }
+router.get("/", cache(10), verifyToken, isAdmin, async (req, res) => {
   try {
     const results = await User.find({}, "username rounds group");
     const workbook = new exceljs.Workbook();

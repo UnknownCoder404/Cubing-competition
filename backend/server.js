@@ -87,10 +87,11 @@ app.use("/scrambles", require("./routes/scrambles/passwords"));
 // Token validation
 app.use("/token", require("./routes/token/validate"));
 app.use("/health-check", require("./routes/health_check/health_check"));
-
+// Competitions
+app.use("/competitions", require("./routes/competitions/create"));
+app.use("/competitions", require("./routes/competitions/get"));
 app.use("/backup", require("./routes/backup/get"));
 // Start the server on the specified port
-console.log(`ENV PORT: ${process.env.PORT}`);
 const PORT = process.env.PORT || 3000;
 
 mongoose.connection.once("open", () => {

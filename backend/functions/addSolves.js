@@ -1,42 +1,50 @@
-async function addSolves(solver, solves, round) {
-  // Input validation
-  if (!solver || !solves || typeof round !== "number") {
-    return -1;
-  }
-
-  // Ensure rounds array exists
-  if (!solver.rounds) {
-    solver.rounds = [];
-  }
-
-  // Check if the round needs to be created
-  if (round >= solver.rounds.length) {
-    // Create new rounds to fill the gap
-    solver.rounds.length = round + 1;
-    // Initialize the new round with an empty solves array
-    solver.rounds[round] = { solves: [] };
-  }
-
+const User = require("../Models/User");
+/**
+ * Function to update solver's solves in a given competition and round
+ * @param {mongoose.Model} solver - Mongoose model for the user schema
+ * @param {Object} events - Object with event (String) and solves (array)
+ * @param {Number} round - The round number to add solves to
+ * @param {mongoose.Model} competition - Mongoose model for the competition schema
+ */
+async function updateSolves(solver, events, round, competition) {
   try {
-    // Update the solves array for the specified round
-    if (!solver.rounds[round]) {
-      solver.rounds[round] = { solves: [] };
+    // Find the user who is the solver
+    const user = await User.findById(solver._id);
+    if (!user) throw new Error("User not found");
+    if (!user.competitions) user.competitions = [];
+    // Find the competition the user participated in
+    let userCompetition = user.competitions.find((comp) =>
+      comp.competitionId.equals(competition._id)
+    );
+    if (!userCompetition) {
+      user.competitions.push({ competitionId: competition._id, solves: [] });
+      userCompetition = user.competitions.find((comp) =>
+        comp.competitionId.equals(competition._id)
+      );
     }
-    if (!solver.rounds[round].solves) {
-      solver.rounds[round].solves = [];
-    }
-    solver.rounds[round].solves.push(...solves);
-    if (solver.rounds[round].solves.length > 5) {
-      solver.rounds[round].solves = solver.rounds[round].solves.slice(0, 5);
-    }
-    // Save the updated user data
-    await solver.save();
 
-    // Success response
+    // Find the event in the user's competition data
+    let userEvent = userCompetition.events.find(
+      (event) => event.event === events.event
+    );
+    if (!userEvent) {
+      // If event doesn't exist, create a new one
+      userCompetition.events.push({ event: events.event, rounds: [] });
+      userEvent = userCompetition.events.find(
+        (event) => event.event === events.event
+      );
+    }
+    // Add the new solves to the specified round
+    userEvent.rounds[round - 1] = events.rounds;
+
+    // Save the updated user data
+    await user.save();
+    console.log("Solves updated successfully");
     return 1;
-  } catch (err) {
-    console.error("Pogreška dodavanja slaganja:\n", err);
+  } catch (error) {
+    console.error("Error updating solves:", error);
     return -1;
   }
 }
-module.exports = addSolves;
+
+module.exports = updateSolves;

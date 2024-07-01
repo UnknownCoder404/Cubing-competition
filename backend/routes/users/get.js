@@ -12,7 +12,7 @@ router.get("/:userId", verifyToken, isAdmin, async (req, res) => {
       });
     }
     // Fetch all users from the database
-    const user = await getUserById(userId, "username role rounds");
+    const user = await getUserById(userId, "username role competitions");
 
     // Send the response array
     res.status(200).json(user);
