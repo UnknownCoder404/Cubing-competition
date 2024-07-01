@@ -45,8 +45,24 @@ async function announceWinner(winnerId) {
 
   return response.json();
 }
-function createCompetitionHtml(competition) {
+async function getCompetitionNameById(id) {
+  try {
+    const allCompetitionsResponse = await fetch(`${url}/competitions/get`);
+    const allCompetitions = await allCompetitionsResponse.json();
+    const competition = allCompetitions.find(
+      (competition) => competition.id === id
+    );
+    return competition.name;
+  } catch (error) {
+    console.error("Error fetching competition data:", error);
+    return null;
+  }
+}
+async function createCompetitionHtml(competition) {
+  const competitionName = await getCompetitionNameById(competition.id);
   let html = "";
+  html += `<div class="competition">`;
+  html += `<h2>${competitionName ? competitionName : "Greška u nazivu"}</h2>`;
   competition.events.forEach((event, index) => {
     // solves is an object which follows this structure:
     /*
@@ -65,6 +81,7 @@ function createCompetitionHtml(competition) {
       html += `<div class="round">`;
       html += `<h4>Runda ${roundNumber}</h4>`;
       html += `<ul class="solves">`;
+      solves = solves ? solves : [];
       solves.forEach((solve, solveIndex) => {
         const solveNumber = solveIndex + 1;
         const time = solve === 0 ? "DNF/DNS" : formatTime(solve);
@@ -76,6 +93,7 @@ function createCompetitionHtml(competition) {
 
     html += `</div>`; // close .event
   });
+  html += `</div>`; // close .competition
   return html;
 }
 window.showCompetition = async function (userId, index) {
@@ -93,7 +111,9 @@ window.showCompetition = async function (userId, index) {
     }).then((response) => response.json());
 
     if (!user) {
-      userDiv.querySelector(".comp").innerHTML = `<p>User not found.</p>`;
+      userDiv.querySelector(
+        ".comp"
+      ).innerHTML = `<p>Korisnik nije pronađen.</p>`;
       return;
     }
     if (!user.competitions || user.competitions.length === 0) {
@@ -103,8 +123,8 @@ window.showCompetition = async function (userId, index) {
       return;
     }
     userDiv.querySelector(".comp").innerHTML = "";
-    user.competitions.forEach((competition, index) => {
-      const competitionHtml = createCompetitionHtml(competition);
+    user.competitions.forEach(async (competition, index) => {
+      const competitionHtml = await createCompetitionHtml(competition);
 
       userDiv
         .querySelector(".comp")
@@ -209,8 +229,7 @@ window.addSolve = async function (
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
   return response.status;
 };
-
-//console.log(addSolve("6681a0d0effeb153aadd2a8d", 0, 0, [3, 1, 5]));
+console.log(addSolve("6681a0d0effeb153aadd2a8d", 1, 0, [3, 6.8, 5], "4x4"));
 
 window.getUsers = async function () {
   const body = {
