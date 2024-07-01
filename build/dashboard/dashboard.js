@@ -47,7 +47,7 @@ async function announceWinner(winnerId) {
 }
 function createCompetitionHtml(competition) {
   let html = "";
-  competition.solves.forEach((solves, index) => {
+  competition.events.forEach((event, index) => {
     // solves is an object which follows this structure:
     /*
   {
@@ -56,7 +56,7 @@ function createCompetitionHtml(competition) {
     solves: [3, 1, 5],
   },
     */
-    const eventName = solves.event;
+    const eventName = event.event;
     html += `<div class="event ">
                 <h3>${eventName}</h3>`;
     html += `<ul class="solves">`;
@@ -96,9 +96,8 @@ window.showCompetition = async function (userId, index) {
     }
     userDiv.querySelector(".comp").innerHTML = "";
     user.competitions.forEach((competition, index) => {
-      console.log(competition);
       const competitionHtml = createCompetitionHtml(competition);
-      console.log(competitionHtml);
+
       userDiv
         .querySelector(".comp")
         .insertAdjacentHTML("beforeend", competitionHtml);
@@ -162,14 +161,16 @@ window.addSolve = async function (
   userId,
   roundIndex,
   userIndex,
+  solves,
+  event = "3x3",
   competitionId = "6681a3717073260f1dbd0a25"
 ) {
   const roundNumber = roundIndex + 1;
   const solveData = {
     round: roundNumber,
     solves: {
-      event: "3x3",
-      solves: [3, 1, 5, 0, 4],
+      event: event,
+      rounds: solves,
     },
     competitionId,
   };
@@ -200,7 +201,7 @@ window.addSolve = async function (
   alert("Greška prilikom dodavanja slaganja. Pokušaj ponovno.");
   return response.status;
 };
-console.log(addSolve("6681a0d0effeb153aadd2a8d", 0, 0));
+//console.log(addSolve("6681a0d0effeb153aadd2a8d", 0, 0, [3, 1, 5]));
 window.getUsers = async function () {
   const body = {
     method: "GET",

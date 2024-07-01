@@ -1,9 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const User = require("../../Models/user");
 const Competition = require("../../Models/competitions");
 const verifyToken = require("../../middleware/verifyToken");
-const addSolves = require("../../functions/addSolves");
+const updateSolves = require("../../functions/addSolves");
 const { getUserById } = require("../../functions/getUserById");
 const isAdmin = require("../../utils/helpers/isAdmin");
 const router = express.Router();
@@ -45,7 +44,7 @@ router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
           .json({ message: `Slaganje #${i + 1} je negativno.` });
       }
     }
-    const response = await addSolves(solver, solves, round, competition);
+    const response = await updateSolves(solver, solves, round, competition);
     if (response > 0) {
       return res
         .status(200)
